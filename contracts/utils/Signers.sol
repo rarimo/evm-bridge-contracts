@@ -19,7 +19,7 @@ abstract contract Signers is OwnableUpgradeable {
 
     function _checkSignatures(bytes32 signHash_, bytes[] calldata signatures_) internal view {
         for (uint256 i = 0; i < signatures_.length; i++) {
-            address recovered_ = signHash_.recover(signatures_[i]);
+            address recovered_ = signHash_.toEthSignedMessageHash().recover(signatures_[i]);
 
             require(_signers.contains(recovered_), "Signers: invalid signer");
         }
