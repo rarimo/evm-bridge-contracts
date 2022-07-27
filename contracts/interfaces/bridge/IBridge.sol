@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-interface IBridge {
+import "../handlers/IERC20Handler.sol";
+import "../handlers/IERC721Handler.sol";
+import "../handlers/IERC1155Handler.sol";
+import "../handlers/INativeHandler.sol";
+
+interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHandler {
     function withdrawERC20(
         address token_,
         uint256 amount_,
