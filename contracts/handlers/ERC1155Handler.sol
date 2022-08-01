@@ -19,7 +19,7 @@ abstract contract ERC1155Handler is IERC1155Handler {
         IERC1155MintableBurnable erc1155_ = IERC1155MintableBurnable(token_);
 
         if (isWrapped_) {
-            erc1155_.burnFrom(msg.sender, tokenId_, amount_);
+            erc1155_.burn(msg.sender, tokenId_, amount_);
         } else {
             erc1155_.safeTransferFrom(msg.sender, address(this), tokenId_, amount_, "");
         }
@@ -35,6 +35,7 @@ abstract contract ERC1155Handler is IERC1155Handler {
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC1155Handler: zero token");
+        require(receiver_ != address(0), "ERC1155Handler: zero receiver");
         require(amount_ > 0, "ERC1155Handler: amount is zero");
 
         IERC1155MintableBurnable erc1155_ = IERC1155MintableBurnable(token_);
