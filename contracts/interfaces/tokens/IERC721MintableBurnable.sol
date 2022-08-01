@@ -6,5 +6,5 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 interface IERC721MintableBurnable is IERC721 {
     function mintTo(address receiver_, uint256 tokenId_) external returns (bool);
 
-    function burnFrom(address payer_, uint256 tokenId_) external returns (bool);
+    function burn(uint256 tokenId_) external;
 }

@@ -3,8 +3,9 @@ pragma solidity ^0.8.9;
 
 import "../interfaces/handlers/IERC721Handler.sol";
 import "../interfaces/tokens/IERC721MintableBurnable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-abstract contract ERC721Handler is IERC721Handler {
+abstract contract ERC721Handler is IERC721Handler, IERC721Receiver {
     function depositERC721(
         address token_,
         uint256 tokenId_,
@@ -12,12 +13,12 @@ abstract contract ERC721Handler is IERC721Handler {
         string calldata network_,
         bool isWrapped_
     ) external override {
-        require(token_ != address(0), "ERC20Handler: zero token");
+        require(token_ != address(0), "ERC721Handler: zero token");
 
         IERC721MintableBurnable erc721_ = IERC721MintableBurnable(token_);
 
         if (isWrapped_) {
-            erc721_.burnFrom(msg.sender, tokenId_);
+            erc721_.burn(tokenId_);
         } else {
             erc721_.safeTransferFrom(msg.sender, address(this), tokenId_);
         }
@@ -32,6 +33,7 @@ abstract contract ERC721Handler is IERC721Handler {
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC721Handler: zero token");
+        require(receiver_ != address(0), "ERC721Handler: zero receiver");
 
         IERC721MintableBurnable erc721_ = IERC721MintableBurnable(token_);
 
