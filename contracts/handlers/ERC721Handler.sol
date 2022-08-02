@@ -3,9 +3,9 @@ pragma solidity ^0.8.9;
 
 import "../interfaces/handlers/IERC721Handler.sol";
 import "../interfaces/tokens/IERC721MintableBurnable.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
-abstract contract ERC721Handler is IERC721Handler, IERC721Receiver {
+abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
     function depositERC721(
         address token_,
         uint256 tokenId_,
