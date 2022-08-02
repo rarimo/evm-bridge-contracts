@@ -3,8 +3,9 @@ pragma solidity ^0.8.9;
 
 import "../interfaces/handlers/IERC1155Handler.sol";
 import "../interfaces/tokens/IERC1155MintableBurnable.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
-abstract contract ERC1155Handler is IERC1155Handler {
+abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
     function depositERC1155(
         address token_,
         uint256 tokenId_,
