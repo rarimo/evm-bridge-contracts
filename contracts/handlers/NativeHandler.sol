@@ -23,13 +23,16 @@ abstract contract NativeHandler is INativeHandler {
         require(sent_, "NativeHandler: can't send eth");
     }
 
-    function getNativeSignHash(
+    function getNativeMerkleLeaf(
         uint256 amount_,
         address receiver_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        uint256 chainId_
-    ) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(amount_, receiver_, txHash_, txNonce_, chainId_));
+        bytes32 originHash_,
+        string memory chainName_,
+        address verifyingContract_
+    ) public pure override returns (bytes32) {
+        return
+            keccak256(
+                abi.encodePacked(amount_, receiver_, originHash_, chainName_, verifyingContract_)
+            );
     }
 }

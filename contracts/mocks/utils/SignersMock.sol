@@ -4,14 +4,19 @@ pragma solidity ^0.8.9;
 import "../../utils/Signers.sol";
 
 contract SignersMock is Signers {
-    function __SignersMock_init(address[] calldata signers_, uint256 signaturesThreshold_)
-        public
-        initializer
-    {
-        __Signers_init(signers_, signaturesThreshold_);
+    function __SignersMock_init(address signer_) public initializer {
+        __Signers_init(signer_);
     }
 
-    function checkSignatures(bytes32 signHash_, bytes[] calldata signatures_) external view {
-        _checkSignatures(signHash_, signatures_);
+    function checkSignature(bytes32 signHash_, bytes memory signature_) external view {
+        _checkSignature(signHash_, signature_);
+    }
+
+    function checkMerkleSignature(
+        bytes32 merkleLeaf_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_
+    ) external view {
+        _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
     }
 }

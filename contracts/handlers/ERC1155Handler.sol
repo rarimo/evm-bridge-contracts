@@ -49,16 +49,15 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
         }
     }
 
-    function getERC1155SignHash(
+    function getERC1155MerkleLeaf(
         address token_,
         uint256 tokenId_,
         uint256 amount_,
         address receiver_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        uint256 chainId_,
-        bool isWrapped_
-    ) public pure returns (bytes32) {
+        bytes32 originHash_,
+        string memory chainName_,
+        address verifyingContract_
+    ) public pure override returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
@@ -66,10 +65,9 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
                     tokenId_,
                     amount_,
                     receiver_,
-                    txHash_,
-                    txNonce_,
-                    chainId_,
-                    isWrapped_
+                    originHash_,
+                    chainName_,
+                    verifyingContract_
                 )
             );
     }

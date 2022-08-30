@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-
 import "../interfaces/bridge/IBridge.sol";
 
 import "../handlers/ERC20Handler.sol";
@@ -10,12 +8,14 @@ import "../handlers/ERC721Handler.sol";
 import "../handlers/ERC1155Handler.sol";
 import "../handlers/NativeHandler.sol";
 
+import "../proxy/UUPSSignableUpgradeable.sol";
+
 import "../utils/Signers.sol";
 import "../utils/Hashes.sol";
 
 contract Bridge is
     IBridge,
-    UUPSUpgradeable,
+    UUPSSignableUpgradeable,
     Signers,
     Hashes,
     ERC20Handler,
@@ -23,106 +23,117 @@ contract Bridge is
     ERC1155Handler,
     NativeHandler
 {
-    function __Bridge_init(address[] calldata signers_, uint256 signaturesThreshold_)
-        external
-        initializer
-    {
-        __Signers_init(signers_, signaturesThreshold_);
-    }
+    string public chainName;
 
-    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+    function __Bridge_init(address signer_, string calldata chainName_) external initializer {
+        __Signers_init(signer_);
+
+        chainName = chainName_;
+    }
 
     function withdrawERC20(
         address token_,
         uint256 amount_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bool isWrapped_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_,
+        bool isWrapped_
     ) external override {
-        bytes32 signHash_ = getERC20SignHash(
+        bytes32 merkleLeaf_ = getERC20MerkleLeaf(
             token_,
             amount_,
-            msg.sender,
-            txHash_,
-            txNonce_,
-            block.chainid,
-            isWrapped_
+            receiver_,
+            originHash_,
+            chainName,
+            address(this)
         );
 
-        _checkAndUpdateHashes(txHash_, txNonce_);
-        _checkSignatures(signHash_, signatures_);
+        _checkAndUpdateHashes(originHash_);
+        _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
 
-        _withdrawERC20(token_, amount_, msg.sender, isWrapped_);
+        _withdrawERC20(token_, amount_, receiver_, isWrapped_);
     }
 
     function withdrawERC721(
         address token_,
         uint256 tokenId_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bool isWrapped_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_,
+        bool isWrapped_
     ) external override {
-        bytes32 signHash_ = getERC721SignHash(
+        bytes32 merkleLeaf_ = getERC721MerkleLeaf(
             token_,
             tokenId_,
-            msg.sender,
-            txHash_,
-            txNonce_,
-            block.chainid,
-            isWrapped_
+            receiver_,
+            originHash_,
+            chainName,
+            address(this)
         );
 
-        _checkAndUpdateHashes(txHash_, txNonce_);
-        _checkSignatures(signHash_, signatures_);
+        _checkAndUpdateHashes(originHash_);
+        _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
 
-        _withdrawERC721(token_, tokenId_, msg.sender, isWrapped_);
+        _withdrawERC721(token_, tokenId_, receiver_, isWrapped_);
     }
 
     function withdrawERC1155(
         address token_,
         uint256 tokenId_,
         uint256 amount_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bool isWrapped_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_,
+        bool isWrapped_
     ) external override {
-        bytes32 signHash_ = getERC1155SignHash(
+        bytes32 merkleLeaf_ = getERC1155MerkleLeaf(
             token_,
             tokenId_,
             amount_,
-            msg.sender,
-            txHash_,
-            txNonce_,
-            block.chainid,
-            isWrapped_
+            receiver_,
+            originHash_,
+            chainName,
+            address(this)
         );
 
-        _checkAndUpdateHashes(txHash_, txNonce_);
-        _checkSignatures(signHash_, signatures_);
+        _checkAndUpdateHashes(originHash_);
+        _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
 
-        _withdrawERC1155(token_, tokenId_, amount_, msg.sender, isWrapped_);
+        _withdrawERC1155(token_, tokenId_, amount_, receiver_, isWrapped_);
     }
 
     function withdrawNative(
         uint256 amount_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_
     ) external override {
-        bytes32 signHash_ = getNativeSignHash(
+        bytes32 merkleLeaf_ = getNativeMerkleLeaf(
             amount_,
-            msg.sender,
-            txHash_,
-            txNonce_,
-            block.chainid
+            receiver_,
+            originHash_,
+            chainName,
+            address(this)
         );
 
-        _checkAndUpdateHashes(txHash_, txNonce_);
-        _checkSignatures(signHash_, signatures_);
+        _checkAndUpdateHashes(originHash_);
+        _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
 
-        _withdrawNative(amount_, msg.sender);
+        _withdrawNative(amount_, receiver_);
+    }
+
+    function _authorizeUpgrade(address) internal pure override {
+        revert("UUPSSignableUpgradeable: this upgrade method is off");
+    }
+
+    function _authorizeUpgrade(address newImplementation_, bytes memory signature_)
+        internal
+        override
+    {
+        _checkSignature(keccak256(abi.encodePacked(newImplementation_, nonce++)), signature_);
     }
 }

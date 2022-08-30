@@ -30,23 +30,21 @@ interface IERC721Handler {
     ) external;
 
     /**
-     * @notice function for getting sign hash
+     * @notice function for getting the leaf of a merkle tree
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of deposited token
      * @param receiver_ the receiver address in destination network
-     * @param txHash_ the hash of deposit tranaction
-     * @param txNonce_ the nonce of deposit transaction
-     * @param chainId_ the id of chain
-     * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
-     * @return bytes32 keccak256(abi.encodePacked(token_,tokenId_,receiver_,txHash_,txNonce_,chainId_,isWrapped_));
+     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param chainName_ the name of this chain
+     * @param verifyingContract_ this contract address
+     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments
      */
-    function getERC721SignHash(
+    function getERC721MerkleLeaf(
         address token_,
         uint256 tokenId_,
         address receiver_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        uint256 chainId_,
-        bool isWrapped_
+        bytes32 originHash_,
+        string memory chainName_,
+        address verifyingContract_
     ) external pure returns (bytes32);
 }

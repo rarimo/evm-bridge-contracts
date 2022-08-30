@@ -2,74 +2,39 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
-abstract contract Signers is OwnableUpgradeable {
+abstract contract Signers is Initializable {
     using ECDSA for bytes32;
-    using EnumerableSet for EnumerableSet.AddressSet;
+    using MerkleProof for bytes32[];
 
-    uint256 public signaturesThreshold;
+    address public signer;
+    uint256 public nonce;
 
-    EnumerableSet.AddressSet internal _signers;
-
-    function __Signers_init(address[] calldata signers_, uint256 signaturesThreshold_)
-        public
-        onlyInitializing
-    {
-        __Ownable_init();
-
-        addSigners(signers_);
-        setSignaturesThreshold(signaturesThreshold_);
+    function __Signers_init(address signer_) public onlyInitializing {
+        signer = signer_;
     }
 
-    function _checkCorrectSigners(address[] memory signers_) private view {
-        uint256 bitMap;
+    function _checkSignature(bytes32 signHash_, bytes memory signature_) internal view {
+        address signer_ = signHash_.toEthSignedMessageHash().recover(signature_);
 
-        for (uint256 i = 0; i < signers_.length; i++) {
-            require(_signers.contains(signers_[i]), "Signers: invalid signer");
-
-            uint256 bitKey = 2**(uint256(uint160(signers_[i])) >> 152);
-
-            require(bitMap & bitKey == 0, "Signers: duplicate signers");
-
-            bitMap |= bitKey;
-        }
-
-        require(signers_.length >= signaturesThreshold, "Signers: threshold is not met");
+        require(signer == signer_, "Signers: invalid signature");
     }
 
-    function _checkSignatures(bytes32 signHash_, bytes[] calldata signatures_) internal view {
-        address[] memory signers_ = new address[](signatures_.length);
+    function _checkMerkleSignature(
+        bytes32 merkleLeaf_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_
+    ) internal view {
+        bytes32 merkleRoot_ = merklePath_.processProof(merkleLeaf_);
 
-        for (uint256 i = 0; i < signatures_.length; i++) {
-            signers_[i] = signHash_.toEthSignedMessageHash().recover(signatures_[i]);
-        }
-
-        _checkCorrectSigners(signers_);
+        _checkSignature(merkleRoot_, signature_);
     }
 
-    function setSignaturesThreshold(uint256 signaturesThreshold_) public onlyOwner {
-        require(signaturesThreshold_ > 0, "Signers: invalid threshold");
+    function changeSigner(address newSigner_, bytes memory signature_) external {
+        _checkSignature(keccak256(abi.encodePacked(newSigner_, nonce++)), signature_);
 
-        signaturesThreshold = signaturesThreshold_;
-    }
-
-    function addSigners(address[] calldata signers_) public onlyOwner {
-        for (uint256 i = 0; i < signers_.length; i++) {
-            require(signers_[i] != address(0), "Signers: zero signer");
-
-            _signers.add(signers_[i]);
-        }
-    }
-
-    function removeSigners(address[] calldata signers_) public onlyOwner {
-        for (uint256 i = 0; i < signers_.length; i++) {
-            _signers.remove(signers_[i]);
-        }
-    }
-
-    function getSigners() external view returns (address[] memory) {
-        return _signers.values();
+        signer = newSigner_;
     }
 }

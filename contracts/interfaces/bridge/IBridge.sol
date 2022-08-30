@@ -18,45 +18,46 @@ import "../handlers/INativeHandler.sol";
  * Each Bridge contract can either give or take the user assets when they want to transfer tokens. Both liquidity pool
  * and mint-and-burn way of transferring assets are supported.
  *
- * IMPORTANT
- *
- * All of the signers' addresses must differ in they first (the most significant) 8 bits in order to pass a bloom filtering.
  */
 interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHandler {
     /**
      * @notice function for withdrawing erc20 tokens
      * @param token_ the address of withdrawn token
      * @param amount_ the amount of withdrawn tokens
-     * @param txHash_ the hash of deposit tranaction
-     * @param txNonce_ the nonce of deposit transaction
+     * @param receiver_ the address who will receive tokens
+     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param merklePath_ the associative merkle path
+     * @param signature_ the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
-     * @param signatures_ the array of signatures. Formed by signing a sign hash by each signer.
      */
     function withdrawERC20(
         address token_,
         uint256 amount_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bool isWrapped_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_,
+        bool isWrapped_
     ) external;
 
     /**
      * @notice function for withdrawing erc721 tokens
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of withdrawn token
-     * @param txHash_ the hash of deposit tranaction
-     * @param txNonce_ the nonce of deposit transaction
+     * @param receiver_ the address who will receive tokens
+     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param merklePath_ the associative merkle path
+     * @param signature_ the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
-     * @param signatures_ the array of signatures. Formed by signing a sign hash by each signer.
      */
     function withdrawERC721(
         address token_,
         uint256 tokenId_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bool isWrapped_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_,
+        bool isWrapped_
     ) external;
 
     /**
@@ -64,32 +65,36 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of withdrawn token
      * @param amount_ the amount of withdrawn tokens
-     * @param txHash_ the hash of deposit tranaction
-     * @param txNonce_ the nonce of deposit transaction
+     * @param receiver_ the address who will receive tokens
+     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param merklePath_ the associative merkle path
+     * @param signature_ the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
-     * @param signatures_ the array of signatures. Formed by signing a sign hash by each signer.
      */
     function withdrawERC1155(
         address token_,
         uint256 tokenId_,
         uint256 amount_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bool isWrapped_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_,
+        bool isWrapped_
     ) external;
 
     /**
      * @notice function for withdrawing native currency
      * @param amount_ the amount of withdrawn native currency
-     * @param txHash_ the hash of deposit tranaction
-     * @param txNonce_ the nonce of deposit transaction
-     * @param signatures_ the array of signatures. Formed by signing a sign hash by each signer.
+     * @param receiver_ the address who will receive tokens
+     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param merklePath_ the associative merkle path
+     * @param signature_ the signature of a merkle root the signer signed
      */
     function withdrawNative(
         uint256 amount_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        bytes[] calldata signatures_
+        address receiver_,
+        bytes32 originHash_,
+        bytes32[] calldata merklePath_,
+        bytes calldata signature_
     ) external;
 }

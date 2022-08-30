@@ -49,25 +49,23 @@ abstract contract ERC20Handler is IERC20Handler {
         }
     }
 
-    function getERC20SignHash(
+    function getERC20MerkleLeaf(
         address token_,
         uint256 amount_,
         address receiver_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        uint256 chainId_,
-        bool isWrapped_
-    ) public pure returns (bytes32) {
+        bytes32 originHash_,
+        string memory chainName_,
+        address verifyingContract_
+    ) public pure override returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
                     token_,
                     amount_,
                     receiver_,
-                    txHash_,
-                    txNonce_,
-                    chainId_,
-                    isWrapped_
+                    originHash_,
+                    chainName_,
+                    verifyingContract_
                 )
             );
     }

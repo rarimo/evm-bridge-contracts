@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "../../utils/Hashes.sol";
 
 contract HashesMock is Hashes {
-    function checkAndUpdateHashes(bytes32 txHash_, uint256 txNonce_) external {
-        _checkAndUpdateHashes(txHash_, txNonce_);
+    function checkAndUpdateHashes(bytes32 originHash_) external {
+        _checkAndUpdateHashes(originHash_);
     }
 }

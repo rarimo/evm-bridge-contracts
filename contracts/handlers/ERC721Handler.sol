@@ -45,25 +45,23 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
         }
     }
 
-    function getERC721SignHash(
+    function getERC721MerkleLeaf(
         address token_,
         uint256 tokenId_,
         address receiver_,
-        bytes32 txHash_,
-        uint256 txNonce_,
-        uint256 chainId_,
-        bool isWrapped_
-    ) public pure returns (bytes32) {
+        bytes32 originHash_,
+        string memory chainName_,
+        address verifyingContract_
+    ) public pure override returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
                     token_,
                     tokenId_,
                     receiver_,
-                    txHash_,
-                    txNonce_,
-                    chainId_,
-                    isWrapped_
+                    originHash_,
+                    chainName_,
+                    verifyingContract_
                 )
             );
     }
