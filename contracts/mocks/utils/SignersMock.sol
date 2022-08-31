@@ -8,7 +8,7 @@ contract SignersMock is Signers {
         __Signers_init(signer_);
     }
 
-    function checkSignature(bytes32 signHash_, bytes memory signature_) external view {
+    function checkSignature(bytes32 signHash_, bytes calldata signature_) external view {
         _checkSignature(signHash_, signature_);
     }
 

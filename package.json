@@ -36,6 +36,7 @@
     "@truffle/deployer": "3.2.56",
     "@truffle/reporters": "1.1.2",
     "@metamask/eth-sig-util": "^4.0.0",
+    "merkletreejs": "^0.2.32",
     "bignumber.js": "^9.0.1",
     "chai": "^4.3.4",
     "hardhat-contract-sizer": "^2.1.1",

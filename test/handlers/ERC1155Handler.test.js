@@ -38,6 +38,7 @@ describe("ERC1155Handler", () => {
       assert.equal(tx.receipt.logs[0].event, "DepositedERC1155");
       assert.equal(tx.receipt.logs[0].args.token, token.address);
       assert.equal(tx.receipt.logs[0].args.tokenId, baseId);
+      assert.equal(tx.receipt.logs[0].args.amount, baseAmount);
       assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.equal(tx.receipt.logs[0].args.network, "kovan");
       assert.isTrue(tx.receipt.logs[0].args.isWrapped);
@@ -51,6 +52,7 @@ describe("ERC1155Handler", () => {
       assert.equal(tx.receipt.logs[0].event, "DepositedERC1155");
       assert.equal(tx.receipt.logs[0].args.token, token.address);
       assert.equal(tx.receipt.logs[0].args.tokenId, baseId);
+      assert.equal(tx.receipt.logs[0].args.amount, baseAmount);
       assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.equal(tx.receipt.logs[0].args.network, "kovan");
       assert.isFalse(tx.receipt.logs[0].args.isWrapped);
@@ -79,70 +81,61 @@ describe("ERC1155Handler", () => {
     });
   });
 
-  describe("getERC1155SignHash", () => {
+  describe("getERC1155MerkleLeaf", () => {
     it("should encode args", async () => {
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
-      let expectedChainId = 31378;
-      let expectedIsWrapped = true;
+      let originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let signHash0 = await handler.getERC1155SignHash(
+      let merkleLeaf0 = await handler.getERC1155MerkleLeaf(
         token.address,
         baseId,
         baseAmount,
         OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId,
-        expectedIsWrapped
+        originHash,
+        "ethereum",
+        handler.address
       );
 
       assert.equal(
-        signHash0,
+        merkleLeaf0,
         web3.utils.soliditySha3(
           { value: token.address, type: "address" },
           { value: baseId, type: "uint256" },
           { value: baseAmount, type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" },
-          { value: expectedIsWrapped, type: "bool" }
+          { value: originHash, type: "bytes32" },
+          { value: "ethereum", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      expectedIsWrapped = false;
-
-      let signHash1 = await handler.getERC1155SignHash(
+      let merkleLeaf1 = await handler.getERC1155MerkleLeaf(
         token.address,
         baseId,
         baseAmount,
         OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId,
-        expectedIsWrapped
+        originHash,
+        "BSC",
+        handler.address
       );
 
       assert.equal(
-        signHash1,
+        merkleLeaf1,
         web3.utils.soliditySha3(
           { value: token.address, type: "address" },
           { value: baseId, type: "uint256" },
           { value: baseAmount, type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" },
-          { value: expectedIsWrapped, type: "bool" }
+          { value: originHash, type: "bytes32" },
+          { value: "BSC", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      assert.notEqual(signHash0, signHash1);
+      assert.notEqual(merkleLeaf0, merkleLeaf1);
     });
   });
 
-  describe("withdrawERC721", () => {
+  describe("withdrawERC1155", () => {
     it("should withdraw 100 tokens, wrapped = true", async () => {
       await handler.depositERC1155(token.address, baseId, baseAmount, "receiver", "kovan", true);
       await handler.withdrawERC1155(token.address, baseId, baseAmount, OWNER, true);

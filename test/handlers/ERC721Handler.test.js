@@ -63,62 +63,57 @@ describe("ERC721Handler", () => {
     });
   });
 
-  describe("getERC721SignHash", () => {
+  describe("getERC721MerkleLeaf", () => {
     it("should encode args", async () => {
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
-      let expectedChainId = 31378;
-      let expectedIsWrapped = true;
+      let originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let signHash0 = await handler.getERC721SignHash(
+      let merkleLeaf0 = await handler.getERC721MerkleLeaf(
         token.address,
         baseId,
+        "1",
         OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId,
-        expectedIsWrapped
+        originHash,
+        "ethereum",
+        handler.address
       );
 
       assert.equal(
-        signHash0,
+        merkleLeaf0,
         web3.utils.soliditySha3(
           { value: token.address, type: "address" },
           { value: baseId, type: "uint256" },
+          { value: "1", type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" },
-          { value: expectedIsWrapped, type: "bool" }
+          { value: originHash, type: "bytes32" },
+          { value: "ethereum", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      expectedIsWrapped = false;
-
-      let signHash1 = await handler.getERC721SignHash(
+      let merkleLeaf1 = await handler.getERC721MerkleLeaf(
         token.address,
         baseId,
+        "1",
         OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId,
-        expectedIsWrapped
+        originHash,
+        "BSC",
+        handler.address
       );
 
       assert.equal(
-        signHash1,
+        merkleLeaf1,
         web3.utils.soliditySha3(
           { value: token.address, type: "address" },
           { value: baseId, type: "uint256" },
+          { value: "1", type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" },
-          { value: expectedIsWrapped, type: "bool" }
+          { value: originHash, type: "bytes32" },
+          { value: "BSC", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      assert.notEqual(signHash0, signHash1);
+      assert.notEqual(merkleLeaf0, merkleLeaf1);
     });
   });
 

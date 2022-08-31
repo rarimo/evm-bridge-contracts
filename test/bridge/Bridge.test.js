@@ -1,5 +1,6 @@
 const { assert } = require("chai");
-const { accounts, wei } = require("../../scripts/helpers/utils");
+const { accounts, wei, toBN } = require("../../scripts/helpers/utils");
+const { constructTree, getProof, getRoot } = require("../../scripts/helpers/merkletree");
 const ethSigUtil = require("@metamask/eth-sig-util");
 
 const Bridge = artifacts.require("Bridge");
@@ -15,24 +16,34 @@ Bridge.numberFormat = "BigNumber";
 const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 describe("Bridge", () => {
+  const existingLeaves = [
+    "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956471",
+    "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956472",
+    "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956473",
+    "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956474",
+    "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956475",
+  ];
+
   const baseBalance = wei("1000");
   const baseId = "5000";
-  const txHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-  const txNonce = "1794147";
+  const originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
+
+  let OWNER;
+  let SECOND;
 
   let bridge;
-  let OWNER;
   let erc20;
   let erc721;
   let erc1155;
 
   before("setup", async () => {
     OWNER = await accounts(0);
+    SECOND = await accounts(1);
   });
 
   beforeEach("setup", async () => {
     bridge = await Bridge.new();
-    await bridge.__Bridge_init([await accounts(0)], "1");
+    await bridge.__Bridge_init(OWNER, "ethereum");
 
     erc20 = await ERC20MB.new("Mock", "MK", OWNER);
     await erc20.mintTo(OWNER, baseBalance);
@@ -53,98 +64,166 @@ describe("Bridge", () => {
 
   describe("ERC20 flow", () => {
     it("should withdrawERC20", async () => {
-      const expectedAmount = wei("100");
-      const expectedIsWrapped = true;
+      const isWrapped = true;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-      const hash = web3.utils.soliditySha3({ value: txHash, type: "bytes32" }, { value: txNonce, type: "uint256" });
 
-      const signHash = await bridge.getERC20SignHash(
-        erc20.address,
-        expectedAmount,
-        OWNER,
-        txHash,
-        txNonce,
-        await web3.eth.getChainId(),
-        expectedIsWrapped
+      let tx = await bridge.depositERC20(erc20.address, baseBalance, OWNER, "ethereum", isWrapped);
+
+      let leaf = await bridge.getERC20MerkleLeaf(
+        tx.receipt.logs[0].args.token,
+        tx.receipt.logs[0].args.amount,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        tx.receipt.logs[0].args.network,
+        bridge.address
       );
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
 
-      await bridge.depositERC20(erc20.address, expectedAmount, "receiver", "kovan", true);
-      await bridge.withdrawERC20(erc20.address, expectedAmount, txHash, txNonce, expectedIsWrapped, [signature]);
+      existingLeaves.push(leaf);
+
+      const tree = constructTree(existingLeaves);
+      const root = getRoot(tree);
+      const proof = getProof(leaf, tree);
+
+      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+
+      await bridge.withdrawERC20(
+        tx.receipt.logs[0].args.token,
+        tx.receipt.logs[0].args.amount,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        proof,
+        signature,
+        isWrapped
+      );
 
       assert.equal((await erc20.balanceOf(OWNER)).toFixed(), baseBalance);
       assert.equal(await erc20.balanceOf(bridge.address), "0");
 
-      assert.isTrue(await bridge.usedHashes(hash));
+      assert.isTrue(await bridge.usedHashes(originHash));
     });
   });
 
   describe("ERC721 flow", () => {
     it("should withdrawERC721", async () => {
-      const expectedIsWrapped = true;
+      const isWrapped = true;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-      const hash = web3.utils.soliditySha3({ value: txHash, type: "bytes32" }, { value: txNonce, type: "uint256" });
 
-      const signHash = await bridge.getERC721SignHash(
-        erc721.address,
-        baseId,
-        OWNER,
-        txHash,
-        txNonce,
-        await web3.eth.getChainId(),
-        expectedIsWrapped
+      let tx = await bridge.depositERC721(erc721.address, baseId, OWNER, "ethereum", isWrapped);
+
+      let leaf = await bridge.getERC721MerkleLeaf(
+        tx.receipt.logs[0].args.token,
+        tx.receipt.logs[0].args.tokenId,
+        "1",
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        tx.receipt.logs[0].args.network,
+        bridge.address
       );
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
 
-      await bridge.depositERC721(erc721.address, baseId, "receiver", "kovan", expectedIsWrapped);
-      await bridge.withdrawERC721(erc721.address, baseId, txHash, txNonce, expectedIsWrapped, [signature]);
+      existingLeaves.push(leaf);
+
+      const tree = constructTree(existingLeaves);
+      const root = getRoot(tree);
+      const proof = getProof(leaf, tree);
+
+      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+
+      await bridge.withdrawERC721(
+        tx.receipt.logs[0].args.token,
+        tx.receipt.logs[0].args.tokenId,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        proof,
+        signature,
+        isWrapped
+      );
 
       assert.equal(await erc721.ownerOf(baseId), OWNER);
-      assert.isTrue(await bridge.usedHashes(hash));
+
+      assert.isTrue(await bridge.usedHashes(originHash));
     });
   });
 
   describe("ERC1155 flow", () => {
     it("should withdrawERC1155", async () => {
-      const expectedIsWrapped = true;
+      const isWrapped = true;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-      const hash = web3.utils.soliditySha3({ value: txHash, type: "bytes32" }, { value: txNonce, type: "uint256" });
 
-      const signHash = await bridge.getERC1155SignHash(
-        erc1155.address,
-        baseId,
-        baseBalance,
-        OWNER,
-        txHash,
-        txNonce,
-        await web3.eth.getChainId(),
-        expectedIsWrapped
+      let tx = await bridge.depositERC1155(erc1155.address, baseId, baseBalance, OWNER, "ethereum", isWrapped);
+
+      let leaf = await bridge.getERC721MerkleLeaf(
+        tx.receipt.logs[0].args.token,
+        tx.receipt.logs[0].args.tokenId,
+        tx.receipt.logs[0].args.amount,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        tx.receipt.logs[0].args.network,
+        bridge.address
       );
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
 
-      await bridge.depositERC1155(erc1155.address, baseId, baseBalance, "receiver", "kovan", expectedIsWrapped);
-      await bridge.withdrawERC1155(erc1155.address, baseId, baseBalance, txHash, txNonce, expectedIsWrapped, [
+      existingLeaves.push(leaf);
+
+      const tree = constructTree(existingLeaves);
+      const root = getRoot(tree);
+      const proof = getProof(leaf, tree);
+
+      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+
+      await bridge.withdrawERC1155(
+        tx.receipt.logs[0].args.token,
+        tx.receipt.logs[0].args.tokenId,
+        tx.receipt.logs[0].args.amount,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        proof,
         signature,
-      ]);
+        isWrapped
+      );
 
+      assert.equal((await erc1155.balanceOf(bridge.address, baseId)).toFixed(), "0");
       assert.equal((await erc1155.balanceOf(OWNER, baseId)).toFixed(), baseBalance);
-      assert.isTrue(await bridge.usedHashes(hash));
+
+      assert.isTrue(await bridge.usedHashes(originHash));
     });
   });
 
   describe("Native flow", () => {
     it("should withdrawNative", async () => {
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-      const hash = web3.utils.soliditySha3({ value: txHash, type: "bytes32" }, { value: txNonce, type: "uint256" });
 
-      const signHash = await bridge.getNativeSignHash(baseBalance, OWNER, txHash, txNonce, await web3.eth.getChainId());
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
+      let tx = await bridge.depositNative(OWNER, "ethereum", { value: baseBalance });
 
-      await bridge.depositNative("receiver", "kovan", { value: baseBalance });
-      await bridge.withdrawNative(baseBalance, txHash, txNonce, [signature]);
+      let leaf = await bridge.getNativeMerkleLeaf(
+        tx.receipt.logs[0].args.amount,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        tx.receipt.logs[0].args.network,
+        bridge.address
+      );
 
-      assert.equal(await web3.eth.getBalance(bridge.address), 0);
-      assert.isTrue(await bridge.usedHashes(hash));
+      existingLeaves.push(leaf);
+
+      const tree = constructTree(existingLeaves);
+      const root = getRoot(tree);
+      const proof = getProof(leaf, tree);
+
+      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+
+      const prevBalance = await web3.eth.getBalance(OWNER);
+
+      await bridge.withdrawNative(
+        tx.receipt.logs[0].args.amount,
+        tx.receipt.logs[0].args.receiver,
+        originHash,
+        proof,
+        signature,
+        { from: SECOND }
+      );
+
+      assert.equal(await web3.eth.getBalance(OWNER), toBN(prevBalance).plus(baseBalance).toFixed());
+      assert.equal(await web3.eth.getBalance(bridge.address), "0");
+
+      assert.isTrue(await bridge.usedHashes(originHash));
     });
   });
 });

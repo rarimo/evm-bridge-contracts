@@ -67,6 +67,7 @@ contract Bridge is
         bytes32 merkleLeaf_ = getERC721MerkleLeaf(
             token_,
             tokenId_,
+            1,
             receiver_,
             originHash_,
             chainName,
@@ -127,13 +128,16 @@ contract Bridge is
     }
 
     function _authorizeUpgrade(address) internal pure override {
-        revert("UUPSSignableUpgradeable: this upgrade method is off");
+        revert("Bridge: this upgrade method is off");
     }
 
     function _authorizeUpgrade(address newImplementation_, bytes memory signature_)
         internal
         override
     {
-        _checkSignature(keccak256(abi.encodePacked(newImplementation_, nonce++)), signature_);
+        _checkSignature(
+            keccak256(abi.encodePacked(newImplementation_, block.chainid, nonce++, address(this))),
+            signature_
+        );
     }
 }

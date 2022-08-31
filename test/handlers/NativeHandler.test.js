@@ -26,7 +26,7 @@ describe("NativeHandler", () => {
 
       assert.equal(await web3.eth.getBalance(handler.address), baseAmount);
       assert.equal(tx.receipt.logs[0].event, "DepositedNative");
-      assert.equal(tx.receipt.logs[0].args.tokenAmount, baseAmount);
+      assert.equal(tx.receipt.logs[0].args.amount, baseAmount);
       assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.equal(tx.receipt.logs[0].args.network, "kovan");
     });
@@ -36,45 +36,37 @@ describe("NativeHandler", () => {
     });
   });
 
-  describe("getNativeSignHash", () => {
+  describe("getNativeMerkleLeaf", () => {
     it("should encode args", async () => {
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
-      let expectedChainId = 31378;
+      let originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let signHash0 = await handler.getNativeSignHash(
-        baseAmount,
-        OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId
-      );
+      let merkleLeaf0 = await handler.getNativeMerkleLeaf(baseAmount, OWNER, originHash, "ethereum", handler.address);
 
       assert.equal(
-        signHash0,
+        merkleLeaf0,
         web3.utils.soliditySha3(
           { value: baseAmount, type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" }
+          { value: originHash, type: "bytes32" },
+          { value: "ethereum", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      let signHash1 = await handler.getNativeSignHash(wei("1"), OWNER, expectedTxHash, expectedNonce, expectedChainId);
+      let merkleLeaf1 = await handler.getNativeMerkleLeaf(wei("1"), OWNER, originHash, "BSC", handler.address);
 
       assert.equal(
-        signHash1,
+        merkleLeaf1,
         web3.utils.soliditySha3(
           { value: wei("1"), type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" }
+          { value: originHash, type: "bytes32" },
+          { value: "BSC", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      assert.notEqual(signHash0, signHash1);
+      assert.notEqual(merkleLeaf0, merkleLeaf1);
     });
   });
 

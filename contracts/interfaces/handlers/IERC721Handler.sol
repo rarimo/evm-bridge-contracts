@@ -33,6 +33,7 @@ interface IERC721Handler {
      * @notice function for getting the leaf of a merkle tree
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of deposited token
+     * @param amount_ should always equal 1
      * @param receiver_ the receiver address in destination network
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param chainName_ the name of this chain
@@ -42,6 +43,7 @@ interface IERC721Handler {
     function getERC721MerkleLeaf(
         address token_,
         uint256 tokenId_,
+        uint256 amount_,
         address receiver_,
         bytes32 originHash_,
         string memory chainName_,

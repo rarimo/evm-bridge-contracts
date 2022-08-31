@@ -77,82 +77,73 @@ describe("ERC20Handler", () => {
     });
   });
 
-  describe("getERC20SignHash", () => {
+  describe("getERC20MerkleLeaf", () => {
     it("should encode args", async () => {
-      let expectedAmount = wei("100");
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
-      let expectedChainId = 31378;
-      let expectedIsWrapped = true;
+      let amount = wei("100");
+      let originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let signHash0 = await handler.getERC20SignHash(
+      let merkleLeaf0 = await handler.getERC20MerkleLeaf(
         token.address,
-        expectedAmount,
+        amount,
         OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId,
-        expectedIsWrapped
+        originHash,
+        "ethereum",
+        handler.address
       );
 
       assert.equal(
-        signHash0,
+        merkleLeaf0,
         web3.utils.soliditySha3(
           { value: token.address, type: "address" },
-          { value: expectedAmount, type: "uint256" },
+          { value: amount, type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" },
-          { value: expectedIsWrapped, type: "bool" }
+          { value: originHash, type: "bytes32" },
+          { value: "ethereum", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      expectedIsWrapped = false;
-
-      let signHash1 = await handler.getERC20SignHash(
+      let merkleLeaf1 = await handler.getERC20MerkleLeaf(
         token.address,
-        expectedAmount,
+        amount,
         OWNER,
-        expectedTxHash,
-        expectedNonce,
-        expectedChainId,
-        expectedIsWrapped
+        originHash,
+        "BSC",
+        handler.address
       );
 
       assert.equal(
-        signHash1,
+        merkleLeaf1,
         web3.utils.soliditySha3(
           { value: token.address, type: "address" },
-          { value: expectedAmount, type: "uint256" },
+          { value: amount, type: "uint256" },
           { value: OWNER, type: "address" },
-          { value: expectedTxHash, type: "bytes32" },
-          { value: expectedNonce, type: "uint256" },
-          { value: expectedChainId, type: "uint256" },
-          { value: expectedIsWrapped, type: "bool" }
+          { value: originHash, type: "bytes32" },
+          { value: "BSC", type: "string" },
+          { value: handler.address, type: "address" }
         )
       );
 
-      assert.notEqual(signHash0, signHash1);
+      assert.notEqual(merkleLeaf0, merkleLeaf1);
     });
   });
 
   describe("withdrawERC20", () => {
     it("should withdraw 100 tokens, is wrapped = true", async () => {
-      let expectedAmount = wei("100");
+      let amount = wei("100");
 
-      await handler.depositERC20(token.address, expectedAmount, "receiver", "kovan", true);
-      await handler.withdrawERC20(token.address, expectedAmount, OWNER, true);
+      await handler.depositERC20(token.address, amount, "receiver", "kovan", true);
+      await handler.withdrawERC20(token.address, amount, OWNER, true);
 
       assert.equal((await token.balanceOf(OWNER)).toFixed(), baseBalance);
       assert.equal(await token.balanceOf(handler.address), "0");
     });
 
     it("should withdraw 52 tokens, is wrapped = false", async () => {
-      let expectedAmount = wei("52");
+      let amount = wei("52");
 
-      await handler.depositERC20(token.address, expectedAmount, "receiver", "kovan", false);
-      await handler.withdrawERC20(token.address, expectedAmount, OWNER, false);
+      await handler.depositERC20(token.address, amount, "receiver", "kovan", false);
+      await handler.withdrawERC20(token.address, amount, OWNER, false);
 
       assert.equal((await token.balanceOf(OWNER)).toFixed(), baseBalance);
       assert.equal(await token.balanceOf(handler.address), "0");

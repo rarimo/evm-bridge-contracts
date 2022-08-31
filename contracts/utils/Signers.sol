@@ -33,7 +33,10 @@ abstract contract Signers is Initializable {
     }
 
     function changeSigner(address newSigner_, bytes memory signature_) external {
-        _checkSignature(keccak256(abi.encodePacked(newSigner_, nonce++)), signature_);
+        _checkSignature(
+            keccak256(abi.encodePacked(newSigner_, block.chainid, nonce++, address(this))),
+            signature_
+        );
 
         signer = newSigner_;
     }

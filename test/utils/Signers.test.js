@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { accounts } = require("../../scripts/helpers/utils");
+const { constructTree, getProof, getRoot } = require("../../scripts/helpers/merkletree");
 const truffleAssert = require("truffle-assertions");
 const ethSigUtil = require("@metamask/eth-sig-util");
 
@@ -11,171 +12,130 @@ const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784
 const ANOTHER_PRIVATE_KEY = "df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e";
 
 describe("Signers", () => {
+  let OWNER;
+  let SECOND;
+
   let signers;
+
+  before("setup", async () => {
+    OWNER = await accounts(0);
+    SECOND = await accounts(0);
+  });
 
   beforeEach("setup", async () => {
     signers = await Signers.new();
-    await signers.__SignersMock_init([await accounts(0)], "1");
-  });
 
-  describe("setSignaturesThreshold", () => {
-    it("should set signaturesThreshold", async () => {
-      let expectedSignaturesThreshold = 1;
-
-      await signers.setSignaturesThreshold(expectedSignaturesThreshold);
-
-      assert.equal(expectedSignaturesThreshold, await signers.signaturesThreshold());
-    });
-
-    it("should revert when try to set signaturesThreshold to 0", async () => {
-      let expectedSignaturesThreshold = 0;
-
-      await truffleAssert.reverts(
-        signers.setSignaturesThreshold(expectedSignaturesThreshold),
-        "Signers: invalid threshold"
-      );
-    });
-  });
-
-  describe("addSigners", () => {
-    it("should add signers", async () => {
-      let expectedSigners = [await accounts(0), await accounts(1), await accounts(2)];
-
-      await signers.addSigners(expectedSigners);
-
-      assert.deepEqual(expectedSigners, await signers.getSigners());
-    });
-
-    it("should revert when try add zero address signer", async () => {
-      let expectedSigners = [await accounts(0), "0x0000000000000000000000000000000000000000", await accounts(2)];
-
-      await truffleAssert.reverts(signers.addSigners(expectedSigners), "Signers: zero signer");
-    });
-  });
-
-  describe("removeSigners", () => {
-    it("should remove signers", async () => {
-      let signersToAdd = [await accounts(0), await accounts(1), await accounts(2)];
-      let signersToRemove = [await accounts(0), await accounts(2)];
-
-      await signers.addSigners(signersToAdd);
-      await signers.removeSigners(signersToRemove);
-
-      assert.deepEqual(await signers.getSigners(), [await accounts(1)]);
-    });
+    await signers.__SignersMock_init(OWNER);
   });
 
   describe("checkSignatures", () => {
-    let signersToAdd;
-
-    beforeEach("", async () => {
-      signersToAdd = [await accounts(0), await accounts(1), await accounts(2)];
-      await signers.addSigners(signersToAdd);
-    });
-
     it("should check signatures", async () => {
-      await signers.addSigners([await accounts(19)]);
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-      const anotherPrivateKey = Buffer.from(ANOTHER_PRIVATE_KEY, "hex");
+      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
+      const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
+      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
 
-      let signHash = web3.utils.soliditySha3(
-        { value: "0x76e98f7d84603AEb97cd1c89A80A9e914f181679", type: "address" },
-        { value: "1", type: "uint256" },
-        { value: await accounts(0), type: "address" },
-        { value: expectedTxHash, type: "bytes32" },
-        { value: expectedNonce, type: "uint256" },
-        { value: "98", type: "uint256" },
-        { value: true, type: "bool" }
-      );
-
-      let signature1 = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
-      let signature2 = ethSigUtil.personalSign({ privateKey: anotherPrivateKey, data: signHash });
-
-      await truffleAssert.passes(signers.checkSignatures(signHash, [signature1, signature2]));
+      await truffleAssert.passes(signers.checkSignature(hashToSign, signature));
     });
 
-    it("should revert when try duplicate signers", async () => {
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
+    it("should revert when signer in not signer", async () => {
+      const anotherKey = Buffer.from(ANOTHER_PRIVATE_KEY, "hex");
+      const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let signHash = web3.utils.soliditySha3(
-        { value: "0x76e98f7d84603AEb97cd1c89A80A9e914f181679", type: "address" },
-        { value: "1", type: "uint256" },
-        { value: await accounts(0), type: "address" },
-        { value: expectedTxHash, type: "bytes32" },
-        { value: expectedNonce, type: "uint256" },
-        { value: "98", type: "uint256" },
-        { value: true, type: "bool" }
-      );
+      const signature = ethSigUtil.personalSign({ privateKey: anotherKey, data: hashToSign });
 
-      let signature = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
+      await truffleAssert.reverts(signers.checkSignature(hashToSign, signature), "Signers: invalid signature");
+    });
+
+    it("should revert when passing wrong data", async () => {
+      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
+      const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
+      const fakeHash = "0xd4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
+
+      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+
+      await truffleAssert.reverts(signers.checkSignature(fakeHash, signature), "Signers: invalid signature");
+    });
+  });
+
+  describe("checkMerkleSignature", () => {
+    let leaves;
+    let tree;
+
+    beforeEach("setup", async () => {
+      leaves = [
+        "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956471",
+        "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956472",
+        "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956473",
+        "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956474",
+        "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956475",
+      ];
+
+      tree = constructTree(leaves);
+    });
+
+    it("should verify signed merkle root", async () => {
+      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
+      const leaf = leaves[0];
+      const hashToSign = getRoot(tree);
+      const proof = getProof(leaf, tree);
+
+      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+
+      await truffleAssert.passes(signers.checkMerkleSignature(leaf, proof, signature));
+    });
+
+    it("should revert if passed merkle leaf is wrong", async () => {
+      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
+      const leaf = leaves[0];
+      const hashToSign = getRoot(tree);
+      const proof = getProof(leaf, tree);
+
+      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
 
       await truffleAssert.reverts(
-        signers.checkSignatures(signHash, [signature, signature]),
-        "Signers: duplicate signers"
+        signers.checkMerkleSignature(leaves[1], proof, signature),
+        "Signers: invalid signature"
       );
     });
+  });
 
-    it("should revert when try sign by not signer", async () => {
-      const privateKey = Buffer.from(ANOTHER_PRIVATE_KEY, "hex");
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
+  describe("changeSigner", () => {
+    it("should correctly change signer", async () => {
+      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let signHash = web3.utils.soliditySha3(
-        { value: "0x76e98f7d84603AEb97cd1c89A80A9e914f181679", type: "address" },
-        { value: "1", type: "uint256" },
-        { value: await accounts(0), type: "address" },
-        { value: expectedTxHash, type: "bytes32" },
-        { value: expectedNonce, type: "uint256" },
-        { value: "98", type: "uint256" },
-        { value: true, type: "bool" }
+      assert.equal(await signers.signer(), OWNER);
+      assert.equal(await signers.nonce(), "0");
+
+      const hashToSign = web3.utils.soliditySha3(
+        { value: SECOND, type: "address" },
+        { value: "31337", type: "uint256" },
+        { value: "0", type: "uint256" },
+        { value: signers.address, type: "address" }
       );
 
-      let signature = ethSigUtil.personalSign({ privateKey: privateKey, data: signHash });
+      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
 
-      await truffleAssert.reverts(signers.checkSignatures(signHash, [signature]), "Signers: invalid signer");
+      await signers.changeSigner(SECOND, signature);
+
+      assert.equal(await signers.signer(), SECOND);
+      assert.equal(await signers.nonce(), "1");
     });
 
-    it("should revert when try signers < threshold", async () => {
-      await signers.setSignaturesThreshold(1);
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
+    it("should not change signer if bad signature is passed", async () => {
+      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let signHash = web3.utils.soliditySha3(
-        { value: "0x76e98f7d84603AEb97cd1c89A80A9e914f181679", type: "address" },
-        { value: "1", type: "uint256" },
-        { value: await accounts(0), type: "address" },
-        { value: expectedTxHash, type: "bytes32" },
-        { value: expectedNonce, type: "uint256" },
-        { value: "98", type: "uint256" },
-        { value: true, type: "bool" }
+      const hashToSign = web3.utils.soliditySha3(
+        { value: SECOND, type: "address" },
+        { value: "31337", type: "uint256" },
+        { value: "0", type: "uint256" },
+        { value: signers.address, type: "address" }
       );
+      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
 
-      await truffleAssert.reverts(signers.checkSignatures(signHash, []), "Signers: threshold is not met");
-    });
+      await signers.changeSigner(SECOND, signature);
 
-    it("should revert when pass incorrect", async () => {
-      let expectedTxHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
-      let expectedNonce = "1794147";
-
-      let signHash = web3.utils.soliditySha3(
-        { value: "0x76e98f7d84603AEb97cd1c89A80A9e914f181679", type: "address" },
-        { value: "1", type: "uint256" },
-        { value: await accounts(0), type: "address" },
-        { value: expectedTxHash, type: "bytes32" },
-        { value: expectedNonce, type: "uint256" },
-        { value: "98", type: "uint256" },
-        { value: true, type: "bool" }
-      );
-
-      await truffleAssert.reverts(
-        signers.checkSignatures(signHash, [expectedTxHash]),
-        "ECDSA: invalid signature length"
-      );
+      await truffleAssert.reverts(signers.changeSigner(SECOND, signature), "Signers: invalid signature");
     });
   });
 });

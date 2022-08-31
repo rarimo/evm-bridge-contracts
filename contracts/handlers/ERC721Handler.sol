@@ -48,6 +48,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
     function getERC721MerkleLeaf(
         address token_,
         uint256 tokenId_,
+        uint256 amount_,
         address receiver_,
         bytes32 originHash_,
         string memory chainName_,
@@ -58,6 +59,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
                 abi.encodePacked(
                     token_,
                     tokenId_,
+                    amount_,
                     receiver_,
                     originHash_,
                     chainName_,
