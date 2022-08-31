@@ -9,6 +9,7 @@ ERC20MB.numberFormat = "BigNumber";
 ERC20HandlerMock.numberFormat = "BigNumber";
 
 describe("ERC20Handler", () => {
+  const chainName = "ethereum";
   const baseBalance = wei("1000000");
 
   let OWNER;
@@ -87,7 +88,7 @@ describe("ERC20Handler", () => {
         amount,
         OWNER,
         originHash,
-        "ethereum",
+        chainName,
         handler.address
       );
 
@@ -98,7 +99,7 @@ describe("ERC20Handler", () => {
           { value: amount, type: "uint256" },
           { value: OWNER, type: "address" },
           { value: originHash, type: "bytes32" },
-          { value: "ethereum", type: "string" },
+          { value: chainName, type: "string" },
           { value: handler.address, type: "address" }
         )
       );

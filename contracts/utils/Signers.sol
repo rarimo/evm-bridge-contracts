@@ -12,8 +12,11 @@ abstract contract Signers is Initializable {
     address public signer;
     uint256 public nonce;
 
-    function __Signers_init(address signer_) public onlyInitializing {
+    string public chainName;
+
+    function __Signers_init(address signer_, string memory chainName_) public onlyInitializing {
         signer = signer_;
+        chainName = chainName_;
     }
 
     function _checkSignature(bytes32 signHash_, bytes memory signature_) internal view {
@@ -34,7 +37,7 @@ abstract contract Signers is Initializable {
 
     function changeSigner(address newSigner_, bytes memory signature_) external {
         _checkSignature(
-            keccak256(abi.encodePacked(newSigner_, block.chainid, nonce++, address(this))),
+            keccak256(abi.encodePacked(newSigner_, chainName, nonce++, address(this))),
             signature_
         );
 

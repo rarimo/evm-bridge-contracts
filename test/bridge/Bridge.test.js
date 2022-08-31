@@ -24,6 +24,8 @@ describe("Bridge", () => {
     "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a5956475",
   ];
 
+  const chainName = "ethereum";
+
   const baseBalance = wei("1000");
   const baseId = "5000";
   const originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
@@ -43,7 +45,7 @@ describe("Bridge", () => {
 
   beforeEach("setup", async () => {
     bridge = await Bridge.new();
-    await bridge.__Bridge_init(OWNER, "ethereum");
+    await bridge.__Bridge_init(OWNER, chainName);
 
     erc20 = await ERC20MB.new("Mock", "MK", OWNER);
     await erc20.mintTo(OWNER, baseBalance);
@@ -67,7 +69,7 @@ describe("Bridge", () => {
       const isWrapped = true;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let tx = await bridge.depositERC20(erc20.address, baseBalance, OWNER, "ethereum", isWrapped);
+      let tx = await bridge.depositERC20(erc20.address, baseBalance, OWNER, chainName, isWrapped);
 
       let leaf = await bridge.getERC20MerkleLeaf(
         tx.receipt.logs[0].args.token,
@@ -108,7 +110,7 @@ describe("Bridge", () => {
       const isWrapped = true;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let tx = await bridge.depositERC721(erc721.address, baseId, OWNER, "ethereum", isWrapped);
+      let tx = await bridge.depositERC721(erc721.address, baseId, OWNER, chainName, isWrapped);
 
       let leaf = await bridge.getERC721MerkleLeaf(
         tx.receipt.logs[0].args.token,
@@ -149,7 +151,7 @@ describe("Bridge", () => {
       const isWrapped = true;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let tx = await bridge.depositERC1155(erc1155.address, baseId, baseBalance, OWNER, "ethereum", isWrapped);
+      let tx = await bridge.depositERC1155(erc1155.address, baseId, baseBalance, OWNER, chainName, isWrapped);
 
       let leaf = await bridge.getERC721MerkleLeaf(
         tx.receipt.logs[0].args.token,
@@ -191,7 +193,7 @@ describe("Bridge", () => {
     it("should withdrawNative", async () => {
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let tx = await bridge.depositNative(OWNER, "ethereum", { value: baseBalance });
+      let tx = await bridge.depositNative(OWNER, chainName, { value: baseBalance });
 
       let leaf = await bridge.getNativeMerkleLeaf(
         tx.receipt.logs[0].args.amount,

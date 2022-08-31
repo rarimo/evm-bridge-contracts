@@ -23,12 +23,8 @@ contract Bridge is
     ERC1155Handler,
     NativeHandler
 {
-    string public chainName;
-
     function __Bridge_init(address signer_, string calldata chainName_) external initializer {
-        __Signers_init(signer_);
-
-        chainName = chainName_;
+        __Signers_init(signer_, chainName_);
     }
 
     function withdrawERC20(
@@ -136,7 +132,7 @@ contract Bridge is
         override
     {
         _checkSignature(
-            keccak256(abi.encodePacked(newImplementation_, block.chainid, nonce++, address(this))),
+            keccak256(abi.encodePacked(newImplementation_, chainName, nonce++, address(this))),
             signature_
         );
     }

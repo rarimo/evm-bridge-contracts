@@ -9,6 +9,7 @@ ERC1155MB.numberFormat = "BigNumber";
 ERC1155HandlerMock.numberFormat = "BigNumber";
 
 describe("ERC1155Handler", () => {
+  const chainName = "ethereum";
   const baseAmount = "10";
   const baseId = "5000";
 
@@ -91,7 +92,7 @@ describe("ERC1155Handler", () => {
         baseAmount,
         OWNER,
         originHash,
-        "ethereum",
+        chainName,
         handler.address
       );
 
@@ -103,7 +104,7 @@ describe("ERC1155Handler", () => {
           { value: baseAmount, type: "uint256" },
           { value: OWNER, type: "address" },
           { value: originHash, type: "bytes32" },
-          { value: "ethereum", type: "string" },
+          { value: chainName, type: "string" },
           { value: handler.address, type: "address" }
         )
       );

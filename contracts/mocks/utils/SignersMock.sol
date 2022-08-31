@@ -4,8 +4,8 @@ pragma solidity ^0.8.9;
 import "../../utils/Signers.sol";
 
 contract SignersMock is Signers {
-    function __SignersMock_init(address signer_) public initializer {
-        __Signers_init(signer_);
+    function __SignersMock_init(address signer_, string calldata chainName_) public initializer {
+        __Signers_init(signer_, chainName_);
     }
 
     function checkSignature(bytes32 signHash_, bytes calldata signature_) external view {

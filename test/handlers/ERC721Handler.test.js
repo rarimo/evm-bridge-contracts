@@ -9,6 +9,7 @@ ERC721MB.numberFormat = "BigNumber";
 ERC721HandlerMock.numberFormat = "BigNumber";
 
 describe("ERC721Handler", () => {
+  const chainName = "ethereum";
   const baseId = "5000";
 
   let OWNER;
@@ -73,7 +74,7 @@ describe("ERC721Handler", () => {
         "1",
         OWNER,
         originHash,
-        "ethereum",
+        chainName,
         handler.address
       );
 
@@ -85,7 +86,7 @@ describe("ERC721Handler", () => {
           { value: "1", type: "uint256" },
           { value: OWNER, type: "address" },
           { value: originHash, type: "bytes32" },
-          { value: "ethereum", type: "string" },
+          { value: chainName, type: "string" },
           { value: handler.address, type: "address" }
         )
       );

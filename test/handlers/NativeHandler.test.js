@@ -7,6 +7,7 @@ const NativeHandlerMock = artifacts.require("NativeHandlerMock");
 NativeHandlerMock.numberFormat = "BigNumber";
 
 describe("NativeHandler", () => {
+  const chainName = "ethereum";
   const baseAmount = wei("10");
 
   let OWNER;
@@ -40,7 +41,7 @@ describe("NativeHandler", () => {
     it("should encode args", async () => {
       let originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let merkleLeaf0 = await handler.getNativeMerkleLeaf(baseAmount, OWNER, originHash, "ethereum", handler.address);
+      let merkleLeaf0 = await handler.getNativeMerkleLeaf(baseAmount, OWNER, originHash, chainName, handler.address);
 
       assert.equal(
         merkleLeaf0,
@@ -48,7 +49,7 @@ describe("NativeHandler", () => {
           { value: baseAmount, type: "uint256" },
           { value: OWNER, type: "address" },
           { value: originHash, type: "bytes32" },
-          { value: "ethereum", type: "string" },
+          { value: chainName, type: "string" },
           { value: handler.address, type: "address" }
         )
       );

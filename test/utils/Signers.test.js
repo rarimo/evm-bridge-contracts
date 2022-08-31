@@ -12,6 +12,8 @@ const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784
 const ANOTHER_PRIVATE_KEY = "df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e";
 
 describe("Signers", () => {
+  const chainName = "ethereum";
+
   let OWNER;
   let SECOND;
 
@@ -25,7 +27,7 @@ describe("Signers", () => {
   beforeEach("setup", async () => {
     signers = await Signers.new();
 
-    await signers.__SignersMock_init(OWNER);
+    await signers.__SignersMock_init(OWNER, chainName);
   });
 
   describe("checkSignatures", () => {
@@ -109,7 +111,7 @@ describe("Signers", () => {
 
       const hashToSign = web3.utils.soliditySha3(
         { value: SECOND, type: "address" },
-        { value: "31337", type: "uint256" },
+        { value: chainName, type: "string" },
         { value: "0", type: "uint256" },
         { value: signers.address, type: "address" }
       );
@@ -127,7 +129,7 @@ describe("Signers", () => {
 
       const hashToSign = web3.utils.soliditySha3(
         { value: SECOND, type: "address" },
-        { value: "31337", type: "uint256" },
+        { value: chainName, type: "string" },
         { value: "0", type: "uint256" },
         { value: signers.address, type: "address" }
       );

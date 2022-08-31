@@ -11,6 +11,8 @@ ERC1967Proxy.numberFormat = "BigNumber";
 const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 describe("Upgradeable", () => {
+  const chainName = "ethereum";
+
   let OWNER;
   let SECOND;
 
@@ -30,7 +32,7 @@ describe("Upgradeable", () => {
     proxy = await ERC1967Proxy.new(bridge.address, []);
     proxyBridge = await Bridge.at(proxy.address);
 
-    await proxyBridge.__Bridge_init(OWNER, "1");
+    await proxyBridge.__Bridge_init(OWNER, chainName);
   });
 
   it("should fail classical upgrade", async () => {
@@ -49,7 +51,7 @@ describe("Upgradeable", () => {
 
     const hashToSign = web3.utils.soliditySha3(
       { value: newBridge.address, type: "address" },
-      { value: "31337", type: "uint256" },
+      { value: chainName, type: "string" },
       { value: "0", type: "uint256" },
       { value: proxyBridge.address, type: "address" }
     );
@@ -64,7 +66,7 @@ describe("Upgradeable", () => {
 
     const hashToSign = web3.utils.soliditySha3(
       { value: newBridge.address, type: "address" },
-      { value: "31337", type: "uint256" },
+      { value: chainName, type: "string" },
       { value: "1", type: "uint256" },
       { value: proxyBridge.address, type: "address" }
     );
