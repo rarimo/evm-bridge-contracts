@@ -54,9 +54,8 @@ abstract contract ERC20Handler is IERC20Handler {
         uint256 amount_,
         address receiver_,
         bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) public pure override returns (bytes32) {
+        string memory chainName_
+    ) public view override returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
@@ -65,7 +64,7 @@ abstract contract ERC20Handler is IERC20Handler {
                     receiver_,
                     originHash_,
                     chainName_,
-                    verifyingContract_
+                    address(this)
                 )
             );
     }

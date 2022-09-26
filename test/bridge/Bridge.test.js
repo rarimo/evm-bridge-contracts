@@ -51,12 +51,12 @@ describe("Bridge", () => {
     await erc20.mintTo(OWNER, baseBalance);
     await erc20.approve(bridge.address, baseBalance);
 
-    erc721 = await ERC721MB.new("Mock", "MK", OWNER);
-    await erc721.mintTo(OWNER, baseId);
+    erc721 = await ERC721MB.new("Mock", "MK", OWNER, "");
+    await erc721.mintTo(OWNER, baseId, "URI");
     await erc721.approve(bridge.address, baseId);
 
-    erc1155 = await ERC1155MB.new("URI", OWNER);
-    await erc1155.mintTo(OWNER, baseId, baseBalance);
+    erc1155 = await ERC1155MB.new(OWNER, "");
+    await erc1155.mintTo(OWNER, baseId, baseBalance, "URI");
     await erc1155.setApprovalForAll(bridge.address, true);
 
     await erc20.transferOwnership(bridge.address);
@@ -76,8 +76,7 @@ describe("Bridge", () => {
         tx.receipt.logs[0].args.amount,
         tx.receipt.logs[0].args.receiver,
         originHash,
-        tx.receipt.logs[0].args.network,
-        bridge.address
+        tx.receipt.logs[0].args.network
       );
 
       existingLeaves.push(leaf);
@@ -116,10 +115,10 @@ describe("Bridge", () => {
         tx.receipt.logs[0].args.token,
         tx.receipt.logs[0].args.tokenId,
         "1",
+        "URI1",
         tx.receipt.logs[0].args.receiver,
         originHash,
-        tx.receipt.logs[0].args.network,
-        bridge.address
+        tx.receipt.logs[0].args.network
       );
 
       existingLeaves.push(leaf);
@@ -133,6 +132,7 @@ describe("Bridge", () => {
       await bridge.withdrawERC721(
         tx.receipt.logs[0].args.token,
         tx.receipt.logs[0].args.tokenId,
+        "URI1",
         tx.receipt.logs[0].args.receiver,
         originHash,
         proof,
@@ -141,6 +141,7 @@ describe("Bridge", () => {
       );
 
       assert.equal(await erc721.ownerOf(baseId), OWNER);
+      assert.equal(await erc721.tokenURI(baseId), "URI1");
 
       assert.isTrue(await bridge.usedHashes(originHash));
     });
@@ -157,10 +158,10 @@ describe("Bridge", () => {
         tx.receipt.logs[0].args.token,
         tx.receipt.logs[0].args.tokenId,
         tx.receipt.logs[0].args.amount,
+        "URI2",
         tx.receipt.logs[0].args.receiver,
         originHash,
-        tx.receipt.logs[0].args.network,
-        bridge.address
+        tx.receipt.logs[0].args.network
       );
 
       existingLeaves.push(leaf);
@@ -175,6 +176,7 @@ describe("Bridge", () => {
         tx.receipt.logs[0].args.token,
         tx.receipt.logs[0].args.tokenId,
         tx.receipt.logs[0].args.amount,
+        "URI2",
         tx.receipt.logs[0].args.receiver,
         originHash,
         proof,
@@ -184,6 +186,7 @@ describe("Bridge", () => {
 
       assert.equal((await erc1155.balanceOf(bridge.address, baseId)).toFixed(), "0");
       assert.equal((await erc1155.balanceOf(OWNER, baseId)).toFixed(), baseBalance);
+      assert.equal(await erc1155.uri(baseId), "URI2");
 
       assert.isTrue(await bridge.usedHashes(originHash));
     });
@@ -199,8 +202,7 @@ describe("Bridge", () => {
         tx.receipt.logs[0].args.amount,
         tx.receipt.logs[0].args.receiver,
         originHash,
-        tx.receipt.logs[0].args.network,
-        bridge.address
+        tx.receipt.logs[0].args.network
       );
 
       existingLeaves.push(leaf);

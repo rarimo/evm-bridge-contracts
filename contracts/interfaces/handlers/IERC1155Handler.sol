@@ -37,19 +37,19 @@ interface IERC1155Handler {
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of deposited token
      * @param amount_ the amount of withdrawn tokens
+     * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the receiver address in destination network
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param chainName_ the name of this chain
-     * @param verifyingContract_ this contract address
-     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments
+     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments + address(this)
      */
     function getERC1155MerkleLeaf(
         address token_,
         uint256 tokenId_,
         uint256 amount_,
+        string memory tokenURI_,
         address receiver_,
         bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) external pure returns (bytes32);
+        string memory chainName_
+    ) external view returns (bytes32);
 }

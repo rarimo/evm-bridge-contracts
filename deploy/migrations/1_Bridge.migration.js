@@ -3,9 +3,8 @@ const { logTransaction } = require("../runners/logger/logger.js");
 const Bridge = artifacts.require("Bridge");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 
-// TODO change parameters
-const VALIDATOR = "0x53638975BC11de3029E46DF193d64879EAeA94eB";
-const CHAIN_NAME = "ethereum";
+const VALIDATOR = process.env.VALIDATOR;
+const CHAIN_NAME = process.env.CHAIN_NAME;
 
 module.exports = async (deployer) => {
   const bridge = await deployer.deploy(Bridge);

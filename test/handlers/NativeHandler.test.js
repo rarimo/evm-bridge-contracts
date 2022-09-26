@@ -41,7 +41,7 @@ describe("NativeHandler", () => {
     it("should encode args", async () => {
       let originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      let merkleLeaf0 = await handler.getNativeMerkleLeaf(baseAmount, OWNER, originHash, chainName, handler.address);
+      let merkleLeaf0 = await handler.getNativeMerkleLeaf(baseAmount, OWNER, originHash, chainName);
 
       assert.equal(
         merkleLeaf0,
@@ -54,7 +54,7 @@ describe("NativeHandler", () => {
         )
       );
 
-      let merkleLeaf1 = await handler.getNativeMerkleLeaf(wei("1"), OWNER, originHash, "BSC", handler.address);
+      let merkleLeaf1 = await handler.getNativeMerkleLeaf(wei("1"), OWNER, originHash, "BSC");
 
       assert.equal(
         merkleLeaf1,

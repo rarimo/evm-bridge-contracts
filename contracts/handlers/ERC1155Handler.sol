@@ -33,6 +33,7 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
+        string calldata tokenURI_,
         address receiver_,
         bool isWrapped_
     ) internal {
@@ -43,7 +44,7 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
         IERC1155MintableBurnable erc1155_ = IERC1155MintableBurnable(token_);
 
         if (isWrapped_) {
-            erc1155_.mintTo(receiver_, tokenId_, amount_);
+            erc1155_.mintTo(receiver_, tokenId_, amount_, tokenURI_);
         } else {
             erc1155_.safeTransferFrom(address(this), receiver_, tokenId_, amount_, "");
         }
@@ -53,21 +54,22 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
+        string memory tokenURI_,
         address receiver_,
         bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) public pure override returns (bytes32) {
+        string memory chainName_
+    ) public view override returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
                     token_,
                     tokenId_,
                     amount_,
+                    tokenURI_,
                     receiver_,
                     originHash_,
                     chainName_,
-                    verifyingContract_
+                    address(this)
                 )
             );
     }

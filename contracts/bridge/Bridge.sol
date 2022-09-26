@@ -41,8 +41,7 @@ contract Bridge is
             amount_,
             receiver_,
             originHash_,
-            chainName,
-            address(this)
+            chainName
         );
 
         _checkAndUpdateHashes(originHash_);
@@ -54,6 +53,7 @@ contract Bridge is
     function withdrawERC721(
         address token_,
         uint256 tokenId_,
+        string calldata tokenURI_,
         address receiver_,
         bytes32 originHash_,
         bytes32[] calldata merklePath_,
@@ -64,22 +64,23 @@ contract Bridge is
             token_,
             tokenId_,
             1,
+            tokenURI_,
             receiver_,
             originHash_,
-            chainName,
-            address(this)
+            chainName
         );
 
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
 
-        _withdrawERC721(token_, tokenId_, receiver_, isWrapped_);
+        _withdrawERC721(token_, tokenId_, tokenURI_, receiver_, isWrapped_);
     }
 
     function withdrawERC1155(
         address token_,
         uint256 tokenId_,
         uint256 amount_,
+        string calldata tokenURI_,
         address receiver_,
         bytes32 originHash_,
         bytes32[] calldata merklePath_,
@@ -90,16 +91,16 @@ contract Bridge is
             token_,
             tokenId_,
             amount_,
+            tokenURI_,
             receiver_,
             originHash_,
-            chainName,
-            address(this)
+            chainName
         );
 
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
 
-        _withdrawERC1155(token_, tokenId_, amount_, receiver_, isWrapped_);
+        _withdrawERC1155(token_, tokenId_, amount_, tokenURI_, receiver_, isWrapped_);
     }
 
     function withdrawNative(
@@ -109,13 +110,7 @@ contract Bridge is
         bytes32[] calldata merklePath_,
         bytes calldata signature_
     ) external override {
-        bytes32 merkleLeaf_ = getNativeMerkleLeaf(
-            amount_,
-            receiver_,
-            originHash_,
-            chainName,
-            address(this)
-        );
+        bytes32 merkleLeaf_ = getNativeMerkleLeaf(amount_, receiver_, originHash_, chainName);
 
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);

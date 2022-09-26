@@ -27,12 +27,11 @@ abstract contract NativeHandler is INativeHandler {
         uint256 amount_,
         address receiver_,
         bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) public pure override returns (bytes32) {
+        string memory chainName_
+    ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encodePacked(amount_, receiver_, originHash_, chainName_, verifyingContract_)
+                abi.encodePacked(amount_, receiver_, originHash_, chainName_, address(this))
             );
     }
 }

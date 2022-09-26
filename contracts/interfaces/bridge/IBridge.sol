@@ -44,6 +44,7 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @notice function for withdrawing erc721 tokens
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of withdrawn token
+     * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the address who will receive tokens
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param merklePath_ the associative merkle path
@@ -53,6 +54,7 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
     function withdrawERC721(
         address token_,
         uint256 tokenId_,
+        string calldata tokenURI_,
         address receiver_,
         bytes32 originHash_,
         bytes32[] calldata merklePath_,
@@ -65,6 +67,7 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @param token_ the address of withdrawn token
      * @param tokenId_ the id of withdrawn token
      * @param amount_ the amount of withdrawn tokens
+     * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the address who will receive tokens
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param merklePath_ the associative merkle path
@@ -75,6 +78,7 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
         address token_,
         uint256 tokenId_,
         uint256 amount_,
+        string calldata tokenURI_,
         address receiver_,
         bytes32 originHash_,
         bytes32[] calldata merklePath_,

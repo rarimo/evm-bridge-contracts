@@ -23,10 +23,10 @@ describe("ERC721Handler", () => {
   });
 
   beforeEach("setup", async () => {
-    token = await ERC721MB.new("Mock", "MK", OWNER);
+    token = await ERC721MB.new("Mock", "MK", OWNER, "");
     handler = await ERC721HandlerMock.new();
 
-    await token.mintTo(OWNER, baseId);
+    await token.mintTo(OWNER, baseId, "URI");
     await token.approve(handler.address, baseId);
 
     await token.transferOwnership(handler.address);
@@ -90,10 +90,10 @@ describe("ERC721Handler", () => {
         token.address,
         baseId,
         "1",
+        "URI1",
         OWNER,
         originHash,
-        chainName,
-        handler.address
+        chainName
       );
 
       assert.equal(
@@ -102,6 +102,7 @@ describe("ERC721Handler", () => {
           { value: token.address, type: "address" },
           { value: baseId, type: "uint256" },
           { value: "1", type: "uint256" },
+          { value: "URI1", type: "string" },
           { value: OWNER, type: "address" },
           { value: originHash, type: "bytes32" },
           { value: chainName, type: "string" },
@@ -109,15 +110,7 @@ describe("ERC721Handler", () => {
         )
       );
 
-      let merkleLeaf1 = await handler.getERC721MerkleLeaf(
-        token.address,
-        baseId,
-        "1",
-        OWNER,
-        originHash,
-        "BSC",
-        handler.address
-      );
+      let merkleLeaf1 = await handler.getERC721MerkleLeaf(token.address, baseId, "1", "URI2", OWNER, originHash, "BSC");
 
       assert.equal(
         merkleLeaf1,
@@ -125,6 +118,7 @@ describe("ERC721Handler", () => {
           { value: token.address, type: "address" },
           { value: baseId, type: "uint256" },
           { value: "1", type: "uint256" },
+          { value: "URI2", type: "string" },
           { value: OWNER, type: "address" },
           { value: originHash, type: "bytes32" },
           { value: "BSC", type: "string" },
@@ -139,28 +133,30 @@ describe("ERC721Handler", () => {
   describe("withdrawERC721", async () => {
     it("should withdraw token, wrapped = true", async () => {
       await handler.depositERC721(token.address, baseId, "receiver", "kovan", true);
-      await handler.withdrawERC721(token.address, baseId, OWNER, true);
+      await handler.withdrawERC721(token.address, baseId, "URI1", OWNER, true);
 
       assert.equal(await token.ownerOf(baseId), OWNER);
+      assert.equal(await token.tokenURI(baseId), "URI1");
     });
 
     it("should withdraw token, wrapped = false", async () => {
       await handler.depositERC721(token.address, baseId, "receiver", "kovan", false);
-      await handler.withdrawERC721(token.address, baseId, OWNER, false);
+      await handler.withdrawERC721(token.address, baseId, "URI1", OWNER, false);
 
       assert.equal(await token.ownerOf(baseId), OWNER);
+      assert.equal(await token.tokenURI(baseId), "URI");
     });
 
     it("should revert when token address is 0", async () => {
       await truffleAssert.reverts(
-        handler.withdrawERC721("0x0000000000000000000000000000000000000000", baseId, OWNER, false),
+        handler.withdrawERC721("0x0000000000000000000000000000000000000000", baseId, "", OWNER, false),
         "ERC721Handler: zero token"
       );
     });
 
     it("should revert when receiver address is 0", async () => {
       await truffleAssert.reverts(
-        handler.withdrawERC721(token.address, baseId, "0x0000000000000000000000000000000000000000", false),
+        handler.withdrawERC721(token.address, baseId, "", "0x0000000000000000000000000000000000000000", false),
         "ERC721Handler: zero receiver"
       );
     });

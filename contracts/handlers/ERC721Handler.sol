@@ -30,6 +30,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
     function _withdrawERC721(
         address token_,
         uint256 tokenId_,
+        string calldata tokenURI_,
         address receiver_,
         bool isWrapped_
     ) internal {
@@ -39,7 +40,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
         IERC721MintableBurnable erc721_ = IERC721MintableBurnable(token_);
 
         if (isWrapped_) {
-            erc721_.mintTo(receiver_, tokenId_);
+            erc721_.mintTo(receiver_, tokenId_, tokenURI_);
         } else {
             erc721_.safeTransferFrom(address(this), receiver_, tokenId_);
         }
@@ -49,21 +50,22 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
+        string memory tokenURI_,
         address receiver_,
         bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) public pure override returns (bytes32) {
+        string memory chainName_
+    ) public view override returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
                     token_,
                     tokenId_,
                     amount_,
+                    tokenURI_,
                     receiver_,
                     originHash_,
                     chainName_,
-                    verifyingContract_
+                    address(this)
                 )
             );
     }

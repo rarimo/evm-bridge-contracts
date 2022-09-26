@@ -36,15 +36,13 @@ interface IERC20Handler {
      * @param receiver_ the receiver address in destination network
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param chainName_ the name of this chain
-     * @param verifyingContract_ this contract address
-     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments
+     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments + address(this)
      */
     function getERC20MerkleLeaf(
         address token_,
         uint256 amount_,
         address receiver_,
         bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) external pure returns (bytes32);
+        string memory chainName_
+    ) external view returns (bytes32);
 }
