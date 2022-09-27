@@ -9,6 +9,7 @@ interface IERC721Handler {
         address token,
         uint256 tokenId,
         string receiver,
+        bytes bundle,
         string network,
         bool isWrapped
     );
@@ -18,6 +19,7 @@ interface IERC721Handler {
      * @param token_ the address of deposited token
      * @param tokenId_ the id of deposited token
      * @param receiver_ the receiver address in destination network, information field for event
+     * @param bundle_ the encoded transaction bundle
      * @param network_ the network name of destination network, information field for event
      * @param isWrapped_ the boolean flag, if true - token will burned, false - token will transferred
      */
@@ -25,6 +27,7 @@ interface IERC721Handler {
         address token_,
         uint256 tokenId_,
         string calldata receiver_,
+        bytes calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external;
@@ -36,6 +39,7 @@ interface IERC721Handler {
      * @param amount_ should always equal 1
      * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the receiver address in destination network
+     * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param chainName_ the name of this chain
      * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments + address(this)
@@ -44,8 +48,9 @@ interface IERC721Handler {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
-        string memory tokenURI_,
+        string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) external view returns (bytes32);

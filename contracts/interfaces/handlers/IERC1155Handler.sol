@@ -10,6 +10,7 @@ interface IERC1155Handler {
         uint256 tokenId,
         uint256 amount,
         string receiver,
+        bytes bundle,
         string network,
         bool isWrapped
     );
@@ -20,6 +21,7 @@ interface IERC1155Handler {
      * @param tokenId_ the id of deposited tokens
      * @param amount_ the amount of deposited tokens
      * @param receiver_ the receiver address in destination network, information field for event
+     * @param bundle_ the encoded transaction bundle
      * @param network_ the network name of destination network, information field for event
      * @param isWrapped_ the boolean flag, if true - tokens will burned, false - tokens will transferred
      */
@@ -28,6 +30,7 @@ interface IERC1155Handler {
         uint256 tokenId_,
         uint256 amount_,
         string calldata receiver_,
+        bytes calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external;
@@ -39,6 +42,7 @@ interface IERC1155Handler {
      * @param amount_ the amount of withdrawn tokens
      * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the receiver address in destination network
+     * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param chainName_ the name of this chain
      * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments + address(this)
@@ -47,8 +51,9 @@ interface IERC1155Handler {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
-        string memory tokenURI_,
+        string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) external view returns (bytes32);

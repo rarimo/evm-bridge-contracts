@@ -25,18 +25,18 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @param token_ the address of withdrawn token
      * @param amount_ the amount of withdrawn tokens
      * @param receiver_ the address who will receive tokens
+     * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
-     * @param merklePath_ the associative merkle path
-     * @param signature_ the signature of a merkle root the signer signed
+     * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
      */
     function withdrawERC20(
         address token_,
         uint256 amount_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
-        bytes32[] calldata merklePath_,
-        bytes calldata signature_,
+        bytes calldata proof_,
         bool isWrapped_
     ) external;
 
@@ -46,9 +46,9 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @param tokenId_ the id of withdrawn token
      * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the address who will receive tokens
+     * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
-     * @param merklePath_ the associative merkle path
-     * @param signature_ the signature of a merkle root the signer signed
+     * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
      */
     function withdrawERC721(
@@ -56,9 +56,9 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
         uint256 tokenId_,
         string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
-        bytes32[] calldata merklePath_,
-        bytes calldata signature_,
+        bytes calldata proof_,
         bool isWrapped_
     ) external;
 
@@ -69,9 +69,9 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @param amount_ the amount of withdrawn tokens
      * @param tokenURI_ the token metadata URI or token index if base URI is set
      * @param receiver_ the address who will receive tokens
+     * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
-     * @param merklePath_ the associative merkle path
-     * @param signature_ the signature of a merkle root the signer signed
+     * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
      */
     function withdrawERC1155(
@@ -80,9 +80,9 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
         uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
-        bytes32[] calldata merklePath_,
-        bytes calldata signature_,
+        bytes calldata proof_,
         bool isWrapped_
     ) external;
 
@@ -90,15 +90,15 @@ interface IBridge is IERC20Handler, IERC721Handler, IERC1155Handler, INativeHand
      * @notice function for withdrawing native currency
      * @param amount_ the amount of withdrawn native currency
      * @param receiver_ the address who will receive tokens
+     * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
-     * @param merklePath_ the associative merkle path
-     * @param signature_ the signature of a merkle root the signer signed
+     * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      */
     function withdrawNative(
         uint256 amount_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
-        bytes32[] calldata merklePath_,
-        bytes calldata signature_
+        bytes calldata proof_
     ) external;
 }

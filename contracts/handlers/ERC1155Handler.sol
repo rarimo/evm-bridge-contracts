@@ -6,12 +6,15 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "../interfaces/handlers/IERC1155Handler.sol";
 import "../interfaces/tokens/IERC1155MintableBurnable.sol";
 
-abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
+import "../bundle/Bundler.sol";
+
+abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
     function depositERC1155(
         address token_,
         uint256 tokenId_,
         uint256 amount_,
         string calldata receiver_,
+        bytes calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external override {
@@ -26,7 +29,22 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
             erc1155_.safeTransferFrom(msg.sender, address(this), tokenId_, amount_, "");
         }
 
-        emit DepositedERC1155(token_, tokenId_, amount_, receiver_, network_, isWrapped_);
+        emit DepositedERC1155(token_, tokenId_, amount_, receiver_, bundle_, network_, isWrapped_);
+    }
+
+    function withdrawERC1155Bundle(
+        address token_,
+        uint256 tokenId_,
+        uint256 amount_,
+        string calldata tokenURI_,
+        bytes calldata bundle_,
+        bytes32 salt_,
+        bool isWrapped_
+    ) external onlyThis {
+        address bundleProxy_ = determineProxyAddress(salt_, bundle_);
+
+        _withdraw(token_, tokenId_, amount_, tokenURI_, bundleProxy_, isWrapped_);
+        _bundleUp(salt_, bundle_);
     }
 
     function _withdrawERC1155(
@@ -35,11 +53,41 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
         uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
+        bytes32 originHash_,
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC1155Handler: zero token");
-        require(receiver_ != address(0), "ERC1155Handler: zero receiver");
         require(amount_ > 0, "ERC1155Handler: amount is zero");
+
+        if (bundle_.length > 0) {
+            try
+                this.withdrawERC1155Bundle(
+                    token_,
+                    tokenId_,
+                    amount_,
+                    tokenURI_,
+                    bundle_,
+                    originHash_,
+                    isWrapped_
+                )
+            {
+                return;
+            } catch {}
+        }
+
+        _withdraw(token_, tokenId_, amount_, tokenURI_, receiver_, isWrapped_);
+    }
+
+    function _withdraw(
+        address token_,
+        uint256 tokenId_,
+        uint256 amount_,
+        string calldata tokenURI_,
+        address receiver_,
+        bool isWrapped_
+    ) private {
+        require(receiver_ != address(0), "ERC1155Handler: zero receiver");
 
         IERC1155MintableBurnable erc1155_ = IERC1155MintableBurnable(token_);
 
@@ -54,8 +102,9 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
-        string memory tokenURI_,
+        string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) public view override returns (bytes32) {
@@ -67,6 +116,7 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder {
                     amount_,
                     tokenURI_,
                     receiver_,
+                    bundle_,
                     originHash_,
                     chainName_,
                     address(this)

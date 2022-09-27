@@ -6,11 +6,14 @@ import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "../interfaces/handlers/IERC721Handler.sol";
 import "../interfaces/tokens/IERC721MintableBurnable.sol";
 
-abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
+import "../bundle/Bundler.sol";
+
+abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
     function depositERC721(
         address token_,
         uint256 tokenId_,
         string calldata receiver_,
+        bytes calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external override {
@@ -24,7 +27,21 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
             erc721_.safeTransferFrom(msg.sender, address(this), tokenId_);
         }
 
-        emit DepositedERC721(token_, tokenId_, receiver_, network_, isWrapped_);
+        emit DepositedERC721(token_, tokenId_, receiver_, bundle_, network_, isWrapped_);
+    }
+
+    function withdrawERC721Bundle(
+        address token_,
+        uint256 tokenId_,
+        string calldata tokenURI_,
+        bytes calldata bundle_,
+        bytes32 salt_,
+        bool isWrapped_
+    ) external onlyThis {
+        address bundleProxy_ = determineProxyAddress(salt_, bundle_);
+
+        _withdraw(token_, tokenId_, tokenURI_, bundleProxy_, isWrapped_);
+        _bundleUp(salt_, bundle_);
     }
 
     function _withdrawERC721(
@@ -32,9 +49,37 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
         uint256 tokenId_,
         string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
+        bytes32 originHash_,
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC721Handler: zero token");
+
+        if (bundle_.length > 0) {
+            try
+                this.withdrawERC721Bundle(
+                    token_,
+                    tokenId_,
+                    tokenURI_,
+                    bundle_,
+                    originHash_,
+                    isWrapped_
+                )
+            {
+                return;
+            } catch {}
+        }
+
+        _withdraw(token_, tokenId_, tokenURI_, receiver_, isWrapped_);
+    }
+
+    function _withdraw(
+        address token_,
+        uint256 tokenId_,
+        string calldata tokenURI_,
+        address receiver_,
+        bool isWrapped_
+    ) private {
         require(receiver_ != address(0), "ERC721Handler: zero receiver");
 
         IERC721MintableBurnable erc721_ = IERC721MintableBurnable(token_);
@@ -50,8 +95,9 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
         address token_,
         uint256 tokenId_,
         uint256 amount_,
-        string memory tokenURI_,
+        string calldata tokenURI_,
         address receiver_,
+        bytes calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) public view override returns (bytes32) {
@@ -63,6 +109,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder {
                     amount_,
                     tokenURI_,
                     receiver_,
+                    bundle_,
                     originHash_,
                     chainName_,
                     address(this)
