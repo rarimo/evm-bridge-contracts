@@ -14,7 +14,7 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         uint256 tokenId_,
         uint256 amount_,
         string calldata receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external override {
@@ -29,7 +29,16 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
             erc1155_.safeTransferFrom(msg.sender, address(this), tokenId_, amount_, "");
         }
 
-        emit DepositedERC1155(token_, tokenId_, amount_, receiver_, bundle_, network_, isWrapped_);
+        emit DepositedERC1155(
+            token_,
+            tokenId_,
+            amount_,
+            receiver_,
+            _encodeSalt(bundle_.salt),
+            bundle_.bundle,
+            network_,
+            isWrapped_
+        );
     }
 
     function withdrawERC1155Bundle(
@@ -37,14 +46,13 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_,
-        bytes calldata bundle_,
-        bytes32 salt_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(salt_, bundle_);
+        address bundleProxy_ = determineProxyAddress(bundle_.salt);
 
         _withdraw(token_, tokenId_, amount_, tokenURI_, bundleProxy_, isWrapped_);
-        _bundleUp(salt_, bundle_);
+        _bundleUp(bundle_);
     }
 
     function _withdrawERC1155(
@@ -53,14 +61,13 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
-        bytes32 originHash_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC1155Handler: zero token");
         require(amount_ > 0, "ERC1155Handler: amount is zero");
 
-        if (bundle_.length > 0) {
+        if (bundle_.bundle.length > 0) {
             try
                 this.withdrawERC1155Bundle(
                     token_,
@@ -68,7 +75,6 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
                     amount_,
                     tokenURI_,
                     bundle_,
-                    originHash_,
                     isWrapped_
                 )
             {
@@ -104,13 +110,13 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encodePacked(
+                abi.encode(
                     token_,
                     tokenId_,
                     amount_,

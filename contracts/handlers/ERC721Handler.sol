@@ -13,7 +13,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         address token_,
         uint256 tokenId_,
         string calldata receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external override {
@@ -27,21 +27,28 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
             erc721_.safeTransferFrom(msg.sender, address(this), tokenId_);
         }
 
-        emit DepositedERC721(token_, tokenId_, receiver_, bundle_, network_, isWrapped_);
+        emit DepositedERC721(
+            token_,
+            tokenId_,
+            receiver_,
+            _encodeSalt(bundle_.salt),
+            bundle_.bundle,
+            network_,
+            isWrapped_
+        );
     }
 
     function withdrawERC721Bundle(
         address token_,
         uint256 tokenId_,
         string calldata tokenURI_,
-        bytes calldata bundle_,
-        bytes32 salt_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(salt_, bundle_);
+        address bundleProxy_ = determineProxyAddress(bundle_.salt);
 
         _withdraw(token_, tokenId_, tokenURI_, bundleProxy_, isWrapped_);
-        _bundleUp(salt_, bundle_);
+        _bundleUp(bundle_);
     }
 
     function _withdrawERC721(
@@ -49,23 +56,13 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         uint256 tokenId_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
-        bytes32 originHash_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC721Handler: zero token");
 
-        if (bundle_.length > 0) {
-            try
-                this.withdrawERC721Bundle(
-                    token_,
-                    tokenId_,
-                    tokenURI_,
-                    bundle_,
-                    originHash_,
-                    isWrapped_
-                )
-            {
+        if (bundle_.bundle.length > 0) {
+            try this.withdrawERC721Bundle(token_, tokenId_, tokenURI_, bundle_, isWrapped_) {
                 return;
             } catch {}
         }
@@ -94,19 +91,18 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
     function getERC721MerkleLeaf(
         address token_,
         uint256 tokenId_,
-        uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encodePacked(
+                abi.encode(
                     token_,
                     tokenId_,
-                    amount_,
+                    1,
                     tokenURI_,
                     receiver_,
                     bundle_,

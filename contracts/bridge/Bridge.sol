@@ -26,15 +26,20 @@ contract Bridge is
     ERC1155Handler,
     NativeHandler
 {
-    function __Bridge_init(address signer_, string calldata chainName_) external initializer {
+    function __Bridge_init(
+        address signer_,
+        address bundleImplementation_,
+        string calldata chainName_
+    ) external initializer {
         __Signers_init(signer_, chainName_);
+        __Bundler_init(bundleImplementation_);
     }
 
     function withdrawERC20(
         address token_,
         uint256 amount_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         bytes calldata proof_,
         bool isWrapped_
@@ -51,7 +56,7 @@ contract Bridge is
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, proof_);
 
-        _withdrawERC20(token_, amount_, receiver_, bundle_, originHash_, isWrapped_);
+        _withdrawERC20(token_, amount_, receiver_, bundle_, isWrapped_);
     }
 
     function withdrawERC721(
@@ -59,7 +64,7 @@ contract Bridge is
         uint256 tokenId_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         bytes calldata proof_,
         bool isWrapped_
@@ -67,7 +72,6 @@ contract Bridge is
         bytes32 merkleLeaf_ = getERC721MerkleLeaf(
             token_,
             tokenId_,
-            1,
             tokenURI_,
             receiver_,
             bundle_,
@@ -78,7 +82,7 @@ contract Bridge is
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, proof_);
 
-        _withdrawERC721(token_, tokenId_, tokenURI_, receiver_, bundle_, originHash_, isWrapped_);
+        _withdrawERC721(token_, tokenId_, tokenURI_, receiver_, bundle_, isWrapped_);
     }
 
     function withdrawERC1155(
@@ -87,7 +91,7 @@ contract Bridge is
         uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         bytes calldata proof_,
         bool isWrapped_
@@ -106,22 +110,13 @@ contract Bridge is
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, proof_);
 
-        _withdrawERC1155(
-            token_,
-            tokenId_,
-            amount_,
-            tokenURI_,
-            receiver_,
-            bundle_,
-            originHash_,
-            isWrapped_
-        );
+        _withdrawERC1155(token_, tokenId_, amount_, tokenURI_, receiver_, bundle_, isWrapped_);
     }
 
     function withdrawNative(
         uint256 amount_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         bytes calldata proof_
     ) external override {
@@ -136,7 +131,7 @@ contract Bridge is
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, proof_);
 
-        _withdrawNative(amount_, receiver_, bundle_, originHash_);
+        _withdrawNative(amount_, receiver_, bundle_);
     }
 
     function _authorizeUpgrade(address) internal pure override {

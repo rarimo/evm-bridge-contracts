@@ -15,7 +15,7 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         address token_,
         uint256 amount_,
         string calldata receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         string calldata network_,
         bool isWrapped_
     ) external override {
@@ -30,35 +30,41 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
             erc20_.safeTransferFrom(msg.sender, address(this), amount_);
         }
 
-        emit DepositedERC20(token_, amount_, receiver_, bundle_, network_, isWrapped_);
+        emit DepositedERC20(
+            token_,
+            amount_,
+            receiver_,
+            _encodeSalt(bundle_.salt),
+            bundle_.bundle,
+            network_,
+            isWrapped_
+        );
     }
 
     function withdrawERC20Bundle(
         address token_,
         uint256 amount_,
-        bytes calldata bundle_,
-        bytes32 salt_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(salt_, bundle_);
+        address bundleProxy_ = determineProxyAddress(bundle_.salt);
 
         _withdraw(token_, amount_, bundleProxy_, isWrapped_);
-        _bundleUp(salt_, bundle_);
+        _bundleUp(bundle_);
     }
 
     function _withdrawERC20(
         address token_,
         uint256 amount_,
         address receiver_,
-        bytes calldata bundle_,
-        bytes32 originHash_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) internal {
         require(token_ != address(0), "ERC20Handler: zero token");
         require(amount_ > 0, "ERC20Handler: amount is zero");
 
-        if (bundle_.length > 0) {
-            try this.withdrawERC20Bundle(token_, amount_, bundle_, originHash_, isWrapped_) {
+        if (bundle_.bundle.length > 0) {
+            try this.withdrawERC20Bundle(token_, amount_, bundle_, isWrapped_) {
                 return;
             } catch {}
         }
@@ -87,13 +93,13 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         address token_,
         uint256 amount_,
         address receiver_,
-        bytes calldata bundle_,
+        IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         string memory chainName_
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encodePacked(
+                abi.encode(
                     token_,
                     amount_,
                     receiver_,

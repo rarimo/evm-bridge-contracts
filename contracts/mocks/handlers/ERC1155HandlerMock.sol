@@ -10,19 +10,9 @@ contract ERC1155HandlerMock is ERC1155Handler {
         uint256 amount_,
         string calldata tokenURI_,
         address receiver_,
-        bytes calldata bundle_,
-        bytes32 originHash_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) external {
-        _withdrawERC1155(
-            token_,
-            tokenId_,
-            amount_,
-            tokenURI_,
-            receiver_,
-            bundle_,
-            originHash_,
-            isWrapped_
-        );
+        _withdrawERC1155(token_, tokenId_, amount_, tokenURI_, receiver_, bundle_, isWrapped_);
     }
 }

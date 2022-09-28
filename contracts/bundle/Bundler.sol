@@ -20,24 +20,19 @@ abstract contract Bundler is IBundler, Initializable {
         bundleExecutorImplementation = bundleExecutorImplementation_;
     }
 
-    function _bundleUp(bytes32 salt_, bytes calldata bundle_) internal {
-        new BundleExecutorProxy{salt: salt_}(
-            bundleExecutorImplementation,
-            abi.encodeWithSelector(BundleExecutorImplementation.execute.selector, bundle_)
+    function _bundleUp(Bundle calldata bundle_) internal {
+        address payable executor = payable(
+            new BundleExecutorProxy{salt: bundle_.salt}(
+                bundleExecutorImplementation,
+                address(this)
+            )
         );
+
+        BundleExecutorImplementation(executor).execute(bundle_.bundle);
+        BundleExecutorProxy(executor).destroy();
     }
 
-    function determineProxyAddress(bytes32 salt_, bytes calldata bundle_)
-        public
-        view
-        override
-        returns (address)
-    {
-        bytes memory delegateData_ = abi.encodeWithSelector(
-            BundleExecutorImplementation.execute.selector,
-            bundle_
-        );
-
+    function determineProxyAddress(bytes32 salt_) public view override returns (address) {
         return
             address(
                 uint160(
@@ -50,7 +45,7 @@ abstract contract Bundler is IBundler, Initializable {
                                 keccak256(
                                     abi.encodePacked(
                                         type(BundleExecutorProxy).creationCode,
-                                        abi.encode(bundleExecutorImplementation, delegateData_)
+                                        abi.encode(bundleExecutorImplementation, address(this))
                                     )
                                 )
                             )
@@ -58,5 +53,9 @@ abstract contract Bundler is IBundler, Initializable {
                     )
                 )
             );
+    }
+
+    function _encodeSalt(bytes32 salt_) internal view returns (bytes32) {
+        return keccak256(abi.encode(salt_, msg.sender));
     }
 }

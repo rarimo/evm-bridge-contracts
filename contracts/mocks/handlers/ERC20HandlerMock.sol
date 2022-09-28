@@ -8,10 +8,9 @@ contract ERC20HandlerMock is ERC20Handler {
         address token_,
         uint256 amount_,
         address receiver_,
-        bytes calldata bundle_,
-        bytes32 originHash_,
+        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) external {
-        _withdrawERC20(token_, amount_, receiver_, bundle_, originHash_, isWrapped_);
+        _withdrawERC20(token_, amount_, receiver_, bundle_, isWrapped_);
     }
 }

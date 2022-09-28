@@ -4,9 +4,11 @@ const ethSigUtil = require("@metamask/eth-sig-util");
 
 const ERC1967Proxy = artifacts.require("ERC1967ProxyMock");
 const Bridge = artifacts.require("Bridge");
+const BundleImpl = artifacts.require("BundleExecutorImplementation");
 
 Bridge.numberFormat = "BigNumber";
 ERC1967Proxy.numberFormat = "BigNumber";
+BundleImpl.numberFormat = "BigNumber";
 
 const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
@@ -18,6 +20,9 @@ describe("Upgradeable", () => {
 
   let bridge;
   let newBridge;
+
+  let bundleImpl;
+
   let proxy;
   let proxyBridge;
 
@@ -27,12 +32,13 @@ describe("Upgradeable", () => {
   });
 
   beforeEach("setup", async () => {
+    bundleImpl = await BundleImpl.new();
     bridge = await Bridge.new();
     newBridge = await Bridge.new();
     proxy = await ERC1967Proxy.new(bridge.address, []);
     proxyBridge = await Bridge.at(proxy.address);
 
-    await proxyBridge.__Bridge_init(OWNER, chainName);
+    await proxyBridge.__Bridge_init(OWNER, bundleImpl.address, chainName);
   });
 
   it("should fail classical upgrade", async () => {
