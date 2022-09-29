@@ -15,9 +15,15 @@ contract BundleExecutorProxy {
     }
 
     function destroy() external {
-        require(msg.sender == _BRIDGE);
+        address bridge_ = _BRIDGE;
 
-        selfdestruct(payable(msg.sender));
+        assembly {
+            if iszero(eq(caller(), bridge_)) {
+                revert(0, 0)
+            }
+
+            selfdestruct(caller())
+        }
     }
 
     function _delegate(address implementation_) internal {
