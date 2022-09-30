@@ -99,13 +99,14 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encode(
+                abi.encodePacked(
                     token_,
                     tokenId_,
-                    1,
+                    uint256(1),
                     tokenURI_,
                     receiver_,
-                    bundle_,
+                    bundle_.salt,
+                    bundle_.bundle,
                     originHash_,
                     chainName_,
                     address(this)

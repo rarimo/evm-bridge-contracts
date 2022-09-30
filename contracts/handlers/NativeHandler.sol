@@ -65,7 +65,15 @@ abstract contract NativeHandler is INativeHandler, Bundler {
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encode(amount_, receiver_, bundle_, originHash_, chainName_, address(this))
+                abi.encodePacked(
+                    amount_,
+                    receiver_,
+                    bundle_.salt,
+                    bundle_.bundle,
+                    originHash_,
+                    chainName_,
+                    address(this)
+                )
             );
     }
 }

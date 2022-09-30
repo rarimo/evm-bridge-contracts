@@ -99,11 +99,12 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encode(
+                abi.encodePacked(
                     token_,
                     amount_,
                     receiver_,
-                    bundle_,
+                    bundle_.salt,
+                    bundle_.bundle,
                     originHash_,
                     chainName_,
                     address(this)

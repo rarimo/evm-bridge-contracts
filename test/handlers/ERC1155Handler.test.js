@@ -165,23 +165,18 @@ describe("ERC1155Handler", () => {
 
       assert.equal(
         merkleLeaf0,
-        web3.utils.soliditySha3({
-          value: web3.eth.abi.encodeParameters(
-            [
-              "address",
-              "uint256",
-              "uint256",
-              "string",
-              "address",
-              "tuple(bytes32,bytes)",
-              "bytes32",
-              "string",
-              "address",
-            ],
-            [token.address, baseId, baseAmount, "URI1", OWNER, [salt, bundle], originHash, chainName, handler.address]
-          ),
-          type: "bytes",
-        })
+        web3.utils.soliditySha3(
+          { value: token.address, type: "address" },
+          { value: baseId, type: "uint256" },
+          { value: baseAmount, type: "uint256" },
+          { value: "URI1", type: "string" },
+          { value: OWNER, type: "address" },
+          { value: salt, type: "bytes32" },
+          { value: bundle, type: "bytes" },
+          { value: originHash, type: "bytes32" },
+          { value: chainName, type: "string" },
+          { value: handler.address, type: "address" }
+        )
       );
 
       let merkleLeaf1 = await handler.getERC1155MerkleLeaf(
@@ -197,23 +192,18 @@ describe("ERC1155Handler", () => {
 
       assert.equal(
         merkleLeaf1,
-        web3.utils.soliditySha3({
-          value: web3.eth.abi.encodeParameters(
-            [
-              "address",
-              "uint256",
-              "uint256",
-              "string",
-              "address",
-              "tuple(bytes32,bytes)",
-              "bytes32",
-              "string",
-              "address",
-            ],
-            [token.address, baseId, baseAmount, "URI2", OWNER, [salt, bundle], originHash, "BSC", handler.address]
-          ),
-          type: "bytes",
-        })
+        web3.utils.soliditySha3(
+          { value: token.address, type: "address" },
+          { value: baseId, type: "uint256" },
+          { value: baseAmount, type: "uint256" },
+          { value: "URI2", type: "string" },
+          { value: OWNER, type: "address" },
+          { value: salt, type: "bytes32" },
+          { value: bundle, type: "bytes" },
+          { value: originHash, type: "bytes32" },
+          { value: "BSC", type: "string" },
+          { value: handler.address, type: "address" }
+        )
       );
 
       assert.notEqual(merkleLeaf0, merkleLeaf1);

@@ -116,13 +116,14 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
     ) public view override returns (bytes32) {
         return
             keccak256(
-                abi.encode(
+                abi.encodePacked(
                     token_,
                     tokenId_,
                     amount_,
                     tokenURI_,
                     receiver_,
-                    bundle_,
+                    bundle_.salt,
+                    bundle_.bundle,
                     originHash_,
                     chainName_,
                     address(this)
