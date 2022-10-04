@@ -6,17 +6,20 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "../interfaces/tokens/IERC20MintableBurnable.sol";
 import "../interfaces/handlers/IERC20Handler.sol";
 
+import "../libs/Encoder.sol";
+
 import "../bundle/Bundler.sol";
 
 abstract contract ERC20Handler is IERC20Handler, Bundler {
     using SafeERC20 for IERC20MintableBurnable;
+    using Encoder for bytes32;
 
     function depositERC20(
         address token_,
         uint256 amount_,
-        string calldata receiver_,
         IBundler.Bundle calldata bundle_,
         string calldata network_,
+        string calldata receiver_,
         bool isWrapped_
     ) external override {
         require(token_ != address(0), "ERC20Handler: zero token");
@@ -33,51 +36,34 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         emit DepositedERC20(
             token_,
             amount_,
-            receiver_,
-            _encodeSalt(bundle_.salt),
+            bundle_.salt.encode(),
             bundle_.bundle,
             network_,
+            receiver_,
             isWrapped_
         );
     }
 
     function withdrawERC20Bundle(
-        address token_,
-        uint256 amount_,
+        bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) external onlyThis {
         address bundleProxy_ = determineProxyAddress(bundle_.salt);
 
-        _withdraw(token_, amount_, bundleProxy_, isWrapped_);
+        _withdrawERC20(tokenData_, bundleProxy_, isWrapped_);
         _bundleUp(bundle_);
     }
 
     function _withdrawERC20(
-        address token_,
-        uint256 amount_,
+        bytes calldata tokenData_,
         address receiver_,
-        IBundler.Bundle calldata bundle_,
         bool isWrapped_
     ) internal {
+        (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
+
         require(token_ != address(0), "ERC20Handler: zero token");
         require(amount_ > 0, "ERC20Handler: amount is zero");
-
-        if (bundle_.bundle.length > 0) {
-            try this.withdrawERC20Bundle(token_, amount_, bundle_, isWrapped_) {
-                return;
-            } catch {}
-        }
-
-        _withdraw(token_, amount_, receiver_, isWrapped_);
-    }
-
-    function _withdraw(
-        address token_,
-        uint256 amount_,
-        address receiver_,
-        bool isWrapped_
-    ) private {
         require(receiver_ != address(0), "ERC20Handler: zero receiver");
 
         IERC20MintableBurnable erc20_ = IERC20MintableBurnable(token_);
@@ -89,26 +75,21 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         }
     }
 
-    function getERC20MerkleLeaf(
-        address token_,
-        uint256 amount_,
-        address receiver_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        string memory chainName_
-    ) public view override returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked(
-                    token_,
-                    amount_,
-                    receiver_,
-                    bundle_.salt,
-                    bundle_.bundle,
-                    originHash_,
-                    chainName_,
-                    address(this)
-                )
-            );
+    function _getERC20TokenDataLeaf(bytes calldata tokenData_)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
+
+        return abi.encodePacked(token_, amount_);
+    }
+
+    function _decodeERC20TokenData(bytes calldata tokenData_)
+        private
+        pure
+        returns (address, uint256)
+    {
+        return abi.decode(tokenData_, (address, uint256));
     }
 }

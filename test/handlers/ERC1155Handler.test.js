@@ -9,10 +9,8 @@ ERC1155MB.numberFormat = "BigNumber";
 ERC1155HandlerMock.numberFormat = "BigNumber";
 
 describe("ERC1155Handler", () => {
-  const chainName = "ethereum";
   const baseAmount = "10";
   const baseId = "5000";
-  const originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
   const salt = "0x0000000000000000000000000000000000000000000000000000000000000003";
 
   let OWNER;
@@ -35,8 +33,13 @@ describe("ERC1155Handler", () => {
 
   describe("access", () => {
     it("only this should call this method", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, 0, "", "0"]
+      );
+
       await truffleAssert.reverts(
-        handler.withdrawERC1155Bundle(token.address, 0, 0, "", { salt: salt, bundle: "0x" }, true),
+        handler.withdrawERC1155Bundle(tokenData, { salt: salt, bundle: "0x" }, true),
         "Bundler: not this"
       );
     });
@@ -48,26 +51,24 @@ describe("ERC1155Handler", () => {
         token.address,
         baseId,
         baseAmount,
-        "receiver",
         { salt: salt, bundle: "0xFFAA" },
         "kovan",
+        "receiver",
         true
       );
 
-      let realSalt = web3.utils.soliditySha3({
-        value: web3.eth.abi.encodeParameters(["bytes32", "address"], [salt, OWNER]),
-        type: "bytes",
-      });
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       assert.equal(await token.balanceOf(OWNER, baseId), "0");
+
       assert.equal(tx.receipt.logs[0].event, "DepositedERC1155");
       assert.equal(tx.receipt.logs[0].args.token, token.address);
       assert.equal(tx.receipt.logs[0].args.tokenId, baseId);
       assert.equal(tx.receipt.logs[0].args.amount, baseAmount);
-      assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.equal(tx.receipt.logs[0].args.salt, realSalt);
       assert.equal(tx.receipt.logs[0].args.bundle, "0xffaa");
       assert.equal(tx.receipt.logs[0].args.network, "kovan");
+      assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.isTrue(tx.receipt.logs[0].args.isWrapped);
     });
 
@@ -79,9 +80,9 @@ describe("ERC1155Handler", () => {
           token.address,
           baseId,
           baseAmount,
-          "receiver",
           { salt: salt, bundle: "0x" },
           "kovan",
+          "receiver",
           true
         ),
         "ERC1155MintableBurnable: not approved"
@@ -93,27 +94,25 @@ describe("ERC1155Handler", () => {
         token.address,
         baseId,
         baseAmount,
-        "receiver",
         { salt: salt, bundle: "0x000000" },
         "kovan",
+        "receiver",
         false
       );
 
-      let realSalt = web3.utils.soliditySha3({
-        value: web3.eth.abi.encodeParameters(["bytes32", "address"], [salt, OWNER]),
-        type: "bytes",
-      });
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       assert.equal(await token.balanceOf(OWNER, baseId), "0");
       assert.equal(await token.balanceOf(handler.address, baseId), baseAmount);
+
       assert.equal(tx.receipt.logs[0].event, "DepositedERC1155");
       assert.equal(tx.receipt.logs[0].args.token, token.address);
       assert.equal(tx.receipt.logs[0].args.tokenId, baseId);
       assert.equal(tx.receipt.logs[0].args.amount, baseAmount);
-      assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.equal(tx.receipt.logs[0].args.salt, realSalt);
       assert.equal(tx.receipt.logs[0].args.bundle, "0x000000");
       assert.equal(tx.receipt.logs[0].args.network, "kovan");
+      assert.equal(tx.receipt.logs[0].args.receiver, "receiver");
       assert.isFalse(tx.receipt.logs[0].args.isWrapped);
     });
 
@@ -123,9 +122,9 @@ describe("ERC1155Handler", () => {
           "0x0000000000000000000000000000000000000000",
           baseId,
           baseAmount,
-          "receiver",
           { salt: salt, bundle: "0x" },
           "kovan",
+          "receiver",
           false
         ),
         "ERC1155Handler: zero token"
@@ -138,9 +137,9 @@ describe("ERC1155Handler", () => {
           token.address,
           baseId,
           wei("0"),
-          "receiver",
           { salt: salt, bundle: "0x" },
           "kovan",
+          "receiver",
           false
         ),
         "ERC1155Handler: amount is zero"
@@ -148,91 +147,26 @@ describe("ERC1155Handler", () => {
     });
   });
 
-  describe("getERC1155MerkleLeaf", () => {
-    it("should encode args", async () => {
-      let bundle = "0x112233445566778899";
-
-      let merkleLeaf0 = await handler.getERC1155MerkleLeaf(
-        token.address,
-        baseId,
-        baseAmount,
-        "URI1",
-        OWNER,
-        { salt: salt, bundle: bundle },
-        originHash,
-        chainName
-      );
-
-      assert.equal(
-        merkleLeaf0,
-        web3.utils.soliditySha3(
-          { value: token.address, type: "address" },
-          { value: baseId, type: "uint256" },
-          { value: baseAmount, type: "uint256" },
-          { value: "URI1", type: "string" },
-          { value: OWNER, type: "address" },
-          { value: salt, type: "bytes32" },
-          { value: bundle, type: "bytes" },
-          { value: originHash, type: "bytes32" },
-          { value: chainName, type: "string" },
-          { value: handler.address, type: "address" }
-        )
-      );
-
-      let merkleLeaf1 = await handler.getERC1155MerkleLeaf(
-        token.address,
-        baseId,
-        baseAmount,
-        "URI2",
-        OWNER,
-        { salt: salt, bundle: bundle },
-        originHash,
-        "BSC"
-      );
-
-      assert.equal(
-        merkleLeaf1,
-        web3.utils.soliditySha3(
-          { value: token.address, type: "address" },
-          { value: baseId, type: "uint256" },
-          { value: baseAmount, type: "uint256" },
-          { value: "URI2", type: "string" },
-          { value: OWNER, type: "address" },
-          { value: salt, type: "bytes32" },
-          { value: bundle, type: "bytes" },
-          { value: originHash, type: "bytes32" },
-          { value: "BSC", type: "string" },
-          { value: handler.address, type: "address" }
-        )
-      );
-
-      assert.notEqual(merkleLeaf0, merkleLeaf1);
-    });
-  });
-
   describe("withdrawERC1155", () => {
     it("should withdraw 100 tokens, wrapped = true", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, baseId, "URI1", baseAmount]
+      );
+
       await handler.depositERC1155(
         token.address,
         baseId,
         baseAmount,
-        "receiver",
         { salt: salt, bundle: "0x" },
         "kovan",
+        "receiver",
         true
       );
 
       assert.equal(await token.uri(baseId), "URI");
 
-      await handler.withdrawERC1155(
-        token.address,
-        baseId,
-        baseAmount,
-        "URI1",
-        OWNER,
-        { salt: salt, bundle: "0x" },
-        true
-      );
+      await handler.withdrawERC1155(tokenData, OWNER, true);
 
       assert.equal(await token.balanceOf(OWNER, baseId), baseAmount);
       assert.equal(await token.balanceOf(handler.address, baseId), "0");
@@ -240,16 +174,21 @@ describe("ERC1155Handler", () => {
     });
 
     it("should withdraw 52 tokens, wrapped = false", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, baseId, "", baseAmount]
+      );
+
       await handler.depositERC1155(
         token.address,
         baseId,
         baseAmount,
-        "receiver",
         { salt: salt, bundle: "0x" },
         "kovan",
+        "receiver",
         false
       );
-      await handler.withdrawERC1155(token.address, baseId, baseAmount, "", OWNER, { salt: salt, bundle: "0x" }, false);
+      await handler.withdrawERC1155(tokenData, OWNER, false);
 
       assert.equal(await token.balanceOf(OWNER, baseId), baseAmount);
       assert.equal(await token.balanceOf(handler.address, baseId), "0");
@@ -257,38 +196,31 @@ describe("ERC1155Handler", () => {
     });
 
     it("should revert when token address is 0", async () => {
-      await truffleAssert.reverts(
-        handler.withdrawERC1155(
-          "0x0000000000000000000000000000000000000000",
-          baseId,
-          baseAmount,
-          "",
-          OWNER,
-          { salt: salt, bundle: "0x" },
-          true
-        ),
-        "ERC1155Handler: zero token"
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        ["0x0000000000000000000000000000000000000000", baseId, "", baseAmount]
       );
+
+      await truffleAssert.reverts(handler.withdrawERC1155(tokenData, OWNER, true), "ERC1155Handler: zero token");
     });
 
     it("should revert when amount is 0", async () => {
-      await truffleAssert.reverts(
-        handler.withdrawERC1155(token.address, baseId, 0, "", OWNER, { salt: salt, bundle: "0x" }, true),
-        "ERC1155Handler: amount is zero"
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, baseId, "", "0"]
       );
+
+      await truffleAssert.reverts(handler.withdrawERC1155(tokenData, OWNER, true), "ERC1155Handler: amount is zero");
     });
 
     it("should revert when receiver address is 0", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, baseId, "", baseAmount]
+      );
+
       await truffleAssert.reverts(
-        handler.withdrawERC1155(
-          token.address,
-          baseId,
-          baseAmount,
-          "",
-          "0x0000000000000000000000000000000000000000",
-          { salt: salt, bundle: "0x" },
-          true
-        ),
+        handler.withdrawERC1155(tokenData, "0x0000000000000000000000000000000000000000", true),
         "ERC1155Handler: zero receiver"
       );
     });

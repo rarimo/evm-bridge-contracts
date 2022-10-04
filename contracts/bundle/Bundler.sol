@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+
 import "../interfaces/bundle/IBundler.sol";
 
 import "./proxy/BundleExecutorProxy.sol";
 import "./proxy/BundleExecutorImplementation.sol";
-
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 abstract contract Bundler is IBundler, Initializable {
     address public bundleExecutorImplementation;
@@ -53,9 +53,5 @@ abstract contract Bundler is IBundler, Initializable {
                     )
                 )
             );
-    }
-
-    function _encodeSalt(bytes32 salt_) internal view returns (bytes32) {
-        return keccak256(abi.encode(salt_, msg.sender));
     }
 }

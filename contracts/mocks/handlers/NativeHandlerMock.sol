@@ -4,11 +4,7 @@ pragma solidity ^0.8.9;
 import "../../handlers/NativeHandler.sol";
 
 contract NativeHandlerMock is NativeHandler {
-    function withdrawNative(
-        uint256 amount_,
-        address receiver_,
-        IBundler.Bundle calldata bundle_
-    ) external {
-        _withdrawNative(amount_, receiver_, bundle_);
+    function withdrawNative(bytes calldata tokenData_, address receiver_) external {
+        _withdrawNative(tokenData_, receiver_, false);
     }
 }

@@ -3,52 +3,48 @@ pragma solidity ^0.8.9;
 
 import "../interfaces/handlers/INativeHandler.sol";
 
+import "../libs/Encoder.sol";
+
 import "../bundle/Bundler.sol";
 
 abstract contract NativeHandler is INativeHandler, Bundler {
+    using Encoder for bytes32;
+
     function depositNative(
-        string calldata receiver_,
         IBundler.Bundle calldata bundle_,
-        string calldata network_
+        string calldata network_,
+        string calldata receiver_
     ) external payable override {
         require(msg.value > 0, "NativeHandler: zero value");
 
         emit DepositedNative(
             msg.value,
-            receiver_,
-            _encodeSalt(bundle_.salt),
+            bundle_.salt.encode(),
             bundle_.bundle,
-            network_
+            network_,
+            receiver_
         );
     }
 
-    function withdrawNativeBundle(uint256 amount_, IBundler.Bundle calldata bundle_)
-        external
-        onlyThis
-    {
+    function withdrawNativeBundle(
+        bytes calldata tokenData_,
+        IBundler.Bundle calldata bundle_,
+        bool
+    ) external onlyThis {
         address bundleProxy_ = determineProxyAddress(bundle_.salt);
 
-        _withdraw(amount_, bundleProxy_);
+        _withdrawNative(tokenData_, bundleProxy_, false);
         _bundleUp(bundle_);
     }
 
     function _withdrawNative(
-        uint256 amount_,
+        bytes calldata tokenData_,
         address receiver_,
-        IBundler.Bundle calldata bundle_
+        bool
     ) internal {
+        uint256 amount_ = _decodeNativeTokenData(tokenData_);
+
         require(amount_ > 0, "NativeHandler: amount is zero");
-
-        if (bundle_.bundle.length > 0) {
-            try this.withdrawNativeBundle(amount_, bundle_) {
-                return;
-            } catch {}
-        }
-
-        _withdraw(amount_, receiver_);
-    }
-
-    function _withdraw(uint256 amount_, address receiver_) private {
         require(receiver_ != address(0), "NativeHandler: receiver is zero");
 
         (bool success_, ) = payable(receiver_).call{value: amount_}("");
@@ -56,24 +52,15 @@ abstract contract NativeHandler is INativeHandler, Bundler {
         require(success_, "NativeHandler: failed to send eth");
     }
 
-    function getNativeMerkleLeaf(
-        uint256 amount_,
-        address receiver_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        string memory chainName_
-    ) public view override returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked(
-                    amount_,
-                    receiver_,
-                    bundle_.salt,
-                    bundle_.bundle,
-                    originHash_,
-                    chainName_,
-                    address(this)
-                )
-            );
+    function _getNativeTokenDataLeaf(bytes calldata tokenData_)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return abi.encodePacked(_decodeNativeTokenData(tokenData_));
+    }
+
+    function _decodeNativeTokenData(bytes calldata tokenData_) private pure returns (uint256) {
+        return abi.decode(tokenData_, (uint256));
     }
 }

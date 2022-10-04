@@ -10,10 +10,10 @@ interface IERC721Handler is IBundler {
     event DepositedERC721(
         address token,
         uint256 tokenId,
-        string receiver,
         bytes32 salt,
         bytes bundle,
         string network,
+        string receiver,
         bool isWrapped
     );
 
@@ -21,38 +21,17 @@ interface IERC721Handler is IBundler {
      * @notice function for depositing erc721 tokens, emits event DepositedERC721
      * @param token_ the address of deposited token
      * @param tokenId_ the id of deposited token
-     * @param receiver_ the receiver address in destination network, information field for event
      * @param bundle_ the encoded transaction bundle with salt
      * @param network_ the network name of destination network, information field for event
+     * @param receiver_ the receiver address in destination network, information field for event
      * @param isWrapped_ the boolean flag, if true - token will burned, false - token will transferred
      */
     function depositERC721(
         address token_,
         uint256 tokenId_,
-        string calldata receiver_,
         IBundler.Bundle calldata bundle_,
         string calldata network_,
+        string calldata receiver_,
         bool isWrapped_
     ) external;
-
-    /**
-     * @notice function for getting the leaf of a merkle tree
-     * @param token_ the address of withdrawn token
-     * @param tokenId_ the id of deposited token
-     * @param tokenURI_ the token metadata URI or token index if base URI is set
-     * @param receiver_ the receiver address in destination network
-     * @param bundle_ the encoded transaction bundle with encoded salt
-     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
-     * @param chainName_ the name of this chain
-     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments + address(this)
-     */
-    function getERC721MerkleLeaf(
-        address token_,
-        uint256 tokenId_,
-        string calldata tokenURI_,
-        address receiver_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        string memory chainName_
-    ) external view returns (bytes32);
 }

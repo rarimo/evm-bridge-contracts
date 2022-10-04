@@ -18,87 +18,76 @@ import "../handlers/INativeHandler.sol";
  * Each Bridge contract can either give or take the user assets when they want to transfer tokens. Both liquidity pool
  * and mint-and-burn way of transferring assets are supported.
  *
+ * The bridge enables the transaction bundling feature as well.
  */
 interface IBridge is IBundler, IERC20Handler, IERC721Handler, IERC1155Handler, INativeHandler {
     /**
      * @notice function for withdrawing erc20 tokens
-     * @param token_ the address of withdrawn token
-     * @param amount_ the amount of withdrawn tokens
-     * @param receiver_ the address who will receive tokens
+     * @param tokenData_ the encoded token address and amount
      * @param bundle_ the encoded transaction bundle with encoded salt
+     * @param receiver_ the address who will receive tokens
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
      * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
      */
     function withdrawERC20(
-        address token_,
-        uint256 amount_,
-        address receiver_,
+        bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
+        address receiver_,
         bytes calldata proof_,
         bool isWrapped_
     ) external;
 
     /**
      * @notice function for withdrawing erc721 tokens
-     * @param token_ the address of withdrawn token
-     * @param tokenId_ the id of withdrawn token
-     * @param tokenURI_ the token metadata URI or token index if base URI is set
-     * @param receiver_ the address who will receive tokens
+     * @param tokenData_ the encoded token address, token id, amount (1), and token URI
      * @param bundle_ the encoded transaction bundle with encoded salt
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param receiver_ the address who will receive tokens
      * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
      */
     function withdrawERC721(
-        address token_,
-        uint256 tokenId_,
-        string calldata tokenURI_,
-        address receiver_,
+        bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
+        address receiver_,
         bytes calldata proof_,
         bool isWrapped_
     ) external;
 
     /**
      * @notice function for withdrawing erc1155 tokens
-     * @param token_ the address of withdrawn token
-     * @param tokenId_ the id of withdrawn token
-     * @param amount_ the amount of withdrawn tokens
-     * @param tokenURI_ the token metadata URI or token index if base URI is set
-     * @param receiver_ the address who will receive tokens
+     * @param tokenData_ the encoded token address, token id, amount, and token URI
      * @param bundle_ the encoded transaction bundle with encoded salt
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param receiver_ the address who will receive tokens
      * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      * @param isWrapped_ the boolean flag, if true - tokens will minted, false - tokens will transferred
      */
     function withdrawERC1155(
-        address token_,
-        uint256 tokenId_,
-        uint256 amount_,
-        string calldata tokenURI_,
-        address receiver_,
+        bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
+        address receiver_,
         bytes calldata proof_,
         bool isWrapped_
     ) external;
 
     /**
      * @notice function for withdrawing native currency
-     * @param amount_ the amount of withdrawn native currency
-     * @param receiver_ the address who will receive tokens
+     * @param tokenData_ the encoded native amount
      * @param bundle_ the encoded transaction bundle
      * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param receiver_ the address who will receive tokens
      * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
      */
     function withdrawNative(
-        uint256 amount_,
-        address receiver_,
+        bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
+        address receiver_,
         bytes calldata proof_
     ) external;
 }

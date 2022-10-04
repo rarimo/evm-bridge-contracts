@@ -41,6 +41,7 @@ describe("Bridge", () => {
   const baseBalance = wei("1000");
   const baseId = "5000";
   const originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
+  const originHash2 = "0xd4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
   const salt = "0x0000000000000000000000000000000000000000000000000000000000000001";
 
   let OWNER;
@@ -90,22 +91,25 @@ describe("Bridge", () => {
       let tx = await bridge.depositERC20(
         erc20.address,
         baseBalance,
-        OWNER,
         { salt: salt, bundle: "0x" },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC20MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: "0x", type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.amount]
       );
 
       existingLeaves.push(leaf);
@@ -119,14 +123,13 @@ describe("Bridge", () => {
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
       await bridge.withdrawERC20(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
@@ -144,30 +147,31 @@ describe("Bridge", () => {
         ["address[]", "uint256[]", "bytes[]"],
         [[erc20.address], [0], [getBytesTransferERC20(SECOND, wei("100"))]]
       );
-      const realSalt = web3.utils.soliditySha3({
-        value: web3.eth.abi.encodeParameters(["bytes32", "address"], [salt, OWNER]),
-        type: "bytes",
-      });
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       let tx = await bridge.depositERC20(
         erc20.address,
         baseBalance,
-        OWNER,
         { salt: salt, bundle: bundle },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC20MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.amount]
       );
 
       existingLeaves.push(leaf);
@@ -183,14 +187,13 @@ describe("Bridge", () => {
       const bundleProxy = await bridge.determineProxyAddress(realSalt);
 
       await bridge.withdrawERC20(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
@@ -211,22 +214,26 @@ describe("Bridge", () => {
       let tx = await bridge.depositERC20(
         erc20.address,
         baseBalance,
-        OWNER,
         { salt: salt, bundle: bundle },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC20MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.amount]
       );
 
       existingLeaves.push(leaf);
@@ -242,14 +249,13 @@ describe("Bridge", () => {
       const bundleProxy = await bridge.determineProxyAddress(tx.receipt.logs[0].args.salt);
 
       await bridge.withdrawERC20(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
@@ -268,23 +274,27 @@ describe("Bridge", () => {
       let tx = await bridge.depositERC721(
         erc721.address,
         baseId,
-        OWNER,
         { salt: salt, bundle: "0x" },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC721MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        "URI1",
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI1", type: "string" },
+        { value: "1", type: "uint256" },
+        { value: "0x", type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1", "1"]
       );
 
       existingLeaves.push(leaf);
@@ -298,15 +308,13 @@ describe("Bridge", () => {
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
       await bridge.withdrawERC721(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        "URI1",
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
@@ -320,11 +328,7 @@ describe("Bridge", () => {
     it("should transfer NFT through bundling", async () => {
       const isWrapped = false;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
-      const realSalt = web3.utils.soliditySha3({
-        value: web3.eth.abi.encodeParameters(["bytes32", "address"], [salt, OWNER]),
-        type: "bytes",
-      });
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       const bundleProxy = await bridge.determineProxyAddress(realSalt);
 
@@ -344,23 +348,28 @@ describe("Bridge", () => {
       let tx = await bridge.depositERC721(
         erc721.address,
         baseId,
-        OWNER,
         { salt: salt, bundle: bundle },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC721MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        "URI1",
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI1", type: "string" },
+        { value: "1", type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1", "1"]
       );
 
       existingLeaves.push(leaf);
@@ -374,21 +383,131 @@ describe("Bridge", () => {
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
       await bridge.withdrawERC721(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        "URI1",
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
 
       assert.equal(await erc721.ownerOf(baseId), SECOND);
       assert.equal(await erc721.tokenURI(baseId), "URI");
+    });
+
+    it("should bundle twice for the same salt", async () => {
+      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
+
+      const bundleProxy = await bridge.determineProxyAddress(realSalt);
+
+      const bundle = web3.eth.abi.encodeParameters(
+        ["address[]", "uint256[]", "bytes[]"],
+        [
+          [erc721.address, bundleReceiver.address, erc721.address],
+          [0, 0, 0],
+          [
+            getBytesSafeTransferERC721(bundleProxy, bundleReceiver.address, baseId),
+            getBytesWithdrawNFT(erc721.address, baseId),
+            getBytesSafeTransferERC721(bundleProxy, SECOND, baseId),
+          ],
+        ]
+      );
+
+      let tx = await bridge.depositERC721(
+        erc721.address,
+        baseId,
+        { salt: salt, bundle: bundle },
+        chainName,
+        OWNER,
+        true
+      );
+
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI1", type: "string" },
+        { value: "1", type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1", "1"]
+      );
+
+      existingLeaves.push(leaf);
+
+      let tree = constructTree(existingLeaves);
+      let root = getRoot(tree);
+      let path = getProof(leaf, tree);
+
+      let signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+
+      let proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
+
+      await bridge.withdrawERC721(
+        tokenData,
+        {
+          salt: tx.receipt.logs[0].args.salt,
+          bundle: tx.receipt.logs[0].args.bundle,
+        },
+        originHash,
+        tx.receipt.logs[0].args.receiver,
+        proof,
+        true
+      );
+
+      await erc721.transferFrom(SECOND, OWNER, baseId, { from: SECOND });
+      await erc721.approve(bridge.address, baseId);
+
+      tx = await bridge.depositERC721(erc721.address, baseId, { salt: salt, bundle: bundle }, chainName, OWNER, false);
+
+      leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI1", type: "string" },
+        { value: "1", type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash2, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      existingLeaves.push(leaf);
+
+      tree = constructTree(existingLeaves);
+      root = getRoot(tree);
+      path = getProof(leaf, tree);
+
+      signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+
+      proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
+
+      await bridge.withdrawERC721(
+        tokenData,
+        {
+          salt: tx.receipt.logs[0].args.salt,
+          bundle: tx.receipt.logs[0].args.bundle,
+        },
+        originHash2,
+        tx.receipt.logs[0].args.receiver,
+        proof,
+        false
+      );
+
+      assert.equal(await erc721.ownerOf(baseId), SECOND);
+      assert.equal(await erc721.tokenURI(baseId), "URI1");
     });
   });
 
@@ -401,24 +520,27 @@ describe("Bridge", () => {
         erc1155.address,
         baseId,
         baseBalance,
-        OWNER,
         { salt: salt, bundle: "0x" },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC1155MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        tx.receipt.logs[0].args.amount,
-        "URI2",
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI2", type: "string" },
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: "0x", type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI2", tx.receipt.logs[0].args.amount]
       );
 
       existingLeaves.push(leaf);
@@ -432,16 +554,13 @@ describe("Bridge", () => {
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
       await bridge.withdrawERC1155(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        tx.receipt.logs[0].args.amount,
-        "URI2",
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
@@ -456,11 +575,7 @@ describe("Bridge", () => {
     it("should withdraw ERC1155 through bundling", async () => {
       const isWrapped = false;
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
-      const realSalt = web3.utils.soliditySha3({
-        value: web3.eth.abi.encodeParameters(["bytes32", "address"], [salt, OWNER]),
-        type: "bytes",
-      });
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       const bundleProxy = await bridge.determineProxyAddress(realSalt);
 
@@ -473,24 +588,28 @@ describe("Bridge", () => {
         erc1155.address,
         baseId,
         baseBalance,
-        OWNER,
         { salt: salt, bundle: bundle },
         chainName,
+        OWNER,
         isWrapped
       );
 
-      let leaf = await bridge.getERC1155MerkleLeaf(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        tx.receipt.logs[0].args.amount,
-        "URI2",
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI2", type: "string" },
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI2", tx.receipt.logs[0].args.amount]
       );
 
       existingLeaves.push(leaf);
@@ -504,16 +623,13 @@ describe("Bridge", () => {
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
       await bridge.withdrawERC1155(
-        tx.receipt.logs[0].args.token,
-        tx.receipt.logs[0].args.tokenId,
-        tx.receipt.logs[0].args.amount,
-        "URI2",
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         isWrapped
       );
@@ -530,18 +646,18 @@ describe("Bridge", () => {
     it("should withdrawNative", async () => {
       const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
-      let tx = await bridge.depositNative(OWNER, { salt: salt, bundle: "0x" }, chainName, { value: baseBalance });
+      let tx = await bridge.depositNative({ salt: salt, bundle: "0x" }, chainName, OWNER, { value: baseBalance });
 
-      let leaf = await bridge.getNativeMerkleLeaf(
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: "0x", type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
       );
+
+      const tokenData = web3.eth.abi.encodeParameters(["uint256"], [tx.receipt.logs[0].args.amount]);
 
       existingLeaves.push(leaf);
 
@@ -556,13 +672,13 @@ describe("Bridge", () => {
       const prevBalance = await web3.eth.getBalance(OWNER);
 
       await bridge.withdrawNative(
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof,
         { from: SECOND }
       );
@@ -585,18 +701,19 @@ describe("Bridge", () => {
         ]
       );
 
-      let tx = await bridge.depositNative(OWNER, { salt: salt, bundle: bundle }, chainName, { value: baseBalance });
+      let tx = await bridge.depositNative({ salt: salt, bundle: bundle }, chainName, OWNER, { value: baseBalance });
 
-      let leaf = await bridge.getNativeMerkleLeaf(
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
-        {
-          salt: tx.receipt.logs[0].args.salt,
-          bundle: tx.receipt.logs[0].args.bundle,
-        },
-        originHash,
-        tx.receipt.logs[0].args.network
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.amount, type: "uint256" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
       );
+
+      const tokenData = web3.eth.abi.encodeParameters(["uint256"], [tx.receipt.logs[0].args.amount]);
 
       existingLeaves.push(leaf);
 
@@ -613,13 +730,13 @@ describe("Bridge", () => {
       const prevBalance = await web3.eth.getBalance(SECOND);
 
       await bridge.withdrawNative(
-        tx.receipt.logs[0].args.amount,
-        tx.receipt.logs[0].args.receiver,
+        tokenData,
         {
           salt: tx.receipt.logs[0].args.salt,
           bundle: tx.receipt.logs[0].args.bundle,
         },
         originHash,
+        tx.receipt.logs[0].args.receiver,
         proof
       );
 
