@@ -45,16 +45,14 @@ contract Bridge is
         bytes calldata proof_,
         bool isWrapped_
     ) external override {
-        bytes32 merkleLeaf_ = _getERC20TokenDataLeaf.encode(
+        _verifyMerkleLeaf(
+            _getERC20TokenDataLeaf,
             tokenData_,
             bundle_,
             originHash_,
-            chainName,
-            receiver_
+            receiver_,
+            proof_
         );
-
-        _checkAndUpdateHashes(originHash_);
-        _checkMerkleSignature(merkleLeaf_, proof_);
 
         _withdraw(
             _withdrawERC20,
@@ -74,16 +72,14 @@ contract Bridge is
         bytes calldata proof_,
         bool isWrapped_
     ) external override {
-        bytes32 merkleLeaf_ = _getERC721TokenDataLeaf.encode(
+        _verifyMerkleLeaf(
+            _getERC721TokenDataLeaf,
             tokenData_,
             bundle_,
             originHash_,
-            chainName,
-            receiver_
+            receiver_,
+            proof_
         );
-
-        _checkAndUpdateHashes(originHash_);
-        _checkMerkleSignature(merkleLeaf_, proof_);
 
         _withdraw(
             _withdrawERC721,
@@ -103,16 +99,14 @@ contract Bridge is
         bytes calldata proof_,
         bool isWrapped_
     ) external override {
-        bytes32 merkleLeaf_ = _getERC1155TokenDataLeaf.encode(
+        _verifyMerkleLeaf(
+            _getERC1155TokenDataLeaf,
             tokenData_,
             bundle_,
             originHash_,
-            chainName,
-            receiver_
+            receiver_,
+            proof_
         );
-
-        _checkAndUpdateHashes(originHash_);
-        _checkMerkleSignature(merkleLeaf_, proof_);
 
         _withdraw(
             _withdrawERC1155,
@@ -131,16 +125,14 @@ contract Bridge is
         address receiver_,
         bytes calldata proof_
     ) external override {
-        bytes32 merkleLeaf_ = _getNativeTokenDataLeaf.encode(
+        _verifyMerkleLeaf(
+            _getNativeTokenDataLeaf,
             tokenData_,
             bundle_,
             originHash_,
-            chainName,
-            receiver_
+            receiver_,
+            proof_
         );
-
-        _checkAndUpdateHashes(originHash_);
-        _checkMerkleSignature(merkleLeaf_, proof_);
 
         _withdraw(
             _withdrawNative,
@@ -150,6 +142,26 @@ contract Bridge is
             receiver_,
             false
         );
+    }
+
+    function _verifyMerkleLeaf(
+        function(bytes calldata) internal pure returns (bytes memory) _getTokenDataLeaf,
+        bytes calldata tokenData_,
+        IBundler.Bundle calldata bundle_,
+        bytes32 originHash_,
+        address receiver_,
+        bytes calldata proof_
+    ) internal {
+        bytes32 merkleLeaf_ = _getTokenDataLeaf.encode(
+            tokenData_,
+            bundle_,
+            originHash_,
+            chainName,
+            receiver_
+        );
+
+        _checkAndUpdateHashes(originHash_);
+        _checkMerkleSignature(merkleLeaf_, proof_);
     }
 
     function _withdraw(
