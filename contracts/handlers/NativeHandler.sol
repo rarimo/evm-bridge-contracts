@@ -26,6 +26,8 @@ abstract contract NativeHandler is INativeHandler, Bundler {
         );
     }
 
+    receive() external payable {}
+
     function withdrawNativeBundle(
         bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,

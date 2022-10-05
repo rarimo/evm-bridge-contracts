@@ -1,4 +1,4 @@
-const { accounts } = require("../../scripts/helpers/utils");
+const { accounts, wei } = require("../../scripts/helpers/utils");
 const truffleAssert = require("truffle-assertions");
 const ethSigUtil = require("@metamask/eth-sig-util");
 
@@ -82,6 +82,13 @@ describe("Upgradeable", () => {
     await truffleAssert.reverts(
       proxyBridge.upgradeToWithSig(newBridge.address, signature),
       "Signers: invalid signature"
+    );
+  });
+
+  it("should receive ether through proxy", async () => {
+    await truffleAssert.passes(
+      await web3.eth.sendTransaction({ from: OWNER, to: proxyBridge.address, value: wei("1") }),
+      "pass"
     );
   });
 });
