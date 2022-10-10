@@ -5,12 +5,10 @@ import "../../handlers/ERC1155Handler.sol";
 
 contract ERC1155HandlerMock is ERC1155Handler {
     function withdrawERC1155(
-        address token_,
-        uint256 tokenId_,
-        uint256 amount_,
+        bytes calldata tokenData_,
         address receiver_,
         bool isWrapped_
     ) external {
-        _withdrawERC1155(token_, tokenId_, amount_, receiver_, isWrapped_);
+        _withdrawERC1155(tokenData_, receiver_, isWrapped_);
     }
 }

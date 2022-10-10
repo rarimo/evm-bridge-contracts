@@ -5,11 +5,10 @@ import "../../handlers/ERC20Handler.sol";
 
 contract ERC20HandlerMock is ERC20Handler {
     function withdrawERC20(
-        address token_,
-        uint256 amount_,
+        bytes calldata tokenData_,
         address receiver_,
         bool isWrapped_
     ) external {
-        _withdrawERC20(token_, amount_, receiver_, isWrapped_);
+        _withdrawERC20(tokenData_, receiver_, isWrapped_);
     }
 }

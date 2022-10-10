@@ -1,33 +1,29 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-interface INativeHandler {
+import "../bundle/IBundler.sol";
+
+interface INativeHandler is IBundler {
     /**
      * @notice event emits from depositNative function
      */
-    event DepositedNative(uint256 amount, string receiver, string network);
+    event DepositedNative(
+        uint256 amount,
+        bytes32 salt,
+        bytes bundle,
+        string network,
+        string receiver
+    );
 
     /**
      * @notice function for depositing native currency, emits event DepositedNative
-     * @param receiver_ the receiver address in destination network, information field for event
+     * @param bundle_ the encoded transaction bundle with salt
      * @param network_ the network name of destination network, information field for event
+     * @param receiver_ the receiver address in destination network, information field for event
      */
-    function depositNative(string calldata receiver_, string calldata network_) external payable;
-
-    /**
-     * @notice function for getting the leaf of a merkle tree
-     * @param amount_ the amount of withdrawn tokens
-     * @param receiver_ the receiver address in destination network
-     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
-     * @param chainName_ the name of this chain
-     * @param verifyingContract_ this contract address
-     * @return bytes32 the keccak256 hash of abi.encodePacked concatenation of arguments
-     */
-    function getNativeMerkleLeaf(
-        uint256 amount_,
-        address receiver_,
-        bytes32 originHash_,
-        string memory chainName_,
-        address verifyingContract_
-    ) external pure returns (bytes32);
+    function depositNative(
+        IBundler.Bundle calldata bundle_,
+        string calldata network_,
+        string calldata receiver_
+    ) external payable;
 }

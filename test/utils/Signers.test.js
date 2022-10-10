@@ -80,64 +80,26 @@ describe("Signers", () => {
       const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const leaf = leaves[0];
       const hashToSign = getRoot(tree);
-      const proof = getProof(leaf, tree);
+      const path = getProof(leaf, tree);
 
       const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
 
-      await truffleAssert.passes(signers.checkMerkleSignature(leaf, proof, signature));
+      const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
+
+      await truffleAssert.passes(signers.checkMerkleSignature(leaf, proof));
     });
 
     it("should revert if passed merkle leaf is wrong", async () => {
       const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const leaf = leaves[0];
       const hashToSign = getRoot(tree);
-      const proof = getProof(leaf, tree);
+      const path = getProof(leaf, tree);
 
       const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
 
-      await truffleAssert.reverts(
-        signers.checkMerkleSignature(leaves[1], proof, signature),
-        "Signers: invalid signature"
-      );
-    });
-  });
+      const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
-  describe("changeSigner", () => {
-    it("should correctly change signer", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
-      assert.equal(await signers.signer(), OWNER);
-      assert.equal(await signers.nonce(), "0");
-
-      const hashToSign = web3.utils.soliditySha3(
-        { value: SECOND, type: "address" },
-        { value: chainName, type: "string" },
-        { value: "0", type: "uint256" },
-        { value: signers.address, type: "address" }
-      );
-
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
-
-      await signers.changeSigner(SECOND, signature);
-
-      assert.equal(await signers.signer(), SECOND);
-      assert.equal(await signers.nonce(), "1");
-    });
-
-    it("should not change signer if bad signature is passed", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
-      const hashToSign = web3.utils.soliditySha3(
-        { value: SECOND, type: "address" },
-        { value: chainName, type: "string" },
-        { value: "0", type: "uint256" },
-        { value: signers.address, type: "address" }
-      );
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
-
-      await signers.changeSigner(SECOND, signature);
-
-      await truffleAssert.reverts(signers.changeSigner(SECOND, signature), "Signers: invalid signature");
+      await truffleAssert.reverts(signers.checkMerkleSignature(leaves[1], proof), "Signers: invalid signature");
     });
   });
 });

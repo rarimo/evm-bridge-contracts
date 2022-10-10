@@ -5,11 +5,10 @@ import "../../handlers/ERC721Handler.sol";
 
 contract ERC721HandlerMock is ERC721Handler {
     function withdrawERC721(
-        address token_,
-        uint256 tokenId_,
+        bytes calldata tokenData_,
         address receiver_,
         bool isWrapped_
     ) external {
-        _withdrawERC721(token_, tokenId_, receiver_, isWrapped_);
+        _withdrawERC721(tokenData_, receiver_, isWrapped_);
     }
 }

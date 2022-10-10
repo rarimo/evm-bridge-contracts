@@ -14,7 +14,12 @@ abstract contract Signers is Initializable {
 
     string public chainName;
 
-    function __Signers_init(address signer_, string memory chainName_) public onlyInitializing {
+    modifier nonceIncrementer() {
+        _;
+        nonce++;
+    }
+
+    function __Signers_init(address signer_, string calldata chainName_) public onlyInitializing {
         signer = signer_;
         chainName = chainName_;
     }
@@ -25,22 +30,18 @@ abstract contract Signers is Initializable {
         require(signer == signer_, "Signers: invalid signature");
     }
 
-    function _checkMerkleSignature(
-        bytes32 merkleLeaf_,
-        bytes32[] calldata merklePath_,
-        bytes calldata signature_
-    ) internal view {
+    function _checkMerkleSignature(bytes32 merkleLeaf_, bytes calldata proof_) internal view {
+        (bytes32[] memory merklePath_, bytes memory signature_) = abi.decode(
+            proof_,
+            (bytes32[], bytes)
+        );
+
         bytes32 merkleRoot_ = merklePath_.processProof(merkleLeaf_);
 
         _checkSignature(merkleRoot_, signature_);
     }
 
-    function changeSigner(address newSigner_, bytes memory signature_) external {
-        _checkSignature(
-            keccak256(abi.encodePacked(newSigner_, chainName, nonce++, address(this))),
-            signature_
-        );
-
-        signer = newSigner_;
+    function _getAddressChangeHash(address newAddress_) internal view returns (bytes32) {
+        return keccak256(abi.encodePacked(newAddress_, chainName, nonce, address(this)));
     }
 }

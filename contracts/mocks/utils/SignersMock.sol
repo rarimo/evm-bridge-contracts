@@ -12,11 +12,7 @@ contract SignersMock is Signers {
         _checkSignature(signHash_, signature_);
     }
 
-    function checkMerkleSignature(
-        bytes32 merkleLeaf_,
-        bytes32[] calldata merklePath_,
-        bytes calldata signature_
-    ) external view {
-        _checkMerkleSignature(merkleLeaf_, merklePath_, signature_);
+    function checkMerkleSignature(bytes32 merkleLeaf_, bytes calldata proof_) external view {
+        _checkMerkleSignature(merkleLeaf_, proof_);
     }
 }
