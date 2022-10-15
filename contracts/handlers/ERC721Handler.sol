@@ -58,7 +58,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         address receiver_,
         bool isWrapped_
     ) internal {
-        (address token_, uint256 tokenId_, string memory tokenURI_, ) = _decodeERC721TokenData(
+        (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
             tokenData_
         );
 
@@ -79,14 +79,11 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         pure
         returns (bytes memory)
     {
-        (
-            address token_,
-            uint256 tokenId_,
-            string memory tokenURI_,
-            uint256 amount_
-        ) = _decodeERC721TokenData(tokenData_);
+        (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
+            tokenData_
+        );
 
-        return abi.encodePacked(token_, tokenId_, tokenURI_, amount_);
+        return abi.encodePacked(token_, tokenId_, tokenURI_);
     }
 
     function _decodeERC721TokenData(bytes calldata tokenData_)
@@ -95,10 +92,9 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         returns (
             address,
             uint256,
-            string memory,
-            uint256
+            string memory
         )
     {
-        return abi.decode(tokenData_, (address, uint256, string, uint256));
+        return abi.decode(tokenData_, (address, uint256, string));
     }
 }
