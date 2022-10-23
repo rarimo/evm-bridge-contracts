@@ -10,3 +10,7 @@ coverage
 
 .idea
 .vscode
+
+# Typechain generated files
+generated-types/*
+!generated-types/ethers
