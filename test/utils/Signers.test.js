@@ -1,15 +1,12 @@
-const { assert } = require("chai");
 const { accounts } = require("../../scripts/helpers/utils");
 const { constructTree, getProof, getRoot } = require("../../scripts/helpers/merkletree");
+const { rawSign } = require("../helpers/signer");
+const { OWNER_PRIVATE_KEY, ANOTHER_PRIVATE_KEY } = require("../helpers/keys");
 const truffleAssert = require("truffle-assertions");
-const ethSigUtil = require("@metamask/eth-sig-util");
 
 const Signers = artifacts.require("SignersMock");
 
 Signers.numberFormat = "BigNumber";
-
-const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-const ANOTHER_PRIVATE_KEY = "df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e";
 
 describe("Signers", () => {
   const chainName = "ethereum";
@@ -32,29 +29,26 @@ describe("Signers", () => {
 
   describe("checkSignatures", () => {
     it("should check signatures", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       await truffleAssert.passes(signers.checkSignature(hashToSign, signature));
     });
 
     it("should revert when signer in not signer", async () => {
-      const anotherKey = Buffer.from(ANOTHER_PRIVATE_KEY, "hex");
       const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      const signature = ethSigUtil.personalSign({ privateKey: anotherKey, data: hashToSign });
+      const signature = rawSign(hashToSign, ANOTHER_PRIVATE_KEY);
 
       await truffleAssert.reverts(signers.checkSignature(hashToSign, signature), "Signers: invalid signature");
     });
 
     it("should revert when passing wrong data", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
       const fakeHash = "0xd4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
 
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       await truffleAssert.reverts(signers.checkSignature(fakeHash, signature), "Signers: invalid signature");
     });
@@ -77,12 +71,11 @@ describe("Signers", () => {
     });
 
     it("should verify signed merkle root", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const leaf = leaves[0];
       const hashToSign = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -90,12 +83,11 @@ describe("Signers", () => {
     });
 
     it("should revert if passed merkle leaf is wrong", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const leaf = leaves[0];
       const hashToSign = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 

@@ -39,11 +39,7 @@ abstract contract NativeHandler is INativeHandler, Bundler {
         _bundleUp(bundle_);
     }
 
-    function _withdrawNative(
-        bytes calldata tokenData_,
-        address receiver_,
-        bool
-    ) internal {
+    function _withdrawNative(bytes calldata tokenData_, address receiver_, bool) internal {
         uint256 amount_ = _decodeNativeTokenData(tokenData_);
 
         require(amount_ > 0, "NativeHandler: amount is zero");

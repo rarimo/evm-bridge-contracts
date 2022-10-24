@@ -5,7 +5,7 @@ import "../interfaces/bundle/IBundler.sol";
 
 library Encoder {
     function encode(bytes32 salt_) internal view returns (bytes32) {
-        return keccak256(abi.encodePacked(salt_, msg.sender));
+        return keccak256(abi.encodePacked(salt_, tx.origin));
     }
 
     function encode(
@@ -34,11 +34,11 @@ library Encoder {
         return abi.encodePacked(bundle_.salt, bundle_.bundle);
     }
 
-    function _getMetadataLeaf(
-        bytes32 originHash_,
-        string memory chainName_,
-        address receiver_
-    ) private view returns (bytes memory) {
+    function _getMetadataLeaf(bytes32 originHash_, string memory chainName_, address receiver_)
+        private
+        view
+        returns (bytes memory)
+    {
         return abi.encodePacked(originHash_, chainName_, receiver_, address(this));
     }
 }

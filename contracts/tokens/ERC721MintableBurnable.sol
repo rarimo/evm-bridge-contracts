@@ -9,22 +9,19 @@ import "../interfaces/tokens/IERC721MintableBurnable.sol";
 contract ERC721MintableBurnable is IERC721MintableBurnable, Ownable, ERC721URIStorage {
     string public baseURI;
 
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        address owner_,
-        string memory baseURI_
-    ) ERC721(name_, symbol_) {
+    constructor(string memory name_, string memory symbol_, address owner_, string memory baseURI_)
+        ERC721(name_, symbol_)
+    {
         baseURI = baseURI_;
 
         transferOwnership(owner_);
     }
 
-    function mintTo(
-        address receiver_,
-        uint256 tokenId_,
-        string calldata tokenURI_
-    ) external override onlyOwner {
+    function mintTo(address receiver_, uint256 tokenId_, string calldata tokenURI_)
+        external
+        override
+        onlyOwner
+    {
         _mint(receiver_, tokenId_);
         _setTokenURI(tokenId_, tokenURI_);
     }

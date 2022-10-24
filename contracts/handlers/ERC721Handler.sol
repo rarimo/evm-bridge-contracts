@@ -53,11 +53,9 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         _bundleUp(bundle_);
     }
 
-    function _withdrawERC721(
-        bytes calldata tokenData_,
-        address receiver_,
-        bool isWrapped_
-    ) internal {
+    function _withdrawERC721(bytes calldata tokenData_, address receiver_, bool isWrapped_)
+        internal
+    {
         (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
             tokenData_
         );
@@ -89,11 +87,7 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
     function _decodeERC721TokenData(bytes calldata tokenData_)
         private
         pure
-        returns (
-            address,
-            uint256,
-            string memory
-        )
+        returns (address, uint256, string memory)
     {
         return abi.decode(tokenData_, (address, uint256, string));
     }

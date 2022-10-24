@@ -1,6 +1,7 @@
 const { accounts, wei } = require("../../scripts/helpers/utils");
+const { rawSign } = require("../helpers/signer");
+const { OWNER_PRIVATE_KEY } = require("../helpers/keys");
 const truffleAssert = require("truffle-assertions");
-const ethSigUtil = require("@metamask/eth-sig-util");
 
 const ERC1967Proxy = artifacts.require("ERC1967ProxyMock");
 const Bridge = artifacts.require("Bridge");
@@ -9,8 +10,6 @@ const BundleImpl = artifacts.require("BundleExecutorImplementation");
 Bridge.numberFormat = "BigNumber";
 ERC1967Proxy.numberFormat = "BigNumber";
 BundleImpl.numberFormat = "BigNumber";
-
-const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 describe("Upgradeable", () => {
   const chainName = "ethereum";
@@ -53,8 +52,6 @@ describe("Upgradeable", () => {
   });
 
   it("should upgrade if signature is ok", async () => {
-    const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
     const hashToSign = web3.utils.soliditySha3(
       { value: newBridge.address, type: "address" },
       { value: chainName, type: "string" },
@@ -62,14 +59,12 @@ describe("Upgradeable", () => {
       { value: proxyBridge.address, type: "address" }
     );
 
-    const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+    const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
     await truffleAssert.passes(proxyBridge.upgradeToWithSig(newBridge.address, signature));
   });
 
   it("should fail upgrade if nonce is wrong", async () => {
-    const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
     const hashToSign = web3.utils.soliditySha3(
       { value: newBridge.address, type: "address" },
       { value: chainName, type: "string" },
@@ -77,7 +72,7 @@ describe("Upgradeable", () => {
       { value: proxyBridge.address, type: "address" }
     );
 
-    const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+    const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
     await truffleAssert.reverts(
       proxyBridge.upgradeToWithSig(newBridge.address, signature),

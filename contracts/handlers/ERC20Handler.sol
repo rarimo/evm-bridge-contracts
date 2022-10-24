@@ -55,11 +55,9 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         _bundleUp(bundle_);
     }
 
-    function _withdrawERC20(
-        bytes calldata tokenData_,
-        address receiver_,
-        bool isWrapped_
-    ) internal {
+    function _withdrawERC20(bytes calldata tokenData_, address receiver_, bool isWrapped_)
+        internal
+    {
         (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
 
         require(token_ != address(0), "ERC20Handler: zero token");

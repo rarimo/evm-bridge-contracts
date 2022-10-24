@@ -25,7 +25,7 @@ abstract contract Signers is Initializable {
     }
 
     function _checkSignature(bytes32 signHash_, bytes memory signature_) internal view {
-        address signer_ = signHash_.toEthSignedMessageHash().recover(signature_);
+        address signer_ = signHash_.recover(signature_);
 
         require(signer == signer_, "Signers: invalid signature");
     }

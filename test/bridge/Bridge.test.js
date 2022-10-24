@@ -8,7 +8,8 @@ const {
   getBytesWithdrawETH,
 } = require("../bundler/bundler-utils");
 const { constructTree, getProof, getRoot } = require("../../scripts/helpers/merkletree");
-const ethSigUtil = require("@metamask/eth-sig-util");
+const { rawSign } = require("../helpers/signer");
+const { OWNER_PRIVATE_KEY } = require("../helpers/keys");
 const truffleAssert = require("truffle-assertions");
 
 const Bridge = artifacts.require("Bridge");
@@ -24,8 +25,6 @@ ERC20MB.numberFormat = "BigNumber";
 Bridge.numberFormat = "BigNumber";
 BundleImpl.numberFormat = "BigNumber";
 BundleReceiver.numberFormat = "BigNumber";
-
-const OWNER_PRIVATE_KEY = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 describe("Bridge", () => {
   const existingLeaves = [
@@ -86,7 +85,6 @@ describe("Bridge", () => {
   describe("ERC20 flow", () => {
     it("should withdrawERC20", async () => {
       const isWrapped = true;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
       let tx = await bridge.depositERC20(
         erc20.address,
@@ -118,7 +116,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -142,7 +140,6 @@ describe("Bridge", () => {
 
     it("should withdraw ERC20 through bundling", async () => {
       const isWrapped = true;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const bundle = web3.eth.abi.encodeParameters(
         ["address[]", "uint256[]", "bytes[]"],
         [[erc20.address], [0], [getBytesTransferERC20(SECOND, wei("100"))]]
@@ -180,7 +177,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -205,7 +202,6 @@ describe("Bridge", () => {
 
     it("should fallback to a normal withdrawal if bundling reverts", async () => {
       const isWrapped = true;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const bundle = web3.eth.abi.encodeParameters(
         ["address[]", "uint256[]", "bytes[]"],
         [[erc20.address], [0], [getBytesTransferERC20(SECOND, wei("10000"))]]
@@ -242,7 +238,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -269,7 +265,6 @@ describe("Bridge", () => {
   describe("ERC721 flow", () => {
     it("should withdrawERC721", async () => {
       const isWrapped = true;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
       let tx = await bridge.depositERC721(
         erc721.address,
@@ -302,7 +297,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -326,7 +321,6 @@ describe("Bridge", () => {
 
     it("should transfer NFT through bundling", async () => {
       const isWrapped = false;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       const bundleProxy = await bridge.determineProxyAddress(realSalt);
@@ -376,7 +370,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -397,7 +391,6 @@ describe("Bridge", () => {
     });
 
     it("should bundle twice for the same salt", async () => {
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       const bundleProxy = await bridge.determineProxyAddress(realSalt);
@@ -447,7 +440,7 @@ describe("Bridge", () => {
       let root = getRoot(tree);
       let path = getProof(leaf, tree);
 
-      let signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      let signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       let proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -486,7 +479,7 @@ describe("Bridge", () => {
       root = getRoot(tree);
       path = getProof(leaf, tree);
 
-      signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -510,7 +503,6 @@ describe("Bridge", () => {
   describe("ERC1155 flow", () => {
     it("should withdrawERC1155", async () => {
       const isWrapped = true;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
 
       let tx = await bridge.depositERC1155(
         erc1155.address,
@@ -545,7 +537,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -570,7 +562,6 @@ describe("Bridge", () => {
 
     it("should withdraw ERC1155 through bundling", async () => {
       const isWrapped = false;
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
       const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
 
       const bundleProxy = await bridge.determineProxyAddress(realSalt);
@@ -614,7 +605,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -640,8 +631,6 @@ describe("Bridge", () => {
 
   describe("Native flow", () => {
     it("should withdrawNative", async () => {
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
       let tx = await bridge.depositNative({ salt: salt, bundle: "0x" }, chainName, OWNER, { value: baseBalance });
 
       let leaf = web3.utils.soliditySha3(
@@ -661,7 +650,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -686,8 +675,6 @@ describe("Bridge", () => {
     });
 
     it("should withdraw native through bundling", async () => {
-      const privateKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
       const bundle = web3.eth.abi.encodeParameters(
         ["address[]", "uint256[]", "bytes[]"],
         [
@@ -717,7 +704,7 @@ describe("Bridge", () => {
       const root = getRoot(tree);
       const path = getProof(leaf, tree);
 
-      const signature = ethSigUtil.personalSign({ privateKey: privateKey, data: root });
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
 
       const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
 
@@ -745,8 +732,6 @@ describe("Bridge", () => {
 
   describe("changeSigner", () => {
     it("should correctly change signer", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
       assert.equal(await bridge.signer(), OWNER);
       assert.equal(await bridge.nonce(), "0");
 
@@ -757,7 +742,7 @@ describe("Bridge", () => {
         { value: bridge.address, type: "address" }
       );
 
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       await bridge.changeSigner(SECOND, signature);
 
@@ -766,15 +751,14 @@ describe("Bridge", () => {
     });
 
     it("should not change signer if bad signature is passed", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
       const hashToSign = web3.utils.soliditySha3(
         { value: SECOND, type: "address" },
         { value: chainName, type: "string" },
         { value: "0", type: "uint256" },
         { value: bridge.address, type: "address" }
       );
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       await bridge.changeSigner(SECOND, signature);
 
@@ -784,8 +768,6 @@ describe("Bridge", () => {
 
   describe("changeBundleExecutorImplementation", () => {
     it("should correctly change executor implementation", async () => {
-      const ownerKey = Buffer.from(OWNER_PRIVATE_KEY, "hex");
-
       assert.equal(await bridge.bundleExecutorImplementation(), bundleImpl.address);
       assert.equal(await bridge.nonce(), "0");
 
@@ -796,7 +778,7 @@ describe("Bridge", () => {
         { value: bridge.address, type: "address" }
       );
 
-      const signature = ethSigUtil.personalSign({ privateKey: ownerKey, data: hashToSign });
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
       await bridge.changeBundleExecutorImplementation(SECOND, signature);
 
