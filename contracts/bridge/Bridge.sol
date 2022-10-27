@@ -188,13 +188,12 @@ contract Bridge is
     function _authorizeUpgrade(address newImplementation_, bytes memory signature_)
         internal
         override
-        nonceIncrementer
     {
-        _checkSignature(_getAddressChangeHash(newImplementation_), signature_);
+        _checkSignatureAndIncrementNonce(_getAddressChangeHash(newImplementation_), signature_);
     }
 
-    function changeSigner(address newSigner_, bytes memory signature_) external nonceIncrementer {
-        _checkSignature(_getAddressChangeHash(newSigner_), signature_);
+    function changeSigner(address newSigner_, bytes memory signature_) external {
+        _checkSignatureAndIncrementNonce(_getAddressChangeHash(newSigner_), signature_);
 
         signer = newSigner_;
     }
@@ -202,8 +201,8 @@ contract Bridge is
     function changeBundleExecutorImplementation(
         address newImplementation_,
         bytes memory signature_
-    ) external nonceIncrementer {
-        _checkSignature(_getAddressChangeHash(newImplementation_), signature_);
+    ) external {
+        _checkSignatureAndIncrementNonce(_getAddressChangeHash(newImplementation_), signature_);
 
         bundleExecutorImplementation = newImplementation_;
     }

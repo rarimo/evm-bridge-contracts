@@ -80,6 +80,22 @@ describe("Upgradeable", () => {
     );
   });
 
+  it("should not upgrade from nonproxy", async () => {
+    const hashToSign = web3.utils.soliditySha3(
+      { value: newBridge.address, type: "address" },
+      { value: chainName, type: "string" },
+      { value: "0", type: "uint256" },
+      { value: proxyBridge.address, type: "address" }
+    );
+
+    const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+    await truffleAssert.reverts(
+      bridge.upgradeToWithSig(newBridge.address, signature),
+      "Function must be called through delegatecall"
+    );
+  });
+
   it("should receive ether through proxy", async () => {
     await truffleAssert.passes(
       await web3.eth.sendTransaction({ from: OWNER, to: proxyBridge.address, value: wei("1") }),

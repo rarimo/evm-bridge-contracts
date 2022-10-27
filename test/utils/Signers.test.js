@@ -27,6 +27,15 @@ describe("Signers", () => {
     await signers.__SignersMock_init(OWNER, chainName);
   });
 
+  describe("access", () => {
+    it("should not initialize twice", async () => {
+      await truffleAssert.reverts(
+        signers.__Signers_init(OWNER, chainName),
+        "Initializable: contract is not initializing"
+      );
+    });
+  });
+
   describe("checkSignatures", () => {
     it("should check signatures", async () => {
       const hashToSign = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";

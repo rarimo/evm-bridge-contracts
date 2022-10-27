@@ -36,6 +36,15 @@ describe("Bundler", () => {
     await bundler.__BundlerMock_init(bundleImpl.address);
   });
 
+  describe("access", () => {
+    it("should not initialize twice", async () => {
+      await truffleAssert.reverts(
+        bundler.__Bundler_init(bundleImpl.address),
+        "Initializable: contract is not initializing"
+      );
+    });
+  });
+
   describe("proxy address", () => {
     it("proxy address should be different", async () => {
       const salt1 = web3.utils.soliditySha3({ value: 1, type: "uint256" });

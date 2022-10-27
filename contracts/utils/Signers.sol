@@ -14,14 +14,16 @@ abstract contract Signers is Initializable {
 
     string public chainName;
 
-    modifier nonceIncrementer() {
-        _;
-        nonce++;
-    }
-
     function __Signers_init(address signer_, string calldata chainName_) public onlyInitializing {
         signer = signer_;
         chainName = chainName_;
+    }
+
+    function _checkSignatureAndIncrementNonce(bytes32 signHash_, bytes memory signature_)
+        internal
+    {
+        _checkSignature(signHash_, signature_);
+        nonce++;
     }
 
     function _checkSignature(bytes32 signHash_, bytes memory signature_) internal view {

@@ -82,6 +82,25 @@ describe("Bridge", () => {
     await erc1155.transferOwnership(bridge.address);
   });
 
+  describe("access", () => {
+    it("should not initialize twice", async () => {
+      await truffleAssert.reverts(
+        bridge.__Bridge_init(OWNER, bundleImpl.address, chainName),
+        "Initializable: contract is already initialized"
+      );
+    });
+
+    it("only owner should call these functions", async () => {
+      await truffleAssert.reverts(erc20.mintTo(OWNER, 1), "Ownable: caller is not the owner");
+      await truffleAssert.reverts(erc721.mintTo(OWNER, 1, ""), "Ownable: caller is not the owner");
+      await truffleAssert.reverts(erc1155.mintTo(OWNER, 1, 1, ""), "Ownable: caller is not the owner");
+
+      await truffleAssert.reverts(erc20.burnFrom(OWNER, 1), "Ownable: caller is not the owner");
+      await truffleAssert.reverts(erc721.burnFrom(OWNER, 1), "Ownable: caller is not the owner");
+      await truffleAssert.reverts(erc1155.burnFrom(OWNER, 1, 1), "Ownable: caller is not the owner");
+    });
+  });
+
   describe("ERC20 flow", () => {
     it("should withdrawERC20", async () => {
       const isWrapped = true;
