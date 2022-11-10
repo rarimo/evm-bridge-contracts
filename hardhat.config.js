@@ -49,6 +49,12 @@ module.exports = {
       gasMultiplier: 1.2,
       timeout: 60000,
     },
+    mumbai: {
+      url: "https://rpc-mumbai.maticvigil.com/",
+      accounts: privateKey(),
+      gasMultiplier: 1.2,
+      timeout: 60000,
+    },
     bsc_mainnet: {
       url: "https://bsc-dataseed.binance.org/",
       accounts: privateKey(),
@@ -76,6 +82,7 @@ module.exports = {
       sepolia: `${process.env.ETHERSCAN_KEY}`,
       bsc: `${process.env.BSCSCAN_KEY}`,
       bscTestnet: `${process.env.BSCSCAN_KEY}`,
+      polygonMumbai: `${process.env.POLYGON_KEY}`,
     },
   },
   mocha: {
