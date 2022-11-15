@@ -55,6 +55,12 @@ module.exports = {
       gasMultiplier: 1.2,
       timeout: 60000,
     },
+    fuji: {
+      url: "https://api.avax-test.network/ext/bc/C/rpc",
+      accounts: privateKey(),
+      gasMultiplier: 1.2,
+      timeout: 60000,
+    },
     bsc_mainnet: {
       url: "https://bsc-dataseed.binance.org/",
       accounts: privateKey(),
@@ -83,6 +89,7 @@ module.exports = {
       bsc: `${process.env.BSCSCAN_KEY}`,
       bscTestnet: `${process.env.BSCSCAN_KEY}`,
       polygonMumbai: `${process.env.POLYGON_KEY}`,
+      avalancheFujiTestnet: `${process.env.AVALANCHE_KEY}`,
     },
   },
   mocha: {

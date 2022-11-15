@@ -17,6 +17,7 @@
     "deploy-sepolia": "CONFIRMATIONS=5 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network sepolia",
     "deploy-chapel": "CONFIRMATIONS=2 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
     "deploy-mumbai": "CONFIRMATIONS=6 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network mumbai",
+    "deploy-fuji": "CONFIRMATIONS=6 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network fuji",
     "deploy-eth-mainnet": "CONFIRMATIONS=5 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
     "deploy-bsc-mainnet": "CONFIRMATIONS=2 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet",
     "generate-types": "TYPECHAIN_FORCE=true npx hardhat typechain",
