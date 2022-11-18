@@ -45,6 +45,16 @@ describe("ERC1155Handler", () => {
     });
   });
 
+  describe("metadata", () => {
+    it("should check token metadata", async () => {
+      token = await ERC1155MB.new(OWNER, "URI");
+
+      await token.mintTo(OWNER, baseId, baseAmount, "");
+
+      assert.equal(await token.uri(baseId), "URI");
+    });
+  });
+
   describe("depositERC1155", () => {
     it("should deposit token, isWrapped = true", async () => {
       let tx = await handler.depositERC1155(

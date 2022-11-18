@@ -48,6 +48,8 @@ describe("ERC721Handler", () => {
 
   describe("depositERC721", () => {
     it("should deposit token, isWrapped = true", async () => {
+      assert.isFalse(await token.supportsInterface("0x00000000"));
+
       let tx = await handler.depositERC721(
         token.address,
         baseId,
