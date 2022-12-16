@@ -44,6 +44,8 @@ abstract contract Signers is Initializable {
     }
 
     function _getAddressChangeHash(address newAddress_) internal view returns (bytes32) {
+        require(newAddress_ != address(0), "Signers: new address is 0");
+
         return keccak256(abi.encodePacked(newAddress_, chainName, nonce, address(this)));
     }
 }

@@ -1,4 +1,4 @@
-const { logTransaction } = require("../runners/logger/logger.js");
+const { logTransaction } = require("@dlsl/hardhat-migrate");
 
 const BundleExecutorImpl = artifacts.require("BundleExecutorImplementation");
 const Bridge = artifacts.require("Bridge");

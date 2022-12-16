@@ -42,6 +42,7 @@ describe("Bridge", () => {
   const originHash = "0xc4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
   const originHash2 = "0xd4f46c912cc2a1f30891552ac72871ab0f0e977886852bdd5dccd221a595647d";
   const salt = "0x0000000000000000000000000000000000000000000000000000000000000001";
+  const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
   let OWNER;
   let SECOND;
@@ -803,6 +804,22 @@ describe("Bridge", () => {
 
       assert.equal(await bridge.bundleExecutorImplementation(), SECOND);
       assert.equal(await bridge.nonce(), "1");
+    });
+
+    it("should not change executor for address(0)", async () => {
+      const hashToSign = web3.utils.soliditySha3(
+        { value: ZERO_ADDR, type: "address" },
+        { value: chainName, type: "string" },
+        { value: "0", type: "uint256" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+      await truffleAssert.reverts(
+        bridge.changeBundleExecutorImplementation(ZERO_ADDR, signature),
+        "Signers: new address is 0"
+      );
     });
   });
 });

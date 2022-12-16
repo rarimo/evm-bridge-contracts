@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-web3");
 require("@nomiclabs/hardhat-truffle5");
-require("@nomiclabs/hardhat-etherscan");
 require("@typechain/hardhat");
+require("@dlsl/hardhat-migrate");
 require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
 require("solidity-coverage");
@@ -61,12 +61,12 @@ module.exports = {
       gasMultiplier: 1.2,
       timeout: 60000,
     },
-    bsc_mainnet: {
+    bsc: {
       url: "https://bsc-dataseed.binance.org/",
       accounts: privateKey(),
       gasMultiplier: 1.2,
     },
-    eth_mainnet: {
+    ethereum: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
       accounts: privateKey(),
       gasMultiplier: 1.2,
@@ -91,6 +91,9 @@ module.exports = {
       polygonMumbai: `${process.env.POLYGON_KEY}`,
       avalancheFujiTestnet: `${process.env.AVALANCHE_KEY}`,
     },
+  },
+  migrate: {
+    pathToMigrations: "./deploy/",
   },
   mocha: {
     timeout: 1000000,
