@@ -67,7 +67,6 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         ) = _decodeERC1155TokenData(tokenData_);
 
         require(token_ != address(0), "ERC1155Handler: zero token");
-        require(amount_ > 0, "ERC1155Handler: amount is zero");
         require(receiver_ != address(0), "ERC1155Handler: zero receiver");
 
         IERC1155MintableBurnable erc1155_ = IERC1155MintableBurnable(token_);

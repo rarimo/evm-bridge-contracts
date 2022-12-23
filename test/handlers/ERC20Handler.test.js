@@ -162,10 +162,16 @@ describe("ERC20Handler", () => {
       assert.equal(await token.balanceOf(handler.address), "0");
     });
 
-    it("should revert when try to withdraw 0 tokens", async () => {
+    it("should withdraw 0 tokens, isWrapped = false", async () => {
       const tokenData = web3.eth.abi.encodeParameters(["address", "uint256"], [token.address, 0]);
 
-      await truffleAssert.reverts(handler.withdrawERC20(tokenData, OWNER, false), "ERC20Handler: amount is zero");
+      await truffleAssert.passes(handler.withdrawERC20(tokenData, OWNER, false), "pass");
+    });
+
+    it("should withdraw 0 tokens, isWrapped = true", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(["address", "uint256"], [token.address, 0]);
+
+      await truffleAssert.passes(handler.withdrawERC20(tokenData, OWNER, true), "pass");
     });
 
     it("should revert when withdrawal token address is 0", async () => {

@@ -68,10 +68,16 @@ describe("NativeHandler", () => {
       assert.equal(await web3.eth.getBalance(handler.address), 0);
     });
 
-    it("should revert when amount is 0", async () => {
+    it("should withdraw 0 tokens", async () => {
       const tokenData = web3.eth.abi.encodeParameters(["uint256"], [0]);
 
-      await truffleAssert.reverts(handler.withdrawNative(tokenData, OWNER), "NativeHandler: amount is zero");
+      await truffleAssert.passes(handler.withdrawNative(tokenData, OWNER), "pass");
+    });
+
+    it("should withdraw 0 tokens to the contract with receive function", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(["uint256"], [0]);
+
+      await truffleAssert.passes(handler.withdrawNative(tokenData, handler.address), "pass");
     });
 
     it("should revert when receiver address is 0", async () => {

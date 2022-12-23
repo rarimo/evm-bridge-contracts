@@ -1,5 +1,3 @@
-const { logTransaction } = require("@dlsl/hardhat-migrate");
-
 const BundleExecutorImpl = artifacts.require("BundleExecutorImplementation");
 const Bridge = artifacts.require("Bridge");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
@@ -7,7 +5,7 @@ const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 const VALIDATOR = process.env.VALIDATOR;
 const CHAIN_NAME = process.env.CHAIN_NAME;
 
-module.exports = async (deployer) => {
+module.exports = async (deployer, logger) => {
   const bundleExecutorImpl = await deployer.deploy(BundleExecutorImpl);
 
   const bridge = await deployer.deploy(Bridge);
@@ -15,5 +13,8 @@ module.exports = async (deployer) => {
 
   const bridgeProxy = await Bridge.at(proxy.address);
 
-  logTransaction(await bridgeProxy.__Bridge_init(VALIDATOR, bundleExecutorImpl.address, CHAIN_NAME), "Init Bridge");
+  logger.logTransaction(
+    await bridgeProxy.__Bridge_init(VALIDATOR, bundleExecutorImpl.address, CHAIN_NAME),
+    "Init Bridge"
+  );
 };

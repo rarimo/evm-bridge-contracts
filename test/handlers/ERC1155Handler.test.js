@@ -205,6 +205,24 @@ describe("ERC1155Handler", () => {
       assert.equal(await token.uri(baseId), "URI");
     });
 
+    it("should withdraw 0 tokens, isWrapped = false", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, baseId, "", "0"]
+      );
+
+      await truffleAssert.passes(handler.withdrawERC1155(tokenData, OWNER, false), "pass");
+    });
+
+    it("should withdraw 0 tokens, isWrapped = true", async () => {
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string", "uint256"],
+        [token.address, baseId, "", "0"]
+      );
+
+      await truffleAssert.passes(handler.withdrawERC1155(tokenData, OWNER, true), "pass");
+    });
+
     it("should revert when token address is 0", async () => {
       const tokenData = web3.eth.abi.encodeParameters(
         ["address", "uint256", "string", "uint256"],
@@ -212,15 +230,6 @@ describe("ERC1155Handler", () => {
       );
 
       await truffleAssert.reverts(handler.withdrawERC1155(tokenData, OWNER, true), "ERC1155Handler: zero token");
-    });
-
-    it("should revert when amount is 0", async () => {
-      const tokenData = web3.eth.abi.encodeParameters(
-        ["address", "uint256", "string", "uint256"],
-        [token.address, baseId, "", "0"]
-      );
-
-      await truffleAssert.reverts(handler.withdrawERC1155(tokenData, OWNER, true), "ERC1155Handler: amount is zero");
     });
 
     it("should revert when receiver address is 0", async () => {

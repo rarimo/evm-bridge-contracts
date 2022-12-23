@@ -42,7 +42,6 @@ abstract contract NativeHandler is INativeHandler, Bundler {
     function _withdrawNative(bytes calldata tokenData_, address receiver_, bool) internal {
         uint256 amount_ = _decodeNativeTokenData(tokenData_);
 
-        require(amount_ > 0, "NativeHandler: amount is zero");
         require(receiver_ != address(0), "NativeHandler: receiver is zero");
 
         (bool success_, ) = payable(receiver_).call{value: amount_}("");
