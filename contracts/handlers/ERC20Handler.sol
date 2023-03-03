@@ -55,9 +55,11 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         _bundleUp(bundle_);
     }
 
-    function _withdrawERC20(bytes calldata tokenData_, address receiver_, bool isWrapped_)
-        internal
-    {
+    function _withdrawERC20(
+        bytes calldata tokenData_,
+        address receiver_,
+        bool isWrapped_
+    ) internal {
         (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
 
         require(token_ != address(0), "ERC20Handler: zero token");
@@ -72,21 +74,17 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         }
     }
 
-    function _getERC20TokenDataLeaf(bytes calldata tokenData_)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _getERC20TokenDataLeaf(
+        bytes calldata tokenData_
+    ) internal pure returns (bytes memory) {
         (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
 
         return abi.encodePacked(token_, amount_);
     }
 
-    function _decodeERC20TokenData(bytes calldata tokenData_)
-        private
-        pure
-        returns (address, uint256)
-    {
+    function _decodeERC20TokenData(
+        bytes calldata tokenData_
+    ) private pure returns (address, uint256) {
         return abi.decode(tokenData_, (address, uint256));
     }
 }

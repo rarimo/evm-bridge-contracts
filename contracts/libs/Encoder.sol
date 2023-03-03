@@ -34,11 +34,11 @@ library Encoder {
         return abi.encodePacked(bundle_.salt, bundle_.bundle);
     }
 
-    function _getMetadataLeaf(bytes32 originHash_, string memory chainName_, address receiver_)
-        private
-        view
-        returns (bytes memory)
-    {
+    function _getMetadataLeaf(
+        bytes32 originHash_,
+        string memory chainName_,
+        address receiver_
+    ) private view returns (bytes memory) {
         return abi.encodePacked(originHash_, chainName_, receiver_, address(this));
     }
 }

@@ -185,10 +185,10 @@ contract Bridge is
         revert("Bridge: this upgrade method is off");
     }
 
-    function _authorizeUpgrade(address newImplementation_, bytes memory signature_)
-        internal
-        override
-    {
+    function _authorizeUpgrade(
+        address newImplementation_,
+        bytes memory signature_
+    ) internal override {
         _checkSignatureAndIncrementNonce(_getAddressChangeHash(newImplementation_), signature_);
     }
 

@@ -71,6 +71,18 @@ module.exports = {
       accounts: privateKey(),
       gasMultiplier: 1.2,
     },
+    polygon: {
+      url: `https://polygon-rpc.com`,
+      accounts: privateKey(),
+      gasMultiplier: 3,
+      timeout: 6000000,
+    },
+    avalanche: {
+      url: `https://api.avax.network/ext/bc/C/rpc`,
+      accounts: privateKey(),
+      gasMultiplier: 1.2,
+      timeout: 60000,
+    },
   },
   solidity: {
     version: "0.8.9",

@@ -56,9 +56,11 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         _bundleUp(bundle_);
     }
 
-    function _withdrawERC1155(bytes calldata tokenData_, address receiver_, bool isWrapped_)
-        internal
-    {
+    function _withdrawERC1155(
+        bytes calldata tokenData_,
+        address receiver_,
+        bool isWrapped_
+    ) internal {
         (
             address token_,
             uint256 tokenId_,
@@ -78,11 +80,9 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         }
     }
 
-    function _getERC1155TokenDataLeaf(bytes calldata tokenData_)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _getERC1155TokenDataLeaf(
+        bytes calldata tokenData_
+    ) internal pure returns (bytes memory) {
         (
             address token_,
             uint256 tokenId_,
@@ -93,11 +93,9 @@ abstract contract ERC1155Handler is IERC1155Handler, ERC1155Holder, Bundler {
         return abi.encodePacked(token_, tokenId_, tokenURI_, amount_);
     }
 
-    function _decodeERC1155TokenData(bytes calldata tokenData_)
-        private
-        pure
-        returns (address, uint256, string memory, uint256)
-    {
+    function _decodeERC1155TokenData(
+        bytes calldata tokenData_
+    ) private pure returns (address, uint256, string memory, uint256) {
         return abi.decode(tokenData_, (address, uint256, string, uint256));
     }
 }

@@ -29,22 +29,19 @@ contract ERC1155MintableBurnable is
         _setURI(tokenId_, tokenURI_);
     }
 
-    function burnFrom(address payer_, uint256 tokenId_, uint256 amount_)
-        external
-        override
-        onlyOwner
-    {
+    function burnFrom(
+        address payer_,
+        uint256 tokenId_,
+        uint256 amount_
+    ) external override onlyOwner {
         require(isApprovedForAll(payer_, msg.sender), "ERC1155MintableBurnable: not approved");
 
         _burn(payer_, tokenId_, amount_);
     }
 
-    function uri(uint256 tokenId)
-        public
-        view
-        override(ERC1155URIStorage, ERC1155)
-        returns (string memory)
-    {
+    function uri(
+        uint256 tokenId
+    ) public view override(ERC1155URIStorage, ERC1155) returns (string memory) {
         return super.uri(tokenId);
     }
 

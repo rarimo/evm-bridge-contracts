@@ -49,11 +49,9 @@ abstract contract NativeHandler is INativeHandler, Bundler {
         require(success_, "NativeHandler: failed to send eth");
     }
 
-    function _getNativeTokenDataLeaf(bytes calldata tokenData_)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _getNativeTokenDataLeaf(
+        bytes calldata tokenData_
+    ) internal pure returns (bytes memory) {
         return abi.encodePacked(_decodeNativeTokenData(tokenData_));
     }
 

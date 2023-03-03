@@ -19,9 +19,10 @@ abstract contract Signers is Initializable {
         chainName = chainName_;
     }
 
-    function _checkSignatureAndIncrementNonce(bytes32 signHash_, bytes memory signature_)
-        internal
-    {
+    function _checkSignatureAndIncrementNonce(
+        bytes32 signHash_,
+        bytes memory signature_
+    ) internal {
         _checkSignature(signHash_, signature_);
         nonce++;
     }
