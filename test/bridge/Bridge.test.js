@@ -6,6 +6,7 @@ const {
   getBytesSafeTransferERC1155,
   getBytesWithdrawNFT,
   getBytesWithdrawETH,
+  getBytesDoSomething,
 } = require("../bundler/bundler-utils");
 const { constructTree, getProof, getRoot } = require("../../scripts/helpers/merkletree");
 const { rawSign } = require("../helpers/signer");
@@ -16,11 +17,13 @@ const Bridge = artifacts.require("Bridge");
 const BundleImpl = artifacts.require("BundleExecutorImplementation");
 const ERC20MB = artifacts.require("ERC20MintableBurnable");
 const ERC721MB = artifacts.require("ERC721MintableBurnable");
+const SBTMB = artifacts.require("SBTMintableBurnable");
 const ERC1155MB = artifacts.require("ERC1155MintableBurnable");
 const BundleReceiver = artifacts.require("BundleReceiverMock");
 
 ERC1155MB.numberFormat = "BigNumber";
 ERC721MB.numberFormat = "BigNumber";
+SBTMB.numberFormat = "BigNumber";
 ERC20MB.numberFormat = "BigNumber";
 Bridge.numberFormat = "BigNumber";
 BundleImpl.numberFormat = "BigNumber";
@@ -52,6 +55,7 @@ describe("Bridge", () => {
   let bundleReceiver;
   let erc20;
   let erc721;
+  let sbt;
   let erc1155;
 
   before("setup", async () => {
@@ -74,12 +78,16 @@ describe("Bridge", () => {
     await erc721.mintTo(OWNER, baseId, "URI");
     await erc721.approve(bridge.address, baseId);
 
+    sbt = await SBTMB.new("Mock", "MK", OWNER, "");
+    await sbt.attestTo(OWNER, baseId, "URI");
+
     erc1155 = await ERC1155MB.new(OWNER, "");
     await erc1155.mintTo(OWNER, baseId, baseBalance, "URI");
     await erc1155.setApprovalForAll(bridge.address, true);
 
     await erc20.transferOwnership(bridge.address);
     await erc721.transferOwnership(bridge.address);
+    await sbt.transferOwnership(bridge.address);
     await erc1155.transferOwnership(bridge.address);
   });
 
@@ -307,8 +315,8 @@ describe("Bridge", () => {
       );
 
       const tokenData = web3.eth.abi.encodeParameters(
-        ["address", "uint256", "string", "uint256"],
-        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1", "1"]
+        ["address", "uint256", "string"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1"]
       );
 
       existingLeaves.push(leaf);
@@ -380,8 +388,8 @@ describe("Bridge", () => {
       );
 
       const tokenData = web3.eth.abi.encodeParameters(
-        ["address", "uint256", "string", "uint256"],
-        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1", "1"]
+        ["address", "uint256", "string"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1"]
       );
 
       existingLeaves.push(leaf);
@@ -450,8 +458,8 @@ describe("Bridge", () => {
       );
 
       const tokenData = web3.eth.abi.encodeParameters(
-        ["address", "uint256", "string", "uint256"],
-        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1", "1"]
+        ["address", "uint256", "string"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1"]
       );
 
       existingLeaves.push(leaf);
@@ -517,6 +525,114 @@ describe("Bridge", () => {
 
       assert.equal(await erc721.ownerOf(baseId), SECOND);
       assert.equal(await erc721.tokenURI(baseId), "URI1");
+    });
+  });
+
+  describe("SBT flow", () => {
+    it("should withdrawSBT", async () => {
+      let tx = await bridge.depositSBT(sbt.address, baseId, { salt: salt, bundle: "0x" }, chainName, OWNER);
+
+      assert.equal((await sbt.balanceOf(OWNER)).toFixed(), "1");
+
+      await sbt.burn();
+
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI1", type: "string" },
+        { value: "0x", type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1"]
+      );
+
+      existingLeaves.push(leaf);
+
+      const tree = constructTree(existingLeaves);
+      const root = getRoot(tree);
+      const path = getProof(leaf, tree);
+
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
+
+      const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
+
+      await bridge.withdrawSBT(
+        tokenData,
+        {
+          salt: tx.receipt.logs[0].args.salt,
+          bundle: tx.receipt.logs[0].args.bundle == null ? "0x" : tx.receipt.logs[0].args.bundle,
+        },
+        originHash,
+        tx.receipt.logs[0].args.receiver,
+        proof
+      );
+
+      assert.equal(await sbt.ownerOf(baseId), OWNER);
+      assert.equal(await sbt.tokenURI(baseId), "URI1");
+
+      assert.isTrue(await bridge.usedHashes(originHash));
+    });
+
+    it("should withdraw SBT through bundling", async () => {
+      const realSalt = web3.utils.soliditySha3({ value: salt, type: "bytes32" }, { value: OWNER, type: "address" });
+
+      const bundleProxy = await bridge.determineProxyAddress(realSalt);
+
+      const bundle = web3.eth.abi.encodeParameters(
+        ["address[]", "uint256[]", "bytes[]"],
+        [[bundleReceiver.address], [0], [getBytesDoSomething(false)]]
+      );
+
+      let tx = await bridge.depositSBT(sbt.address, baseId, { salt: salt, bundle: bundle }, chainName, OWNER);
+
+      await sbt.burn();
+
+      let leaf = web3.utils.soliditySha3(
+        { value: tx.receipt.logs[0].args.token, type: "address" },
+        { value: tx.receipt.logs[0].args.tokenId, type: "uint256" },
+        { value: "URI1", type: "string" },
+        { value: tx.receipt.logs[0].args.salt, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.bundle, type: "bytes" },
+        { value: originHash, type: "bytes32" },
+        { value: tx.receipt.logs[0].args.network, type: "string" },
+        { value: tx.receipt.logs[0].args.receiver, type: "address" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const tokenData = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "string"],
+        [tx.receipt.logs[0].args.token, tx.receipt.logs[0].args.tokenId, "URI1"]
+      );
+
+      existingLeaves.push(leaf);
+
+      const tree = constructTree(existingLeaves);
+      const root = getRoot(tree);
+      const path = getProof(leaf, tree);
+
+      const signature = rawSign(root, OWNER_PRIVATE_KEY);
+
+      const proof = web3.eth.abi.encodeParameters(["bytes32[]", "bytes"], [path, signature]);
+
+      await bridge.withdrawSBT(
+        tokenData,
+        {
+          salt: tx.receipt.logs[0].args.salt,
+          bundle: tx.receipt.logs[0].args.bundle,
+        },
+        originHash,
+        tx.receipt.logs[0].args.receiver,
+        proof
+      );
+
+      assert.equal(await sbt.ownerOf(baseId), bundleProxy);
+      assert.equal((await bundleReceiver.count()).toFixed(), "1");
     });
   });
 

@@ -5,8 +5,11 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
 contract BundleReceiverMock is ERC721Holder {
-    function doSomething(bool shouldRevert) external pure {
+    uint256 public count;
+
+    function doSomething(bool shouldRevert) external {
         require(!shouldRevert, "BundleReceiverMock: oops");
+        ++count;
     }
 
     function withdrawNFT(IERC721 nft, uint256 tokenId) external {

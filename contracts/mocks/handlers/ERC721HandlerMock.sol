@@ -11,4 +11,8 @@ contract ERC721HandlerMock is ERC721Handler {
     ) external {
         _withdrawERC721(tokenData_, receiver_, isWrapped_);
     }
+
+    function withdrawSBT(bytes calldata tokenData_, address receiver_) external {
+        _withdrawSBT(tokenData_, receiver_, false);
+    }
 }
