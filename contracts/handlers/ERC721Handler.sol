@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
 import "../interfaces/handlers/IERC721Handler.sol";
 import "../interfaces/tokens/IERC721MintableBurnable.sol";
+import "../interfaces/tokens/SBT/ISBT.sol";
 
 import "../libs/Encoder.sol";
 
@@ -42,6 +43,26 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         );
     }
 
+    function depositSBT(
+        address token_,
+        uint256 tokenId_,
+        IBundler.Bundle calldata bundle_,
+        string calldata network_,
+        string calldata receiver_
+    ) external override {
+        require(token_ != address(0), "ERC721Handler: zero token");
+        require(ISBT(token_).ownerOf(tokenId_) == msg.sender, "ERC721Handler: invalid token id");
+
+        emit DepositedSBT(
+            token_,
+            tokenId_,
+            bundle_.salt.encode(),
+            bundle_.bundle,
+            network_,
+            receiver_
+        );
+    }
+
     function withdrawERC721Bundle(
         bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
@@ -50,6 +71,17 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         address bundleProxy_ = determineProxyAddress(bundle_.salt);
 
         _withdrawERC721(tokenData_, bundleProxy_, isWrapped_);
+        _bundleUp(bundle_);
+    }
+
+    function withdrawSBTBundle(
+        bytes calldata tokenData_,
+        IBundler.Bundle calldata bundle_,
+        bool
+    ) external onlyThis {
+        address bundleProxy_ = determineProxyAddress(bundle_.salt);
+
+        _withdrawSBT(tokenData_, bundleProxy_, false);
         _bundleUp(bundle_);
     }
 
@@ -72,6 +104,17 @@ abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
         } else {
             erc721_.safeTransferFrom(address(this), receiver_, tokenId_);
         }
+    }
+
+    function _withdrawSBT(bytes calldata tokenData_, address receiver_, bool) internal {
+        (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
+            tokenData_
+        );
+
+        require(token_ != address(0), "ERC721Handler: zero token");
+        require(receiver_ != address(0), "ERC721Handler: zero receiver");
+
+        ISBT(token_).attestTo(receiver_, tokenId_, tokenURI_);
     }
 
     function _getERC721TokenDataLeaf(

@@ -58,6 +58,22 @@ interface IBridge is IBundler, IERC20Handler, IERC721Handler, IERC1155Handler, I
     ) external;
 
     /**
+     * @notice function for withdrawing sbt tokens
+     * @param tokenData_ the encoded token address, token id and token URI
+     * @param bundle_ the encoded transaction bundle with encoded salt
+     * @param originHash_ the keccak256 hash of abi.encodePacked(origin chain name . origin tx hash . event nonce)
+     * @param receiver_ the address who will receive tokens
+     * @param proof_ the abi encoded merkle path with the signature of a merkle root the signer signed
+     */
+    function withdrawSBT(
+        bytes calldata tokenData_,
+        IBundler.Bundle calldata bundle_,
+        bytes32 originHash_,
+        address receiver_,
+        bytes calldata proof_
+    ) external;
+
+    /**
      * @notice function for withdrawing erc1155 tokens
      * @param tokenData_ the encoded token address, token id, token URI and amount
      * @param bundle_ the encoded transaction bundle with encoded salt

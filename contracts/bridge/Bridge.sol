@@ -91,6 +91,25 @@ contract Bridge is
         );
     }
 
+    function withdrawSBT(
+        bytes calldata tokenData_,
+        IBundler.Bundle calldata bundle_,
+        bytes32 originHash_,
+        address receiver_,
+        bytes calldata proof_
+    ) external override {
+        _verifyMerkleLeaf(
+            _getERC721TokenDataLeaf,
+            tokenData_,
+            bundle_,
+            originHash_,
+            receiver_,
+            proof_
+        );
+
+        _withdraw(_withdrawSBT, this.withdrawSBTBundle, tokenData_, bundle_, receiver_, false);
+    }
+
     function withdrawERC1155(
         bytes calldata tokenData_,
         IBundler.Bundle calldata bundle_,
