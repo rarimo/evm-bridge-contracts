@@ -70,7 +70,7 @@ describe("Bridge", () => {
     bridge = await Bridge.new();
     await bridge.__Bridge_init(OWNER, bundleImpl.address, chainName);
 
-    erc20 = await ERC20MB.new("Mock", "MK", OWNER);
+    erc20 = await ERC20MB.new("Mock", "MK", 18, OWNER);
     await erc20.mintTo(OWNER, baseBalance);
     await erc20.approve(bridge.address, baseBalance);
 

@@ -7,7 +7,16 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../interfaces/tokens/IERC20MintableBurnable.sol";
 
 contract ERC20MintableBurnable is IERC20MintableBurnable, Ownable, ERC20 {
-    constructor(string memory name_, string memory symbol_, address owner_) ERC20(name_, symbol_) {
+    uint8 private _decimals;
+
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        uint8 decimals_,
+        address owner_
+    ) ERC20(name_, symbol_) {
+        _decimals = decimals_;
+
         transferOwnership(owner_);
     }
 
@@ -18,5 +27,9 @@ contract ERC20MintableBurnable is IERC20MintableBurnable, Ownable, ERC20 {
     function burnFrom(address payer_, uint256 amount_) external override onlyOwner {
         _spendAllowance(payer_, msg.sender, amount_);
         _burn(payer_, amount_);
+    }
+
+    function decimals() public view override returns (uint8) {
+        return _decimals;
     }
 }
