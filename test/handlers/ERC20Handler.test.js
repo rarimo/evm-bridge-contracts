@@ -21,7 +21,7 @@ describe("ERC20Handler", () => {
   });
 
   beforeEach("setup", async () => {
-    token = await ERC20MB.new("Mock", "MK", OWNER);
+    token = await ERC20MB.new("Mock", "MK", 6, OWNER);
     handler = await ERC20HandlerMock.new();
 
     await token.mintTo(OWNER, baseBalance);
@@ -38,6 +38,12 @@ describe("ERC20Handler", () => {
         handler.withdrawERC20Bundle(tokenData, { salt: salt, bundle: "0x" }, true),
         "Bundler: not this"
       );
+    });
+  });
+
+  describe("decimals", async () => {
+    it("should have correct decimals", async () => {
+      assert.equal((await token.decimals()).toFixed(), "6");
     });
   });
 
