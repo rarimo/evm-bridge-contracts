@@ -9,7 +9,7 @@ import "../handlers/INativeHandler.sol";
 /**
  * @notice The Bridge contract
  *
- * The Bridge contract acts as a permissioned way of transfering assets (ERC20, ERC721, ERC1155, Native) between
+ * The Bridge contract acts as a permissioned way of transferring assets (ERC20, ERC721, ERC1155, Native) between
  * 2 different blockchains.
  *
  * In order to correctly use the Bridge, one has to deploy both instances of the contract on the base chain and the
@@ -21,6 +21,18 @@ import "../handlers/INativeHandler.sol";
  * The bridge enables the transaction bundling feature as well.
  */
 interface IBridge is IBundler, IERC20Handler, IERC721Handler, IERC1155Handler, INativeHandler {
+    /**
+     * @notice the enum that helps distinguish functions for calling within the signature
+     * @param None the special zero type, method types start from 1
+     * @param AuthorizeUpgrade the type corresponding to the _authorizeUpgrade function
+     * @param ChangeBundleExecutorImplementation the type corresponding to the changeBundleExecutorImplementation function
+     */
+    enum MethodId {
+        None,
+        AuthorizeUpgrade,
+        ChangeBundleExecutorImplementation
+    }
+
     /**
      * @notice function for withdrawing erc20 tokens
      * @param tokenData_ the encoded token address and amount
