@@ -10,8 +10,9 @@ const {
 } = require("../bundler/bundler-utils");
 const { constructTree, getProof, getRoot } = require("../../scripts/helpers/merkletree");
 const { rawSign } = require("../helpers/signer");
-const { OWNER_PRIVATE_KEY } = require("../helpers/keys");
+const { OWNER_PRIVATE_KEY, KEY_PAIR } = require("../helpers/keys");
 const truffleAssert = require("truffle-assertions");
+const { MethodId } = require("../helpers/constants");
 
 const Bridge = artifacts.require("Bridge");
 const BundleImpl = artifacts.require("BundleExecutorImplementation");
@@ -869,45 +870,74 @@ describe("Bridge", () => {
   describe("changeSigner", () => {
     it("should correctly change signer", async () => {
       assert.equal(await bridge.signer(), OWNER);
-      assert.equal(await bridge.nonce(), "0");
 
-      const hashToSign = web3.utils.soliditySha3(
-        { value: SECOND, type: "address" },
-        { value: chainName, type: "string" },
-        { value: "0", type: "uint256" },
-        { value: bridge.address, type: "address" }
-      );
+      const hashToSign = web3.utils.soliditySha3({ value: KEY_PAIR.publicKey, type: "bytes" });
 
       const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
-      await bridge.changeSigner(SECOND, signature);
+      await bridge.changeSigner(KEY_PAIR.publicKey, signature);
 
-      assert.equal(await bridge.signer(), SECOND);
-      assert.equal(await bridge.nonce(), "1");
+      assert.equal(await bridge.signer(), KEY_PAIR.address);
     });
 
     it("should not change signer if bad signature is passed", async () => {
-      const hashToSign = web3.utils.soliditySha3(
-        { value: SECOND, type: "address" },
-        { value: chainName, type: "string" },
-        { value: "0", type: "uint256" },
-        { value: bridge.address, type: "address" }
-      );
+      const hashToSign = web3.utils.soliditySha3({ value: KEY_PAIR.publicKey, type: "bytes" });
 
       const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
-      await bridge.changeSigner(SECOND, signature);
+      await bridge.changeSigner(KEY_PAIR.publicKey, signature);
 
-      await truffleAssert.reverts(bridge.changeSigner(SECOND, signature), "Signers: invalid signature");
+      await truffleAssert.reverts(bridge.changeSigner(KEY_PAIR.publicKey, signature), "Signers: invalid signature");
+    });
+
+    it("should not change signer if wrong pubKey length", async () => {
+      const hashToSign = web3.utils.soliditySha3({ value: SECOND, type: "bytes" });
+
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+      await truffleAssert.reverts(bridge.changeSigner(SECOND, signature), "Signers: wrong pubKey length");
+    });
+
+    it("should not change signer if zero pubKey", async () => {
+      const pBytes = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F";
+      const zeroBytes = "0000000000000000000000000000000000000000000000000000000000000000";
+      const notNull = "0000000000000000000000000000000000000000000000000000000000000001";
+
+      const zeroPubKeys = [
+        "0x" + zeroBytes + notNull,
+        "0x" + pBytes + notNull,
+        "0x" + notNull + zeroBytes,
+        "0x" + notNull + pBytes,
+      ];
+
+      for (const pubKey of zeroPubKeys) {
+        const hashToSign = web3.utils.soliditySha3({ value: pubKey, type: "bytes" });
+
+        const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+        await truffleAssert.reverts(bridge.changeSigner(pubKey, signature), "Signers: zero pubKey");
+      }
+    });
+
+    it("should not change signer if pubKey not on the curve", async () => {
+      const wrongPubKey =
+        "0x10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010";
+
+      const hashToSign = web3.utils.soliditySha3({ value: wrongPubKey, type: "bytes" });
+
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+      await truffleAssert.reverts(bridge.changeSigner(wrongPubKey, signature), "Signers: pubKey not on the curve");
     });
   });
 
   describe("changeBundleExecutorImplementation", () => {
     it("should correctly change executor implementation", async () => {
       assert.equal(await bridge.bundleExecutorImplementation(), bundleImpl.address);
-      assert.equal(await bridge.nonce(), "0");
+      assert.equal((await bridge.nonces(MethodId.ChangeBundleExecutorImplementation)).toFixed(), "0");
 
       const hashToSign = web3.utils.soliditySha3(
+        { value: MethodId.ChangeBundleExecutorImplementation, type: "uint8" },
         { value: SECOND, type: "address" },
         { value: chainName, type: "string" },
         { value: "0", type: "uint256" },
@@ -919,11 +949,46 @@ describe("Bridge", () => {
       await bridge.changeBundleExecutorImplementation(SECOND, signature);
 
       assert.equal(await bridge.bundleExecutorImplementation(), SECOND);
-      assert.equal(await bridge.nonce(), "1");
+      assert.equal((await bridge.nonces(MethodId.ChangeBundleExecutorImplementation)).toFixed(), "1");
+    });
+
+    it("should not change executor if wrong method id", async () => {
+      const hashToSign = web3.utils.soliditySha3(
+        { value: MethodId.AuthorizeUpgrade, type: "uint8" },
+        { value: SECOND, type: "address" },
+        { value: chainName, type: "string" },
+        { value: "0", type: "uint256" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+      await truffleAssert.reverts(
+        bridge.changeBundleExecutorImplementation(SECOND, signature),
+        "Signers: invalid signature"
+      );
+    });
+
+    it("should not change executor if nonce is wrong", async () => {
+      const hashToSign = web3.utils.soliditySha3(
+        { value: MethodId.ChangeBundleExecutorImplementation, type: "uint8" },
+        { value: SECOND, type: "address" },
+        { value: chainName, type: "string" },
+        { value: "1", type: "uint256" },
+        { value: bridge.address, type: "address" }
+      );
+
+      const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+      await truffleAssert.reverts(
+        bridge.changeBundleExecutorImplementation(SECOND, signature),
+        "Signers: invalid signature"
+      );
     });
 
     it("should not change executor for address(0)", async () => {
       const hashToSign = web3.utils.soliditySha3(
+        { value: MethodId.ChangeBundleExecutorImplementation, type: "uint8" },
         { value: ZERO_ADDR, type: "address" },
         { value: chainName, type: "string" },
         { value: "0", type: "uint256" },

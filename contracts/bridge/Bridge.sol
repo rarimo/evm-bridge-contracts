@@ -208,20 +208,28 @@ contract Bridge is
         address newImplementation_,
         bytes memory signature_
     ) internal override {
-        _checkSignatureAndIncrementNonce(_getAddressChangeHash(newImplementation_), signature_);
+        _checkSignatureAndIncrementNonce(
+            MethodId.AuthorizeUpgrade,
+            _getAddressChangeHash(MethodId.AuthorizeUpgrade, newImplementation_),
+            signature_
+        );
     }
 
-    function changeSigner(address newSigner_, bytes memory signature_) external {
-        _checkSignatureAndIncrementNonce(_getAddressChangeHash(newSigner_), signature_);
+    function changeSigner(bytes memory newSignerPubKey_, bytes memory signature_) external {
+        _checkSignature(keccak256(newSignerPubKey_), signature_);
 
-        signer = newSigner_;
+        signer = _convertPubKeyToAddress(newSignerPubKey_);
     }
 
     function changeBundleExecutorImplementation(
         address newImplementation_,
         bytes memory signature_
     ) external {
-        _checkSignatureAndIncrementNonce(_getAddressChangeHash(newImplementation_), signature_);
+        _checkSignatureAndIncrementNonce(
+            MethodId.ChangeBundleExecutorImplementation,
+            _getAddressChangeHash(MethodId.ChangeBundleExecutorImplementation, newImplementation_),
+            signature_
+        );
 
         bundleExecutorImplementation = newImplementation_;
     }

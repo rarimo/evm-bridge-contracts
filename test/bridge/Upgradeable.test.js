@@ -2,6 +2,8 @@ const { accounts, wei } = require("../../scripts/helpers/utils");
 const { rawSign } = require("../helpers/signer");
 const { OWNER_PRIVATE_KEY } = require("../helpers/keys");
 const truffleAssert = require("truffle-assertions");
+const { MethodId } = require("../helpers/constants");
+const { assert } = require("chai");
 
 const ERC1967Proxy = artifacts.require("ERC1967ProxyMock");
 const Bridge = artifacts.require("Bridge");
@@ -52,7 +54,10 @@ describe("Upgradeable", () => {
   });
 
   it("should upgrade if signature is ok", async () => {
+    assert.equal((await proxyBridge.nonces(MethodId.AuthorizeUpgrade)).toFixed(), "0");
+
     const hashToSign = web3.utils.soliditySha3(
+      { value: MethodId.AuthorizeUpgrade, type: "uint8" },
       { value: newBridge.address, type: "address" },
       { value: chainName, type: "string" },
       { value: "0", type: "uint256" },
@@ -62,10 +67,30 @@ describe("Upgradeable", () => {
     const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
 
     await truffleAssert.passes(proxyBridge.upgradeToWithSig(newBridge.address, signature));
+
+    assert.equal((await proxyBridge.nonces(MethodId.AuthorizeUpgrade)).toFixed(), "1");
+  });
+
+  it("should fail upgrade if method id is wrong", async () => {
+    const hashToSign = web3.utils.soliditySha3(
+      { value: MethodId.ChangeBundleExecutorImplementation, type: "uint8" },
+      { value: newBridge.address, type: "address" },
+      { value: chainName, type: "string" },
+      { value: "0", type: "uint256" },
+      { value: proxyBridge.address, type: "address" }
+    );
+
+    const signature = rawSign(hashToSign, OWNER_PRIVATE_KEY);
+
+    await truffleAssert.reverts(
+      proxyBridge.upgradeToWithSig(newBridge.address, signature),
+      "Signers: invalid signature"
+    );
   });
 
   it("should fail upgrade if nonce is wrong", async () => {
     const hashToSign = web3.utils.soliditySha3(
+      { value: MethodId.AuthorizeUpgrade, type: "uint8" },
       { value: newBridge.address, type: "address" },
       { value: chainName, type: "string" },
       { value: "1", type: "uint256" },
@@ -82,6 +107,7 @@ describe("Upgradeable", () => {
 
   it("should not upgrade from nonproxy", async () => {
     const hashToSign = web3.utils.soliditySha3(
+      { value: MethodId.AuthorizeUpgrade, type: "uint8" },
       { value: newBridge.address, type: "address" },
       { value: chainName, type: "string" },
       { value: "0", type: "uint256" },
