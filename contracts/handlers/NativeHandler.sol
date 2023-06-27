@@ -11,51 +11,34 @@ abstract contract NativeHandler is INativeHandler, Bundler {
     using Encoder for bytes32;
 
     function depositNative(
-        IBundler.Bundle calldata bundle_,
-        string calldata network_,
-        string calldata receiver_
-    ) external payable override {
-        require(msg.value > 0, "NativeHandler: zero value");
-
+        DepositNativeParameters calldata params_
+    ) external payable override onlyFacade {
         emit DepositedNative(
             msg.value,
-            bundle_.salt.encode(),
-            bundle_.bundle,
-            network_,
-            receiver_
+            params_.bundle.salt.encode(),
+            params_.bundle.bundle,
+            params_.network,
+            params_.receiver
         );
     }
 
     receive() external payable {}
 
-    function withdrawNativeBundle(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bool
-    ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(bundle_.salt);
+    function withdrawNative(WithdrawNativeParameters memory params_) public override onlyFacade {
+        require(params_.receiver != address(0), "NativeHandler: receiver is zero");
 
-        _withdrawNative(tokenData_, bundleProxy_, false);
-        _bundleUp(bundle_);
-    }
-
-    function _withdrawNative(bytes calldata tokenData_, address receiver_, bool) internal {
-        uint256 amount_ = _decodeNativeTokenData(tokenData_);
-
-        require(receiver_ != address(0), "NativeHandler: receiver is zero");
-
-        (bool success_, ) = payable(receiver_).call{value: amount_}("");
-
+        (bool success_, ) = params_.receiver.call{value: params_.amount}("");
         require(success_, "NativeHandler: failed to send eth");
     }
 
-    function _getNativeTokenDataLeaf(
-        bytes calldata tokenData_
-    ) internal pure returns (bytes memory) {
-        return abi.encodePacked(_decodeNativeTokenData(tokenData_));
+    function withdrawNativeBundle(
+        WithdrawNativeParameters memory params_
+    ) external override onlyFacade {
+        params_.receiver = determineProxyAddress(params_.bundle.salt);
+
+        withdrawNative(params_);
+        _bundleUp(params_.bundle);
     }
 
-    function _decodeNativeTokenData(bytes calldata tokenData_) private pure returns (uint256) {
-        return abi.decode(tokenData_, (uint256));
-    }
+    uint256[50] private _gap;
 }

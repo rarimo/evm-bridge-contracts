@@ -1,0 +1,13 @@
+{
+  "accounts": {
+    "validator": "0xDa323B2e898745B756768F0e4890599d0Ce5aFA6"
+  },
+
+  "constants": {
+    "chainName": "Fuji"
+  },
+
+  "integrations": {
+    "wrappedNative": "0xd00ae08403B9bbb9124bB305C09058E32C39A48c"
+  }
+}

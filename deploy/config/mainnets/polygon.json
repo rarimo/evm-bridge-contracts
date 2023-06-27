@@ -1,0 +1,13 @@
+{
+  "accounts": {
+    "validator": "0x1BBcc1c328E47805f050CB8C4BEE9a6043997118"
+  },
+
+  "constants": {
+    "chainName": "Polygon"
+  },
+
+  "integrations": {
+    "wrappedNative": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+  }
+}

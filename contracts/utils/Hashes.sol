@@ -9,4 +9,6 @@ abstract contract Hashes {
 
         usedHashes[originHash_] = true;
     }
+
+    uint256[49] private _gap;
 }

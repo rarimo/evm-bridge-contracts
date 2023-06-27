@@ -5,6 +5,7 @@ import "../interfaces/bridge/IBridge.sol";
 
 import "../handlers/ERC20Handler.sol";
 import "../handlers/ERC721Handler.sol";
+import "../handlers/SBTHandler.sol";
 import "../handlers/ERC1155Handler.sol";
 import "../handlers/NativeHandler.sol";
 
@@ -15,6 +16,8 @@ import "./proxy/UUPSSignableUpgradeable.sol";
 import "../utils/Signers.sol";
 import "../utils/Hashes.sol";
 
+import "../libs/Encoder.sol";
+
 contract Bridge is
     IBridge,
     UUPSSignableUpgradeable,
@@ -23,6 +26,7 @@ contract Bridge is
     Hashes,
     ERC20Handler,
     ERC721Handler,
+    SBTHandler,
     ERC1155Handler,
     NativeHandler
 {
@@ -31,173 +35,59 @@ contract Bridge is
     function __Bridge_init(
         address signer_,
         address bundleImplementation_,
-        string calldata chainName_
+        string calldata chainName_,
+        address facade_
     ) external initializer {
         __Signers_init(signer_, chainName_);
-        __Bundler_init(bundleImplementation_);
+        __Bundler_init(bundleImplementation_, facade_);
     }
 
-    function withdrawERC20(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        address receiver_,
-        bytes calldata proof_,
-        bool isWrapped_
-    ) external override {
-        _verifyMerkleLeaf(
-            _getERC20TokenDataLeaf,
-            tokenData_,
-            bundle_,
-            originHash_,
-            receiver_,
-            proof_
-        );
-
-        _withdraw(
-            _withdrawERC20,
-            this.withdrawERC20Bundle,
-            tokenData_,
-            bundle_,
-            receiver_,
-            isWrapped_
-        );
-    }
-
-    function withdrawERC721(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        address receiver_,
-        bytes calldata proof_,
-        bool isWrapped_
-    ) external override {
-        _verifyMerkleLeaf(
-            _getERC721TokenDataLeaf,
-            tokenData_,
-            bundle_,
-            originHash_,
-            receiver_,
-            proof_
-        );
-
-        _withdraw(
-            _withdrawERC721,
-            this.withdrawERC721Bundle,
-            tokenData_,
-            bundle_,
-            receiver_,
-            isWrapped_
-        );
-    }
-
-    function withdrawSBT(
-        bytes calldata tokenData_,
+    function verifyMerkleLeaf(
+        bytes calldata tokenDataLeaf_,
         IBundler.Bundle calldata bundle_,
         bytes32 originHash_,
         address receiver_,
         bytes calldata proof_
-    ) external override {
-        _verifyMerkleLeaf(
-            _getERC721TokenDataLeaf,
-            tokenData_,
-            bundle_,
-            originHash_,
-            receiver_,
-            proof_
-        );
-
-        _withdraw(_withdrawSBT, this.withdrawSBTBundle, tokenData_, bundle_, receiver_, false);
-    }
-
-    function withdrawERC1155(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        address receiver_,
-        bytes calldata proof_,
-        bool isWrapped_
-    ) external override {
-        _verifyMerkleLeaf(
-            _getERC1155TokenDataLeaf,
-            tokenData_,
-            bundle_,
-            originHash_,
-            receiver_,
-            proof_
-        );
-
-        _withdraw(
-            _withdrawERC1155,
-            this.withdrawERC1155Bundle,
-            tokenData_,
-            bundle_,
-            receiver_,
-            isWrapped_
-        );
-    }
-
-    function withdrawNative(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        address receiver_,
-        bytes calldata proof_
-    ) external override {
-        _verifyMerkleLeaf(
-            _getNativeTokenDataLeaf,
-            tokenData_,
-            bundle_,
-            originHash_,
-            receiver_,
-            proof_
-        );
-
-        _withdraw(
-            _withdrawNative,
-            this.withdrawNativeBundle,
-            tokenData_,
-            bundle_,
-            receiver_,
-            false
-        );
-    }
-
-    function _verifyMerkleLeaf(
-        function(bytes calldata) internal pure returns (bytes memory) _getTokenDataLeaf,
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bytes32 originHash_,
-        address receiver_,
-        bytes calldata proof_
-    ) internal {
-        bytes32 merkleLeaf_ = _getTokenDataLeaf.encode(
-            tokenData_,
-            bundle_,
-            originHash_,
-            chainName,
-            receiver_
-        );
+    ) external override onlyFacade {
+        bytes32 merkleLeaf_ = tokenDataLeaf_.encode(bundle_, originHash_, chainName, receiver_);
 
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, proof_);
     }
 
-    function _withdraw(
-        function(bytes calldata, address, bool) internal _withdrawFunc,
-        function(bytes memory, IBundler.Bundle memory, bool) external bundleFunc,
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        address receiver_,
-        bool isWrapped_
-    ) internal {
-        if (bundle_.bundle.length > 0) {
-            try bundleFunc(tokenData_, bundle_, isWrapped_) {
-                return;
-            } catch {}
-        }
+    function changeSigner(bytes calldata newSignerPubKey_, bytes calldata signature_) external {
+        _checkSignature(keccak256(newSignerPubKey_), signature_);
 
-        _withdrawFunc(tokenData_, receiver_, isWrapped_);
+        signer = _convertPubKeyToAddress(newSignerPubKey_);
+    }
+
+    function changeBundleExecutorImplementation(
+        address newImplementation_,
+        bytes calldata signature_
+    ) external {
+        require(newImplementation_ != address(0), "Bridge: zero address");
+
+        validateChangeAddressSignature(
+            uint8(MethodId.ChangeBundleExecutorImplementation),
+            address(this),
+            newImplementation_,
+            signature_
+        );
+
+        bundleExecutorImplementation = newImplementation_;
+    }
+
+    function changeFacade(address newFacade_, bytes calldata signature_) external {
+        require(newFacade_ != address(0), "Bridge: zero address");
+
+        validateChangeAddressSignature(
+            uint8(MethodId.ChangeFacade),
+            address(this),
+            newFacade_,
+            signature_
+        );
+
+        facade = newFacade_;
     }
 
     function _authorizeUpgrade(address) internal pure override {
@@ -206,31 +96,15 @@ contract Bridge is
 
     function _authorizeUpgrade(
         address newImplementation_,
-        bytes memory signature_
+        bytes calldata signature_
     ) internal override {
-        _checkSignatureAndIncrementNonce(
-            MethodId.AuthorizeUpgrade,
-            _getAddressChangeHash(MethodId.AuthorizeUpgrade, newImplementation_),
+        require(newImplementation_ != address(0), "Bridge: zero address");
+
+        validateChangeAddressSignature(
+            uint8(MethodId.AuthorizeUpgrade),
+            address(this),
+            newImplementation_,
             signature_
         );
-    }
-
-    function changeSigner(bytes memory newSignerPubKey_, bytes memory signature_) external {
-        _checkSignature(keccak256(newSignerPubKey_), signature_);
-
-        signer = _convertPubKeyToAddress(newSignerPubKey_);
-    }
-
-    function changeBundleExecutorImplementation(
-        address newImplementation_,
-        bytes memory signature_
-    ) external {
-        _checkSignatureAndIncrementNonce(
-            MethodId.ChangeBundleExecutorImplementation,
-            _getAddressChangeHash(MethodId.ChangeBundleExecutorImplementation, newImplementation_),
-            signature_
-        );
-
-        bundleExecutorImplementation = newImplementation_;
     }
 }

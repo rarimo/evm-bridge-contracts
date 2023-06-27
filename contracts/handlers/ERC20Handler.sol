@@ -14,77 +14,37 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
     using SafeERC20 for IERC20MintableBurnable;
     using Encoder for bytes32;
 
-    function depositERC20(
-        address token_,
-        uint256 amount_,
-        IBundler.Bundle calldata bundle_,
-        string calldata network_,
-        string calldata receiver_,
-        bool isWrapped_
-    ) external override {
-        require(token_ != address(0), "ERC20Handler: zero token");
-        require(amount_ > 0, "ERC20Handler: amount is zero");
-
-        IERC20MintableBurnable erc20_ = IERC20MintableBurnable(token_);
-
-        if (isWrapped_) {
-            erc20_.burnFrom(msg.sender, amount_);
-        } else {
-            erc20_.safeTransferFrom(msg.sender, address(this), amount_);
-        }
-
+    function depositERC20(DepositERC20Parameters calldata params_) external override onlyFacade {
         emit DepositedERC20(
-            token_,
-            amount_,
-            bundle_.salt.encode(),
-            bundle_.bundle,
-            network_,
-            receiver_,
-            isWrapped_
+            params_.token,
+            params_.amount,
+            params_.bundle.salt.encode(),
+            params_.bundle.bundle,
+            params_.network,
+            params_.receiver,
+            params_.isWrapped
         );
     }
 
-    function withdrawERC20Bundle(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bool isWrapped_
-    ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(bundle_.salt);
+    function withdrawERC20(WithdrawERC20Parameters memory params_) public override onlyFacade {
+        require(params_.token != address(0), "ERC20Handler: zero token");
+        require(params_.receiver != address(0), "ERC20Handler: zero receiver");
 
-        _withdrawERC20(tokenData_, bundleProxy_, isWrapped_);
-        _bundleUp(bundle_);
-    }
-
-    function _withdrawERC20(
-        bytes calldata tokenData_,
-        address receiver_,
-        bool isWrapped_
-    ) internal {
-        (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
-
-        require(token_ != address(0), "ERC20Handler: zero token");
-        require(receiver_ != address(0), "ERC20Handler: zero receiver");
-
-        IERC20MintableBurnable erc20_ = IERC20MintableBurnable(token_);
-
-        if (isWrapped_) {
-            erc20_.mintTo(receiver_, amount_);
+        if (params_.isWrapped) {
+            IERC20MintableBurnable(params_.token).mintTo(params_.receiver, params_.amount);
         } else {
-            erc20_.safeTransfer(receiver_, amount_);
+            IERC20MintableBurnable(params_.token).safeTransfer(params_.receiver, params_.amount);
         }
     }
 
-    function _getERC20TokenDataLeaf(
-        bytes calldata tokenData_
-    ) internal pure returns (bytes memory) {
-        (address token_, uint256 amount_) = _decodeERC20TokenData(tokenData_);
+    function withdrawERC20Bundle(
+        WithdrawERC20Parameters memory params_
+    ) external override onlyFacade {
+        params_.receiver = determineProxyAddress(params_.bundle.salt);
 
-        return abi.encodePacked(token_, amount_);
+        withdrawERC20(params_);
+        _bundleUp(params_.bundle);
     }
 
-    function _decodeERC20TokenData(
-        bytes calldata tokenData_
-    ) private pure returns (address, uint256) {
-        return abi.decode(tokenData_, (address, uint256));
-    }
+    uint256[50] private _gap;
 }

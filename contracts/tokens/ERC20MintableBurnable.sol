@@ -24,8 +24,11 @@ contract ERC20MintableBurnable is IERC20MintableBurnable, Ownable, ERC20 {
         _mint(receiver_, amount_);
     }
 
-    function burnFrom(address payer_, uint256 amount_) external override onlyOwner {
-        _spendAllowance(payer_, msg.sender, amount_);
+    function burnFrom(address payer_, uint256 amount_) external override {
+        if (payer_ != msg.sender) {
+            _spendAllowance(payer_, msg.sender, amount_);
+        }
+
         _burn(payer_, amount_);
     }
 

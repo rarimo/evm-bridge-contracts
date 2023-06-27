@@ -11,125 +11,48 @@ import "../libs/Encoder.sol";
 
 import "../bundle/Bundler.sol";
 
-abstract contract ERC721Handler is IERC721Handler, ERC721Holder, Bundler {
+abstract contract ERC721Handler is IERC721Handler, Bundler, ERC721Holder {
     using Encoder for bytes32;
 
-    function depositERC721(
-        address token_,
-        uint256 tokenId_,
-        IBundler.Bundle calldata bundle_,
-        string calldata network_,
-        string calldata receiver_,
-        bool isWrapped_
-    ) external override {
-        require(token_ != address(0), "ERC721Handler: zero token");
-
-        IERC721MintableBurnable erc721_ = IERC721MintableBurnable(token_);
-
-        if (isWrapped_) {
-            erc721_.burnFrom(msg.sender, tokenId_);
-        } else {
-            erc721_.safeTransferFrom(msg.sender, address(this), tokenId_);
-        }
-
+    function depositERC721(DepositERC721Parameters calldata params_) external override onlyFacade {
         emit DepositedERC721(
-            token_,
-            tokenId_,
-            bundle_.salt.encode(),
-            bundle_.bundle,
-            network_,
-            receiver_,
-            isWrapped_
+            params_.token,
+            params_.tokenId,
+            params_.bundle.salt.encode(),
+            params_.bundle.bundle,
+            params_.network,
+            params_.receiver,
+            params_.isWrapped
         );
     }
 
-    function depositSBT(
-        address token_,
-        uint256 tokenId_,
-        IBundler.Bundle calldata bundle_,
-        string calldata network_,
-        string calldata receiver_
-    ) external override {
-        require(token_ != address(0), "ERC721Handler: zero token");
-        require(ISBT(token_).ownerOf(tokenId_) == msg.sender, "ERC721Handler: invalid token id");
+    function withdrawERC721(WithdrawERC721Parameters memory params_) public override onlyFacade {
+        require(params_.token != address(0), "ERC721Handler: zero token");
+        require(params_.receiver != address(0), "ERC721Handler: zero receiver");
 
-        emit DepositedSBT(
-            token_,
-            tokenId_,
-            bundle_.salt.encode(),
-            bundle_.bundle,
-            network_,
-            receiver_
-        );
+        if (params_.isWrapped) {
+            IERC721MintableBurnable(params_.token).mintTo(
+                params_.receiver,
+                params_.tokenId,
+                params_.tokenURI
+            );
+        } else {
+            IERC721MintableBurnable(params_.token).safeTransferFrom(
+                address(this),
+                params_.receiver,
+                params_.tokenId
+            );
+        }
     }
 
     function withdrawERC721Bundle(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bool isWrapped_
-    ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(bundle_.salt);
+        WithdrawERC721Parameters memory params_
+    ) external override onlyFacade {
+        params_.receiver = determineProxyAddress(params_.bundle.salt);
 
-        _withdrawERC721(tokenData_, bundleProxy_, isWrapped_);
-        _bundleUp(bundle_);
+        withdrawERC721(params_);
+        _bundleUp(params_.bundle);
     }
 
-    function withdrawSBTBundle(
-        bytes calldata tokenData_,
-        IBundler.Bundle calldata bundle_,
-        bool
-    ) external onlyThis {
-        address bundleProxy_ = determineProxyAddress(bundle_.salt);
-
-        _withdrawSBT(tokenData_, bundleProxy_, false);
-        _bundleUp(bundle_);
-    }
-
-    function _withdrawERC721(
-        bytes calldata tokenData_,
-        address receiver_,
-        bool isWrapped_
-    ) internal {
-        (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
-            tokenData_
-        );
-
-        require(token_ != address(0), "ERC721Handler: zero token");
-        require(receiver_ != address(0), "ERC721Handler: zero receiver");
-
-        IERC721MintableBurnable erc721_ = IERC721MintableBurnable(token_);
-
-        if (isWrapped_) {
-            erc721_.mintTo(receiver_, tokenId_, tokenURI_);
-        } else {
-            erc721_.safeTransferFrom(address(this), receiver_, tokenId_);
-        }
-    }
-
-    function _withdrawSBT(bytes calldata tokenData_, address receiver_, bool) internal {
-        (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
-            tokenData_
-        );
-
-        require(token_ != address(0), "ERC721Handler: zero token");
-        require(receiver_ != address(0), "ERC721Handler: zero receiver");
-
-        ISBT(token_).attestTo(receiver_, tokenId_, tokenURI_);
-    }
-
-    function _getERC721TokenDataLeaf(
-        bytes calldata tokenData_
-    ) internal pure returns (bytes memory) {
-        (address token_, uint256 tokenId_, string memory tokenURI_) = _decodeERC721TokenData(
-            tokenData_
-        );
-
-        return abi.encodePacked(token_, tokenId_, tokenURI_);
-    }
-
-    function _decodeERC721TokenData(
-        bytes calldata tokenData_
-    ) private pure returns (address, uint256, string memory) {
-        return abi.decode(tokenData_, (address, uint256, string));
-    }
+    uint256[50] private _gap;
 }

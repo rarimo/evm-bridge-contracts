@@ -35,10 +35,12 @@ contract ERC721MintableBurnable is
         _setTokenURI(tokenId_, tokenURI_);
     }
 
-    function burnFrom(address payer_, uint256 tokenId_) external override onlyOwner {
+    function burnFrom(address payer_, uint256 tokenId_) external override {
         require(
             ownerOf(tokenId_) == payer_ &&
-                (getApproved(tokenId_) == msg.sender || isApprovedForAll(payer_, msg.sender)),
+                (payer_ == msg.sender ||
+                    getApproved(tokenId_) == msg.sender ||
+                    isApprovedForAll(payer_, msg.sender)),
             "ERC721MintableBurnable: not approved"
         );
 

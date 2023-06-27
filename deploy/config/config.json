@@ -1,0 +1,13 @@
+{
+  "accounts": {
+    "validator": "0x0000000000000000000000000000000000000001"
+  },
+
+  "constants": {
+    "chainName": "ChainName"
+  },
+
+  "integrations": {
+    "wrappedNative": "0x0000000000000000000000000000000000000002"
+  }
+}
