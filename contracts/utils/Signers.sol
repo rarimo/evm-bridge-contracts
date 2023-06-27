@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 import "../interfaces/bridge/IBridge.sol";
 
-abstract contract Signers is Initializable {
+abstract contract Signers is ISigners, Initializable {
     using ECDSA for bytes32;
     using MerkleProof for bytes32[];
 
@@ -16,20 +16,43 @@ abstract contract Signers is Initializable {
     address public signer;
     string public chainName;
 
-    mapping(IBridge.MethodId => uint256) public nonces;
+    mapping(address => mapping(uint8 => uint256)) public nonces;
 
     function __Signers_init(address signer_, string calldata chainName_) public onlyInitializing {
         signer = signer_;
         chainName = chainName_;
     }
 
-    function _checkSignatureAndIncrementNonce(
-        IBridge.MethodId methodId_,
+    function checkSignatureAndIncrementNonce(
+        uint8 methodId_,
+        address contractAddress_,
         bytes32 signHash_,
-        bytes memory signature_
-    ) internal {
+        bytes calldata signature_
+    ) public {
         _checkSignature(signHash_, signature_);
-        ++nonces[methodId_];
+        ++nonces[contractAddress_][methodId_];
+    }
+
+    function validateChangeAddressSignature(
+        uint8 methodId_,
+        address contractAddress_,
+        address newAddress_,
+        bytes calldata signature_
+    ) public {
+        (string memory chainName_, uint256 nonce_) = getSigComponents(methodId_, contractAddress_);
+
+        bytes32 signHash_ = keccak256(
+            abi.encodePacked(methodId_, newAddress_, chainName_, nonce_, contractAddress_)
+        );
+
+        checkSignatureAndIncrementNonce(methodId_, contractAddress_, signHash_, signature_);
+    }
+
+    function getSigComponents(
+        uint8 methodId_,
+        address contractAddress_
+    ) public view returns (string memory chainName_, uint256 nonce_) {
+        return (chainName, nonces[contractAddress_][methodId_]);
     }
 
     function _checkSignature(bytes32 signHash_, bytes memory signature_) internal view {
@@ -49,25 +72,7 @@ abstract contract Signers is Initializable {
         _checkSignature(merkleRoot_, signature_);
     }
 
-    function _getAddressChangeHash(
-        IBridge.MethodId methodId_,
-        address newAddress_
-    ) internal view returns (bytes32) {
-        require(newAddress_ != address(0), "Signers: new address is 0");
-
-        return
-            keccak256(
-                abi.encodePacked(
-                    methodId_,
-                    newAddress_,
-                    chainName,
-                    nonces[methodId_],
-                    address(this)
-                )
-            );
-    }
-
-    function _convertPubKeyToAddress(bytes memory pubKey_) internal pure returns (address) {
+    function _convertPubKeyToAddress(bytes calldata pubKey_) internal pure returns (address) {
         require(pubKey_.length == 64, "Signers: wrong pubKey length");
 
         (uint256 x_, uint256 y_) = abi.decode(pubKey_, (uint256, uint256));
@@ -81,4 +86,6 @@ abstract contract Signers is Initializable {
 
         return address(uint160(uint256(keccak256(pubKey_))));
     }
+
+    uint256[47] private _gap;
 }

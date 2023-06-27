@@ -1,0 +1,13 @@
+{
+  "accounts": {
+    "validator": "0x1BBcc1c328E47805f050CB8C4BEE9a6043997118"
+  },
+
+  "constants": {
+    "chainName": "Ethereum"
+  },
+
+  "integrations": {
+    "wrappedNative": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+  }
+}

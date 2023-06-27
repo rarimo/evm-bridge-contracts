@@ -10,17 +10,22 @@ import "./proxy/BundleExecutorImplementation.sol";
 
 abstract contract Bundler is IBundler, Initializable {
     address public bundleExecutorImplementation;
+    address public facade;
 
-    modifier onlyThis() {
-        require(msg.sender == address(this), "Bundler: not this");
+    modifier onlyFacade() {
+        _onlyFacade();
         _;
     }
 
-    function __Bundler_init(address bundleExecutorImplementation_) public onlyInitializing {
+    function __Bundler_init(
+        address bundleExecutorImplementation_,
+        address facade_
+    ) public onlyInitializing {
         bundleExecutorImplementation = bundleExecutorImplementation_;
+        facade = facade_;
     }
 
-    function _bundleUp(Bundle calldata bundle_) internal {
+    function _bundleUp(Bundle memory bundle_) internal {
         address payable executor = payable(
             new BundleExecutorProxy{salt: bundle_.salt}(
                 bundleExecutorImplementation,
@@ -54,4 +59,10 @@ abstract contract Bundler is IBundler, Initializable {
                 )
             );
     }
+
+    function _onlyFacade() private view {
+        require(msg.sender == facade, "Bundler: not a facade");
+    }
+
+    uint256[48] private _gap;
 }

@@ -1,0 +1,13 @@
+{
+  "accounts": {
+    "validator": "0x1BBcc1c328E47805f050CB8C4BEE9a6043997118"
+  },
+
+  "constants": {
+    "chainName": "Bsc"
+  },
+
+  "integrations": {
+    "wrappedNative": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+  }
+}

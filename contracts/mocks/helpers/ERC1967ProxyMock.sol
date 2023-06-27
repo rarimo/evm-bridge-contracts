@@ -4,5 +4,9 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract ERC1967ProxyMock is ERC1967Proxy {
-    constructor(address _logic, bytes memory _data) ERC1967Proxy(_logic, _data) {}
+    constructor(address logic_, bytes memory data_) ERC1967Proxy(logic_, data_) {}
+
+    function implementation() external view returns (address) {
+        return _implementation();
+    }
 }
