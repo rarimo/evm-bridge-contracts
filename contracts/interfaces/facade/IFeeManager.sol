@@ -110,4 +110,11 @@ interface IFeeManager {
      * @param params_ the parameters for the fee tokens withdrawal
      */
     function withdrawFeeToken(WithdrawFeeTokenParameters calldata params_) external;
+
+    /**
+     * @notice the function to get the commission amount for the specific fee token
+     * @param feeToken_ the address of the fee token
+     * @return commission_ the commission amount for the specified fee token
+     */
+    function getCommission(address feeToken_) external view returns (uint256 commission_);
 }

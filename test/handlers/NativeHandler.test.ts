@@ -48,6 +48,7 @@ describe("NativeHandler", () => {
     it("should revert if the caller is not a facade", async () => {
       const tx = bridge.connect(SECOND).depositNative(
         {
+          amount: wei("10"),
           bundle: RANDOM_BUNDLE,
           network: CHAIN_NAME,
           receiver: RECEIVER,
@@ -61,6 +62,7 @@ describe("NativeHandler", () => {
     it("should emit the deposit event with proper params", async () => {
       const tx = bridge.depositNative(
         {
+          amount: wei("10"),
           bundle: RANDOM_BUNDLE,
           network: CHAIN_NAME,
           receiver: RECEIVER,
@@ -80,7 +82,7 @@ describe("NativeHandler", () => {
     });
 
     describe("#withdrawNative", () => {
-      it("should revert if the caller is not a facet", async () => {
+      it("should revert if the caller is not a facade", async () => {
         const tx = bridge.connect(SECOND).withdrawNative({
           amount: wei("10"),
           bundle: EMPTY_BUNDLE,
@@ -144,7 +146,7 @@ describe("NativeHandler", () => {
         proxyAddress = await bridge.determineProxyAddress(bundleTransfer.salt);
       });
 
-      it("should revert if the caller is not a facet", async () => {
+      it("should revert if the caller is not a facade", async () => {
         const tx = bridge.connect(SECOND).withdrawNativeBundle({
           amount: wei("10"),
           bundle: bundleTransfer,

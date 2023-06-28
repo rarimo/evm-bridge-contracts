@@ -1343,12 +1343,13 @@ describe("BridgeFacade", () => {
 
     describe("native", () => {
       describe("#depositNative", () => {
-        it("should not deposit if no funds to deposit", async () => {
+        it("should not deposit if amount is zero", async () => {
           const tx = facade.depositNative(
             {
               feeToken: feeTokens[0],
             },
             {
+              amount: 0,
               bundle: EMPTY_BUNDLE,
               network: CHAIN_NAME,
               receiver: RECEIVER,
@@ -1356,7 +1357,75 @@ describe("BridgeFacade", () => {
             { value: feeAmounts[0] }
           );
 
-          await expect(tx).to.be.revertedWith("BridgeFacade: no funds to deposit");
+          await expect(tx).to.be.revertedWith("BridgeFacade: amount is zero");
+        });
+
+        it("should not deposit if wrong amount", async () => {
+          const tx = facade.depositNative(
+            {
+              feeToken: feeTokens[0],
+            },
+            {
+              amount: wei("10"),
+              bundle: EMPTY_BUNDLE,
+              network: CHAIN_NAME,
+              receiver: RECEIVER,
+            },
+            { value: feeAmounts[0] }
+          );
+
+          await expect(tx).to.be.revertedWith("BridgeFacade: wrong amount");
+        });
+
+        it("should not deposit if wrong amount x2", async () => {
+          const tx = facade.depositNative(
+            {
+              feeToken: feeTokens[0],
+            },
+            {
+              amount: wei("10"),
+              bundle: EMPTY_BUNDLE,
+              network: CHAIN_NAME,
+              receiver: RECEIVER,
+            },
+            { value: feeAmounts[0] + wei("10") + 1n }
+          );
+
+          await expect(tx).to.be.revertedWith("BridgeFacade: wrong amount");
+        });
+
+        it("should not deposit if wrong amount x3", async () => {
+          const tx = facade.depositNative(
+            {
+              feeToken: feeTokens[1],
+            },
+            {
+              amount: wei("10"),
+              bundle: EMPTY_BUNDLE,
+              network: CHAIN_NAME,
+              receiver: RECEIVER,
+            },
+            { value: wei("20") }
+          );
+
+          await expect(tx).to.be.revertedWith("BridgeFacade: wrong amount");
+        });
+
+        it("should not deposit if wrong amount x4", async () => {
+          const tx = facade.depositNative(
+            {
+              feeToken: feeTokens[1],
+            },
+            {
+              amount: wei("10"),
+              bundle: EMPTY_BUNDLE,
+              network: CHAIN_NAME,
+              receiver: RECEIVER,
+            },
+            { value: wei("5") }
+          );
+
+          await expect(tx).to.be.revertedWith("BridgeFacade: wrong amount");
         });
 
         it("should not deposit if wrong fee token", async () => {
@@ -1365,6 +1434,7 @@ describe("BridgeFacade", () => {
               feeToken: OWNER.address,
             },
             {
+              amount: wei("10"),
               bundle: EMPTY_BUNDLE,
               network: CHAIN_NAME,
               receiver: RECEIVER,
@@ -1381,6 +1451,7 @@ describe("BridgeFacade", () => {
               feeToken: ETHEREUM_ADDRESS,
             },
             {
+              amount: wei("0.5"),
               bundle: EMPTY_BUNDLE,
               network: CHAIN_NAME,
               receiver: RECEIVER,
@@ -1397,6 +1468,7 @@ describe("BridgeFacade", () => {
               feeToken: feeTokens[2],
             },
             {
+              amount: wei("10"),
               bundle: EMPTY_BUNDLE,
               network: CHAIN_NAME,
               receiver: RECEIVER,
@@ -1413,6 +1485,7 @@ describe("BridgeFacade", () => {
               feeToken: feeTokens[0],
             },
             {
+              amount: wei("10"),
               bundle: EMPTY_BUNDLE,
               network: CHAIN_NAME,
               receiver: RECEIVER,
@@ -1432,6 +1505,7 @@ describe("BridgeFacade", () => {
               feeToken: feeTokens[1],
             },
             {
+              amount: wei("10"),
               bundle: EMPTY_BUNDLE,
               network: CHAIN_NAME,
               receiver: RECEIVER,

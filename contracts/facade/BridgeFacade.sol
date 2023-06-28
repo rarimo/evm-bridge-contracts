@@ -24,9 +24,9 @@ contract BridgeFacade is IBridgeFacade, FeeManager {
         DepositFeeERC20Parameters calldata feeParams_,
         IBridge.DepositERC20Parameters calldata depositParams_
     ) external payable override {
-        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
         require(depositParams_.token != address(0), "BridgeFacade: zero token");
         require(depositParams_.amount > 0, "BridgeFacade: amount is zero");
+        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
 
         address bridge_ = bridge;
 
@@ -50,8 +50,8 @@ contract BridgeFacade is IBridgeFacade, FeeManager {
         DepositFeeERC721Parameters calldata feeParams_,
         IBridge.DepositERC721Parameters calldata depositParams_
     ) external payable override {
-        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
         require(depositParams_.token != address(0), "BridgeFacade: zero token");
+        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
 
         address bridge_ = bridge;
 
@@ -75,12 +75,12 @@ contract BridgeFacade is IBridgeFacade, FeeManager {
         DepositFeeSBTParameters calldata feeParams_,
         IBridge.DepositSBTParameters calldata depositParams_
     ) external payable override {
-        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
         require(depositParams_.token != address(0), "BridgeFacade: zero token");
         require(
             ISBT(depositParams_.token).ownerOf(depositParams_.tokenId) == msg.sender,
             "BridgeFacade: invalid token id"
         );
+        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
 
         IBridge(bridge).depositSBT(depositParams_);
     }
@@ -89,9 +89,9 @@ contract BridgeFacade is IBridgeFacade, FeeManager {
         DepositFeeERC1155Parameters calldata feeParams_,
         IBridge.DepositERC1155Parameters calldata depositParams_
     ) external payable override {
-        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
         require(depositParams_.token != address(0), "BridgeFacade: zero token");
         require(depositParams_.amount > 0, "BridgeFacade: amount is zero");
+        require(_payCommission(feeParams_.feeToken) == 0, "BridgeFacade: excessive native amount");
 
         address bridge_ = bridge;
 
@@ -118,10 +118,13 @@ contract BridgeFacade is IBridgeFacade, FeeManager {
         DepositFeeNativeParameters calldata feeParams_,
         IBridge.DepositNativeParameters calldata depositParams_
     ) external payable override {
-        uint256 amount_ = _payCommission(feeParams_.feeToken);
-        require(amount_ > 0, "BridgeFacade: no funds to deposit");
+        require(depositParams_.amount > 0, "BridgeFacade: amount is zero");
+        require(
+            _payCommission(feeParams_.feeToken) == depositParams_.amount,
+            "BridgeFacade: wrong amount"
+        );
 
-        IBridge(bridge).depositNative{value: amount_}(depositParams_);
+        IBridge(bridge).depositNative{value: depositParams_.amount}(depositParams_);
     }
 
     function withdrawERC20(IBridge.WithdrawERC20Parameters calldata params_) external override {

@@ -158,7 +158,7 @@ describe("ERC721Handler", () => {
           await erc721["safeTransferFrom(address,address,uint256)"](OWNER.address, bridge.address, 10);
         });
 
-        it("should revert if the caller is not a facet", async () => {
+        it("should revert if the caller is not a facade", async () => {
           const tx = bridge.connect(SECOND).withdrawERC721({
             token: erc721.address,
             tokenId: 10,
@@ -262,7 +262,7 @@ describe("ERC721Handler", () => {
           await erc721["safeTransferFrom(address,address,uint256)"](OWNER.address, bridge.address, 10);
         });
 
-        it("should revert if the caller is not a facet", async () => {
+        it("should revert if the caller is not a facade", async () => {
           const tx = bridge.connect(SECOND).withdrawERC721Bundle({
             token: erc721.address,
             tokenId: 10,
