@@ -148,8 +148,8 @@ describe("FeeManager", () => {
         .to.emit(feeManager, "AddedFeeToken")
         .withArgs(feeTokens[1], feeAmounts[1]);
 
-      expect(await feeManager.feeTokens(feeTokens[0])).to.eq(feeAmounts[0]);
-      expect(await feeManager.feeTokens(feeTokens[1])).to.eq(feeAmounts[1]);
+      expect(await feeManager.getCommission(feeTokens[0])).to.eq(feeAmounts[0]);
+      expect(await feeManager.getCommission(feeTokens[1])).to.eq(feeAmounts[1]);
     });
   });
 
@@ -200,8 +200,8 @@ describe("FeeManager", () => {
           .to.emit(feeManager, "RemovedFeeToken")
           .withArgs(feeTokens[1], feeAmounts[1]);
 
-        expect(await feeManager.feeTokens(feeTokens[0])).to.eq(0);
-        expect(await feeManager.feeTokens(feeTokens[1])).to.eq(0);
+        expect(await feeManager.getCommission(feeTokens[0])).to.eq(0);
+        expect(await feeManager.getCommission(feeTokens[1])).to.eq(0);
       });
     });
 
@@ -243,8 +243,8 @@ describe("FeeManager", () => {
           .to.emit(feeManager, "UpdatedFeeToken")
           .withArgs(feeTokens[1], newAmounts[1]);
 
-        expect(await feeManager.feeTokens(feeTokens[0])).to.eq(newAmounts[0]);
-        expect(await feeManager.feeTokens(feeTokens[1])).to.eq(newAmounts[1]);
+        expect(await feeManager.getCommission(feeTokens[0])).to.eq(newAmounts[0]);
+        expect(await feeManager.getCommission(feeTokens[1])).to.eq(newAmounts[1]);
       });
     });
 

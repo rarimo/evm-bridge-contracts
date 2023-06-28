@@ -17,11 +17,13 @@ interface INativeHandler is IBundler {
 
     /**
      * @notice the struct that represents parameters for the native deposit
+     * @param amount the amount of deposited native tokens
      * @param bundle the encoded transaction bundle with salt
      * @param network the network name of destination network, information field for event
      * @param receiver the receiver address in destination network, information field for event
      */
     struct DepositNativeParameters {
+        uint256 amount;
         IBundler.Bundle bundle;
         string network;
         string receiver;

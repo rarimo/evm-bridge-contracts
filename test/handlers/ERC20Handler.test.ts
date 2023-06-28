@@ -138,7 +138,7 @@ describe("ERC20Handler", () => {
           await erc20.transfer(bridge.address, wei("10"));
         });
 
-        it("should revert if the caller is not a facet", async () => {
+        it("should revert if the caller is not a facade", async () => {
           const tx = bridge.connect(SECOND).withdrawERC20({
             token: erc20.address,
             amount: wei("10"),
@@ -236,7 +236,7 @@ describe("ERC20Handler", () => {
           await erc20.transfer(bridge.address, wei("10"));
         });
 
-        it("should revert if the caller is not a facet", async () => {
+        it("should revert if the caller is not a facade", async () => {
           const tx = bridge.connect(SECOND).withdrawERC20Bundle({
             token: erc20.address,
             amount: wei("10"),

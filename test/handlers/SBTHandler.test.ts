@@ -89,7 +89,7 @@ describe("SBTHandler", () => {
         await expect(tx).to.be.revertedWith("SBTMintableBurnable: token is assigned to zero address");
       });
 
-      it("should not be locked if all conditions are met", async () => {
+      it("should be locked if all conditions are met", async () => {
         expect(await sbt.locked(10)).to.be.true;
       });
     });
@@ -152,7 +152,7 @@ describe("SBTHandler", () => {
         await sbt.burn();
       });
 
-      it("should revert if the caller is not a facet", async () => {
+      it("should revert if the caller is not a facade", async () => {
         const tx = bridge.connect(SECOND).withdrawSBT({
           token: sbt.address,
           tokenId: 10,
@@ -227,7 +227,7 @@ describe("SBTHandler", () => {
         proxyAddress = await bridge.determineProxyAddress(bundleApprove.salt);
       });
 
-      it("should revert if the caller is not a facet", async () => {
+      it("should revert if the caller is not a facade", async () => {
         const tx = bridge.connect(SECOND).withdrawSBTBundle({
           token: sbt.address,
           tokenId: 10,

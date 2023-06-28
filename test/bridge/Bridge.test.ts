@@ -176,7 +176,7 @@ describe("Bridge", () => {
       await expect(tx).to.be.revertedWith("Hashes: the hash nonce is used");
     });
 
-    it("should not verify merkle leaf if all conditions are met", async () => {
+    it("should verify merkle leaf if all conditions are met", async () => {
       const erc20DataLeaf = ethers.utils.solidityPack(["address", "uint256"], [SECOND.address, wei("10")]);
       const nativeDataLeaf = ethers.utils.solidityPack(["uint256"], [wei("10")]);
 

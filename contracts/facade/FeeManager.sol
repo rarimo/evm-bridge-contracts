@@ -9,14 +9,13 @@ import "../interfaces/utils/ISigners.sol";
 
 import "../bridge/proxy/UUPSSignableUpgradeable.sol";
 
+import "../libs/Constants.sol";
+
 abstract contract FeeManager is IFeeManager, UUPSSignableUpgradeable, Initializable {
     using SafeERC20 for IERC20;
 
-    address public constant ETHEREUM_ADDRESS = 0x0000000000000000000000000000000000000000;
-    address public constant COMMISSION_ADDRESS = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
-
     address public bridge;
-    mapping(address => uint256) public feeTokens;
+    mapping(address => uint256) internal _feeTokens;
 
     function __FeeManager_init(address bridge_) public onlyInitializing {
         bridge = bridge_;
@@ -89,17 +88,23 @@ abstract contract FeeManager is IFeeManager, UUPSSignableUpgradeable, Initializa
         }
     }
 
+    function getCommission(
+        address feeToken_
+    ) external view override returns (uint256 commission_) {
+        return _feeTokens[feeToken_];
+    }
+
     function _payCommission(address feeToken_) internal returns (uint256 nativeLeft_) {
         nativeLeft_ = msg.value;
 
-        uint256 commission_ = feeTokens[feeToken_];
+        uint256 commission_ = _feeTokens[feeToken_];
         require(commission_ != 0, "FeeManager: wrong fee token");
 
-        if (feeToken_ == ETHEREUM_ADDRESS) {
+        if (feeToken_ == Constants.ETHEREUM_ADDRESS) {
             require(commission_ <= nativeLeft_, "FeeManager: wrong native amount");
 
             nativeLeft_ -= commission_;
-        } else if (feeToken_ != COMMISSION_ADDRESS) {
+        } else if (feeToken_ != Constants.COMMISSION_ADDRESS) {
             IERC20(feeToken_).safeTransferFrom(msg.sender, address(this), commission_);
         }
     }
@@ -177,33 +182,33 @@ abstract contract FeeManager is IFeeManager, UUPSSignableUpgradeable, Initializa
     }
 
     function _addFeeToken(address feeToken_, uint256 feeAmount_) private {
-        require(feeTokens[feeToken_] == 0, "FeeManager: token already exists");
+        require(_feeTokens[feeToken_] == 0, "FeeManager: token already exists");
 
-        feeTokens[feeToken_] = feeAmount_;
+        _feeTokens[feeToken_] = feeAmount_;
 
         emit AddedFeeToken(feeToken_, feeAmount_);
     }
 
     function _removeFeeToken(address feeToken_, uint256 feeAmount_) private {
-        require(feeTokens[feeToken_] == feeAmount_, "FeeManager: wrong token address or amount");
+        require(_feeTokens[feeToken_] == feeAmount_, "FeeManager: wrong token address or amount");
 
-        delete feeTokens[feeToken_];
+        delete _feeTokens[feeToken_];
 
         emit RemovedFeeToken(feeToken_, feeAmount_);
     }
 
     function _updateFeeToken(address feeToken_, uint256 feeAmount_) private {
-        require(feeTokens[feeToken_] != 0, "FeeManager: token doesn't exist");
+        require(_feeTokens[feeToken_] != 0, "FeeManager: token doesn't exist");
 
-        feeTokens[feeToken_] = feeAmount_;
+        _feeTokens[feeToken_] = feeAmount_;
 
         emit UpdatedFeeToken(feeToken_, feeAmount_);
     }
 
     function _withdrawFeeToken(address receiver_, address feeToken_, uint256 amount_) private {
-        require(feeToken_ != COMMISSION_ADDRESS, "FeeManager: commission token");
+        require(feeToken_ != Constants.COMMISSION_ADDRESS, "FeeManager: commission token");
 
-        if (feeToken_ == ETHEREUM_ADDRESS) {
+        if (feeToken_ == Constants.ETHEREUM_ADDRESS) {
             (bool ok_, ) = receiver_.call{value: amount_}("");
             require(ok_, "FeeManager: failed to withdraw native");
         } else {
