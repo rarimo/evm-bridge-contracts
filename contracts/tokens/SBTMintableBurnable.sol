@@ -27,7 +27,7 @@ contract SBTMintableBurnable is IERC5192, ISBT, Ownable, ERC721URIStorage {
         address receiver_,
         uint256 tokenId_,
         string calldata tokenURI_
-    ) external override onlyOwner {
+    ) external override {
         _ownersToTokens[receiver_] = tokenId_;
 
         _mint(receiver_, tokenId_);

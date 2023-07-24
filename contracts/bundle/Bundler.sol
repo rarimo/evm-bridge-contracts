@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-
 import "../interfaces/bundle/IBundler.sol";
 
 import "./proxy/BundleExecutorProxy.sol";
 import "./proxy/BundleExecutorImplementation.sol";
 
-abstract contract Bundler is IBundler, Initializable {
+abstract contract Bundler is IBundler {
     address public bundleExecutorImplementation;
     address public facade;
 
@@ -17,10 +15,7 @@ abstract contract Bundler is IBundler, Initializable {
         _;
     }
 
-    function __Bundler_init(
-        address bundleExecutorImplementation_,
-        address facade_
-    ) public onlyInitializing {
+    function __Bundler_init(address bundleExecutorImplementation_, address facade_) internal {
         bundleExecutorImplementation = bundleExecutorImplementation_;
         facade = facade_;
     }

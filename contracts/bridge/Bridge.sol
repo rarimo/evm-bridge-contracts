@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@dlsl/dev-modules/access-control/MultiOwnable.sol";
+
 import "../interfaces/bridge/IBridge.sol";
 
 import "../handlers/ERC20Handler.sol";
@@ -20,6 +22,7 @@ import "../libs/Encoder.sol";
 
 contract Bridge is
     IBridge,
+    MultiOwnable,
     UUPSSignableUpgradeable,
     Bundler,
     Signers,
@@ -53,6 +56,24 @@ contract Bridge is
 
         _checkAndUpdateHashes(originHash_);
         _checkMerkleSignature(merkleLeaf_, proof_);
+    }
+
+    function changeSignerOwner(bytes calldata newSignerPubKey_) external onlyOwner {
+        signer = _convertPubKeyToAddress(newSignerPubKey_);
+    }
+
+    function changeBundleExecutorImplementationOwner(
+        address newImplementation_
+    ) external onlyOwner {
+        require(newImplementation_ != address(0), "Bridge: zero address");
+
+        bundleExecutorImplementation = newImplementation_;
+    }
+
+    function changeFacadeOwner(address newFacade_) external onlyOwner {
+        require(newFacade_ != address(0), "Bridge: zero address");
+
+        facade = newFacade_;
     }
 
     function changeSigner(bytes calldata newSignerPubKey_, bytes calldata signature_) external {
@@ -90,9 +111,7 @@ contract Bridge is
         facade = newFacade_;
     }
 
-    function _authorizeUpgrade(address) internal pure override {
-        revert("Bridge: this upgrade method is off");
-    }
+    function _authorizeUpgrade(address) internal view override onlyOwner {}
 
     function _authorizeUpgrade(
         address newImplementation_,

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+import "@dlsl/dev-modules/access-control/MultiOwnable.sol";
 
 import "../interfaces/facade/IFeeManager.sol";
 import "../interfaces/utils/ISigners.sol";
@@ -11,14 +12,62 @@ import "../bridge/proxy/UUPSSignableUpgradeable.sol";
 
 import "../libs/Constants.sol";
 
-abstract contract FeeManager is IFeeManager, UUPSSignableUpgradeable, Initializable {
+abstract contract FeeManager is IFeeManager, MultiOwnable, UUPSSignableUpgradeable {
     using SafeERC20 for IERC20;
 
     address public bridge;
     mapping(address => uint256) internal _feeTokens;
 
     function __FeeManager_init(address bridge_) public onlyInitializing {
+        __MultiOwnable_init();
+
         bridge = bridge_;
+    }
+
+    function addFeeTokenOwner(AddFeeTokenParameters calldata params_) external onlyOwner {
+        require(
+            params_.feeTokens.length == params_.feeAmounts.length,
+            "FeeManager: params lengths mismatch"
+        );
+
+        for (uint256 i = 0; i < params_.feeTokens.length; ++i) {
+            _addFeeToken(params_.feeTokens[i], params_.feeAmounts[i]);
+        }
+    }
+
+    function removeFeeTokenOwner(RemoveFeeTokenParameters calldata params_) external onlyOwner {
+        require(
+            params_.feeTokens.length == params_.feeAmounts.length,
+            "FeeManager: params lengths mismatch"
+        );
+
+        for (uint256 i = 0; i < params_.feeTokens.length; ++i) {
+            _removeFeeToken(params_.feeTokens[i], params_.feeAmounts[i]);
+        }
+    }
+
+    function updateFeeTokenOwner(UpdateFeeTokenParameters calldata params_) external onlyOwner {
+        require(
+            params_.feeTokens.length == params_.feeAmounts.length,
+            "FeeManager: params lengths mismatch"
+        );
+
+        for (uint256 i = 0; i < params_.feeTokens.length; ++i) {
+            _updateFeeToken(params_.feeTokens[i], params_.feeAmounts[i]);
+        }
+    }
+
+    function withdrawFeeTokenOwner(
+        WithdrawFeeTokenParameters calldata params_
+    ) external onlyOwner {
+        require(
+            params_.feeTokens.length == params_.amounts.length,
+            "FeeManager: params lengths mismatch"
+        );
+
+        for (uint256 i = 0; i < params_.feeTokens.length; ++i) {
+            _withdrawFeeToken(params_.receiver, params_.feeTokens[i], params_.amounts[i]);
+        }
     }
 
     function addFeeToken(AddFeeTokenParameters calldata params_) external override {
@@ -109,9 +158,7 @@ abstract contract FeeManager is IFeeManager, UUPSSignableUpgradeable, Initializa
         }
     }
 
-    function _authorizeUpgrade(address) internal pure override {
-        revert("FeeManager: this upgrade method is off");
-    }
+    function _authorizeUpgrade(address) internal view override onlyOwner {}
 
     function _authorizeUpgrade(
         address newImplementation_,

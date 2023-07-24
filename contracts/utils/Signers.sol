@@ -3,11 +3,10 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 import "../interfaces/bridge/IBridge.sol";
 
-abstract contract Signers is ISigners, Initializable {
+abstract contract Signers is ISigners {
     using ECDSA for bytes32;
     using MerkleProof for bytes32[];
 
@@ -18,7 +17,7 @@ abstract contract Signers is ISigners, Initializable {
 
     mapping(address => mapping(uint8 => uint256)) public nonces;
 
-    function __Signers_init(address signer_, string calldata chainName_) public onlyInitializing {
+    function __Signers_init(address signer_, string calldata chainName_) internal {
         signer = signer_;
         chainName = chainName_;
     }

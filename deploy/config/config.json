@@ -1,13 +1,13 @@
 {
   "accounts": {
-    "validator": "0x0000000000000000000000000000000000000001"
+    "validator": "0x038D006846a3e203738cF80A02418e124203beb2"
   },
 
   "constants": {
-    "chainName": "ChainName"
+    "chainName": "Fuji"
   },
 
   "integrations": {
-    "wrappedNative": "0x0000000000000000000000000000000000000002"
+    "wrappedNative": "0xd00ae08403B9bbb9124bB305C09058E32C39A48c"
   }
 }

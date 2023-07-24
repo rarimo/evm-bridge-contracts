@@ -30,7 +30,7 @@ contract ERC721MintableBurnable is
         address receiver_,
         uint256 tokenId_,
         string calldata tokenURI_
-    ) external override onlyOwner {
+    ) external override {
         _mint(receiver_, tokenId_);
         _setTokenURI(tokenId_, tokenURI_);
     }

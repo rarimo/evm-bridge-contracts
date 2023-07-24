@@ -24,7 +24,7 @@ contract ERC1155MintableBurnable is
         uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_
-    ) external override onlyOwner {
+    ) external override {
         _mint(receiver_, tokenId_, amount_, "");
         _setURI(tokenId_, tokenURI_);
     }

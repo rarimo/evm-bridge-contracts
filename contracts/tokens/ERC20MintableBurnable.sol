@@ -20,7 +20,7 @@ contract ERC20MintableBurnable is IERC20MintableBurnable, Ownable, ERC20 {
         transferOwnership(owner_);
     }
 
-    function mintTo(address receiver_, uint256 amount_) external override onlyOwner {
+    function mintTo(address receiver_, uint256 amount_) external override {
         _mint(receiver_, amount_);
     }
 

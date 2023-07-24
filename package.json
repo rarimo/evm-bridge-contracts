@@ -18,9 +18,9 @@
     "deploy-localhost": "npx hardhat migrate --network localhost",
     "deploy-goerli": "npx hardhat migrate --network goerli --verify --confirmations 5",
     "deploy-sepolia": "npx hardhat migrate --network sepolia --verify --confirmations 5",
-    "deploy-chapel": "npx hardhat migrate --network chapel --verify --confirmations 2",
+    "deploy-chapel": "npx hardhat migrate --network chapel --verify --confirmations 2 --attempts 3",
     "deploy-mumbai": "npx hardhat migrate --network mumbai --verify --confirmations 6",
-    "deploy-fuji": "npx hardhat migrate --network fuji --verify --confirmations 6",
+    "deploy-fuji": "npx hardhat migrate --network fuji --verify --confirmations 6 --attempts 3",
     "deploy-ethereum": "npx hardhat migrate --network ethereum --confirmations 5",
     "deploy-bsc": "npx hardhat migrate --network bsc --confirmations 2",
     "deploy-polygon": "npx hardhat migrate --network polygon --confirmations 2",
@@ -34,7 +34,7 @@
     "publish-to-npm": "npm run lint-fix && bash ./scripts/publish.sh"
   },
   "dependencies": {
-    "@dlsl/dev-modules": "^2.3.2",
+    "@dlsl/dev-modules": "^2.5.1",
     "@openzeppelin/contracts": "4.6.0",
     "@openzeppelin/contracts-upgradeable": "4.6.0",
     "dotenv": "^10.0.0",
