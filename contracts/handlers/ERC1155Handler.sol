@@ -48,6 +48,19 @@ abstract contract ERC1155Handler is IERC1155Handler, Bundler, ERC1155Holder {
                 ""
             );
         }
+
+        emit WithdrawnERC1155(
+            params_.token,
+            params_.tokenId,
+            params_.tokenURI,
+            params_.amount,
+            params_.bundle.salt,
+            params_.bundle.bundle,
+            params_.originHash,
+            params_.receiver,
+            params_.proof,
+            params_.isWrapped
+        );
     }
 
     function withdrawERC1155Bundle(

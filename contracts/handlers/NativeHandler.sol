@@ -29,6 +29,15 @@ abstract contract NativeHandler is INativeHandler, Bundler {
 
         (bool success_, ) = params_.receiver.call{value: params_.amount}("");
         require(success_, "NativeHandler: failed to send eth");
+
+        emit WithdrawnNative(
+            params_.amount,
+            params_.bundle.salt,
+            params_.bundle.bundle,
+            params_.originHash,
+            params_.receiver,
+            params_.proof
+        );
     }
 
     function withdrawNativeBundle(

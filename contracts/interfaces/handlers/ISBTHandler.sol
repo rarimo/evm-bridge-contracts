@@ -17,6 +17,20 @@ interface ISBTHandler is IBundler {
     );
 
     /**
+     * @notice the event emitted from the withdrawSBT function
+     */
+    event WithdrawnSBT(
+        address token,
+        uint256 tokenId,
+        string tokenURI,
+        bytes32 salt,
+        bytes bundle,
+        bytes32 originHash,
+        address receiver,
+        bytes proof
+    );
+
+    /**
      * @notice the struct that represents parameters for the sbt deposit
      * @param token the address of deposited token
      * @param tokenId the id of deposited token

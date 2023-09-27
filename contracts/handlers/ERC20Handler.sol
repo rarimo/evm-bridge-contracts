@@ -35,6 +35,17 @@ abstract contract ERC20Handler is IERC20Handler, Bundler {
         } else {
             IERC20MintableBurnable(params_.token).safeTransfer(params_.receiver, params_.amount);
         }
+
+        emit WithdrawnERC20(
+            params_.token,
+            params_.amount,
+            params_.bundle.salt,
+            params_.bundle.bundle,
+            params_.originHash,
+            params_.receiver,
+            params_.proof,
+            params_.isWrapped
+        );
     }
 
     function withdrawERC20Bundle(
