@@ -192,6 +192,18 @@ describe("ERC20Handler", () => {
           });
 
           await expect(tx).to.changeTokenBalances(erc20, [bridge, OWNER], [-wei("10"), wei("10")]);
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC20")
+            .withArgs(
+              erc20.address,
+              wei("10"),
+              EMPTY_BUNDLE.salt,
+              EMPTY_BUNDLE.bundle,
+              RANDOM_ORIGIN_HASH,
+              OWNER.address,
+              "0x",
+              false
+            );
         });
       });
 
@@ -212,6 +224,18 @@ describe("ERC20Handler", () => {
           });
 
           await expect(tx).to.changeTokenBalances(erc20, [bridge, OWNER], [0, wei("10")]);
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC20")
+            .withArgs(
+              erc20.address,
+              wei("10"),
+              EMPTY_BUNDLE.salt,
+              EMPTY_BUNDLE.bundle,
+              RANDOM_ORIGIN_HASH,
+              OWNER.address,
+              "0x",
+              true
+            );
         });
       });
     });
@@ -263,6 +287,19 @@ describe("ERC20Handler", () => {
 
           await expect(tx).to.changeTokenBalances(erc20, [bridge, proxyAddress, OWNER], [-wei("10"), wei("10"), 0]);
           expect(await erc20.allowance(proxyAddress, OWNER.address)).to.eq(wei("5"));
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC20")
+            .withArgs(
+              erc20.address,
+              wei("10"),
+              bundleApprove.salt,
+              bundleApprove.bundle,
+              RANDOM_ORIGIN_HASH,
+              proxyAddress,
+              "0x",
+              false
+            );
         });
       });
 
@@ -284,6 +321,19 @@ describe("ERC20Handler", () => {
 
           await expect(tx).to.changeTokenBalances(erc20, [bridge, proxyAddress, OWNER], [0, wei("10"), 0]);
           expect(await erc20.allowance(proxyAddress, OWNER.address)).to.eq(wei("5"));
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC20")
+            .withArgs(
+              erc20.address,
+              wei("10"),
+              bundleApprove.salt,
+              bundleApprove.bundle,
+              RANDOM_ORIGIN_HASH,
+              proxyAddress,
+              "0x",
+              true
+            );
         });
       });
     });
