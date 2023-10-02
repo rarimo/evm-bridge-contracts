@@ -1,4 +1,4 @@
-import { Deployer, Logger } from "@dlsl/hardhat-migrate";
+import { Deployer, Logger } from "@solarity/hardhat-migrate";
 import { artifacts } from "hardhat";
 import config from "./config/config.json";
 
