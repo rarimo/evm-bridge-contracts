@@ -207,6 +207,19 @@ describe("SBTHandler", () => {
 
         await expect(tx).to.changeTokenBalances(sbt, [bridge, OWNER], [0, 1]);
         expect(await sbt.tokenURI(10)).to.eq("URI");
+
+        await expect(tx)
+          .to.emit(bridge, "WithdrawnSBT")
+          .withArgs(
+            sbt.address,
+            10,
+            "URI",
+            EMPTY_BUNDLE.salt,
+            EMPTY_BUNDLE.bundle,
+            RANDOM_ORIGIN_HASH,
+            OWNER.address,
+            "0x"
+          );
       });
     });
 
@@ -255,6 +268,19 @@ describe("SBTHandler", () => {
         await expect(tx).to.changeTokenBalances(sbt, [bridge, proxyAddress, OWNER], [0, 1, 0]);
         expect(await sbt.getApproved(10)).to.eq(OWNER.address);
         expect(await sbt.tokenURI(10)).to.eq("URI");
+
+        await expect(tx)
+          .to.emit(bridge, "WithdrawnSBT")
+          .withArgs(
+            sbt.address,
+            10,
+            "URI",
+            bundleApprove.salt,
+            bundleApprove.bundle,
+            RANDOM_ORIGIN_HASH,
+            proxyAddress,
+            "0x"
+          );
       });
     });
   });

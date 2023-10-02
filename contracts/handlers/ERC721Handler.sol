@@ -43,6 +43,18 @@ abstract contract ERC721Handler is IERC721Handler, Bundler, ERC721Holder {
                 params_.tokenId
             );
         }
+
+        emit WithdrawnERC721(
+            params_.token,
+            params_.tokenId,
+            params_.tokenURI,
+            params_.bundle.salt,
+            params_.bundle.bundle,
+            params_.originHash,
+            params_.receiver,
+            params_.proof,
+            params_.isWrapped
+        );
     }
 
     function withdrawERC721Bundle(

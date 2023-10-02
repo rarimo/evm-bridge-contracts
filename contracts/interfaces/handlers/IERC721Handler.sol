@@ -18,6 +18,21 @@ interface IERC721Handler is IBundler {
     );
 
     /**
+     * @notice the event emitted from the withdrawERC721 function
+     */
+    event WithdrawnERC721(
+        address token,
+        uint256 tokenId,
+        string tokenURI,
+        bytes32 salt,
+        bytes bundle,
+        bytes32 originHash,
+        address receiver,
+        bytes proof,
+        bool isWrapped
+    );
+
+    /**
      * @notice the struct that represents parameters for the erc721 deposit
      * @param token the address of the deposited token
      * @param tokenId the id of deposited token

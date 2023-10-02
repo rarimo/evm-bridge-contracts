@@ -184,7 +184,7 @@ describe("ERC1155Handler", () => {
         });
 
         it("should withdraw properly", async () => {
-          await bridge.withdrawERC1155({
+          const tx = await bridge.withdrawERC1155({
             token: erc1155.address,
             tokenId: 10,
             tokenURI: "URI",
@@ -198,6 +198,21 @@ describe("ERC1155Handler", () => {
 
           expect(await erc1155.balanceOf(bridge.address, 10)).to.eq(0);
           expect(await erc1155.balanceOf(OWNER.address, 10)).to.eq(wei("10"));
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC1155")
+            .withArgs(
+              erc1155.address,
+              10,
+              "URI",
+              wei("10"),
+              EMPTY_BUNDLE.salt,
+              EMPTY_BUNDLE.bundle,
+              RANDOM_ORIGIN_HASH,
+              OWNER.address,
+              "0x",
+              false
+            );
         });
       });
 
@@ -207,7 +222,7 @@ describe("ERC1155Handler", () => {
         });
 
         it("should withdraw properly", async () => {
-          await bridge.withdrawERC1155({
+          const tx = await bridge.withdrawERC1155({
             token: erc1155.address,
             tokenId: 10,
             tokenURI: "URI",
@@ -221,6 +236,21 @@ describe("ERC1155Handler", () => {
 
           expect(await erc1155.balanceOf(bridge.address, 10)).to.eq(0);
           expect(await erc1155.balanceOf(OWNER.address, 10)).to.eq(wei("10"));
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC1155")
+            .withArgs(
+              erc1155.address,
+              10,
+              "URI",
+              wei("10"),
+              EMPTY_BUNDLE.salt,
+              EMPTY_BUNDLE.bundle,
+              RANDOM_ORIGIN_HASH,
+              OWNER.address,
+              "0x",
+              true
+            );
         });
       });
     });
@@ -262,7 +292,7 @@ describe("ERC1155Handler", () => {
         });
 
         it("should withdraw bundle properly", async () => {
-          await bridge.withdrawERC1155Bundle({
+          const tx = await bridge.withdrawERC1155Bundle({
             token: erc1155.address,
             tokenId: 10,
             tokenURI: "URI",
@@ -277,6 +307,21 @@ describe("ERC1155Handler", () => {
           expect(await erc1155.balanceOf(bridge.address, 10)).to.eq(0);
           expect(await erc1155.balanceOf(proxyAddress, 10)).to.eq(wei("10"));
           expect(await erc1155.isApprovedForAll(proxyAddress, OWNER.address)).to.be.true;
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC1155")
+            .withArgs(
+              erc1155.address,
+              10,
+              "URI",
+              wei("10"),
+              bundleApprove.salt,
+              bundleApprove.bundle,
+              RANDOM_ORIGIN_HASH,
+              proxyAddress,
+              "0x",
+              false
+            );
         });
       });
 
@@ -286,7 +331,7 @@ describe("ERC1155Handler", () => {
         });
 
         it("should withdraw bundle properly", async () => {
-          await bridge.withdrawERC1155Bundle({
+          const tx = await bridge.withdrawERC1155Bundle({
             token: erc1155.address,
             tokenId: 10,
             tokenURI: "URI",
@@ -302,6 +347,21 @@ describe("ERC1155Handler", () => {
           expect(await erc1155.balanceOf(proxyAddress, 10)).to.eq(wei("10"));
           expect(await erc1155.isApprovedForAll(proxyAddress, OWNER.address)).to.be.true;
           expect(await erc1155.uri(10)).to.be.eq("URI");
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC1155")
+            .withArgs(
+              erc1155.address,
+              10,
+              "URI",
+              wei("10"),
+              bundleApprove.salt,
+              bundleApprove.bundle,
+              RANDOM_ORIGIN_HASH,
+              proxyAddress,
+              "0x",
+              true
+            );
         });
       });
     });

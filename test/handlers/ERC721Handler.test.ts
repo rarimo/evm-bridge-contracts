@@ -216,6 +216,19 @@ describe("ERC721Handler", () => {
           });
 
           await expect(tx).to.changeTokenBalances(erc721, [bridge, OWNER], [-1, 1]);
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC721")
+            .withArgs(
+              erc721.address,
+              10,
+              "URI",
+              EMPTY_BUNDLE.salt,
+              EMPTY_BUNDLE.bundle,
+              RANDOM_ORIGIN_HASH,
+              OWNER.address,
+              "0x",
+              false
+            );
         });
       });
 
@@ -238,6 +251,20 @@ describe("ERC721Handler", () => {
 
           await expect(tx).to.changeTokenBalances(erc721, [bridge, OWNER], [0, 1]);
           expect(await erc721.tokenURI(10)).to.eq("URI");
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC721")
+            .withArgs(
+              erc721.address,
+              10,
+              "URI",
+              EMPTY_BUNDLE.salt,
+              EMPTY_BUNDLE.bundle,
+              RANDOM_ORIGIN_HASH,
+              OWNER.address,
+              "0x",
+              true
+            );
         });
       });
     });
@@ -291,6 +318,20 @@ describe("ERC721Handler", () => {
 
           await expect(tx).to.changeTokenBalances(erc721, [bridge, proxyAddress, OWNER], [-1, 1, 0]);
           expect(await erc721.getApproved(10)).to.eq(OWNER.address);
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC721")
+            .withArgs(
+              erc721.address,
+              10,
+              "URI",
+              bundleApprove.salt,
+              bundleApprove.bundle,
+              RANDOM_ORIGIN_HASH,
+              proxyAddress,
+              "0x",
+              false
+            );
         });
       });
 
@@ -314,6 +355,20 @@ describe("ERC721Handler", () => {
           await expect(tx).to.changeTokenBalances(erc721, [bridge, proxyAddress, OWNER], [0, 1, 0]);
           expect(await erc721.getApproved(10)).to.eq(OWNER.address);
           expect(await erc721.tokenURI(10)).to.eq("URI");
+
+          await expect(tx)
+            .to.emit(bridge, "WithdrawnERC721")
+            .withArgs(
+              erc721.address,
+              10,
+              "URI",
+              bundleApprove.salt,
+              bundleApprove.bundle,
+              RANDOM_ORIGIN_HASH,
+              proxyAddress,
+              "0x",
+              true
+            );
         });
       });
     });

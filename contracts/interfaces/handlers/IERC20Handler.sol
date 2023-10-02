@@ -18,6 +18,20 @@ interface IERC20Handler is IBundler {
     );
 
     /**
+     * @notice the event emitted from the withdrawERC20 function
+     */
+    event WithdrawnERC20(
+        address token,
+        uint256 amount,
+        bytes32 salt,
+        bytes bundle,
+        bytes32 originHash,
+        address receiver,
+        bytes proof,
+        bool isWrapped
+    );
+
+    /**
      * @notice the struct that represents parameters for the erc20 deposit
      * @param token the address of the deposited token
      * @param amount the amount of deposited tokens

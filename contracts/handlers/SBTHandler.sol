@@ -30,6 +30,17 @@ abstract contract SBTHandler is ISBTHandler, Bundler, ERC721Holder {
         require(params_.receiver != address(0), "SBTHandler: zero receiver");
 
         ISBT(params_.token).attestTo(params_.receiver, params_.tokenId, params_.tokenURI);
+
+        emit WithdrawnSBT(
+            params_.token,
+            params_.tokenId,
+            params_.tokenURI,
+            params_.bundle.salt,
+            params_.bundle.bundle,
+            params_.originHash,
+            params_.receiver,
+            params_.proof
+        );
     }
 
     function withdrawSBTBundle(WithdrawSBTParameters memory params_) external override onlyFacade {

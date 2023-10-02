@@ -16,6 +16,18 @@ interface INativeHandler is IBundler {
     );
 
     /**
+     * @notice the event emitted from the withdrawNative function
+     */
+    event WithdrawnNative(
+        uint256 amount,
+        bytes32 salt,
+        bytes bundle,
+        bytes32 originHash,
+        address receiver,
+        bytes proof
+    );
+
+    /**
      * @notice the struct that represents parameters for the native deposit
      * @param amount the amount of deposited native tokens
      * @param bundle the encoded transaction bundle with salt

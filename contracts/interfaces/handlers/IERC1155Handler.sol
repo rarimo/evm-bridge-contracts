@@ -19,6 +19,22 @@ interface IERC1155Handler is IBundler {
     );
 
     /**
+     * @notice the event emitted from the withdrawERC1155 function
+     */
+    event WithdrawnERC1155(
+        address token,
+        uint256 tokenId,
+        string tokenURI,
+        uint256 amount,
+        bytes32 salt,
+        bytes bundle,
+        bytes32 originHash,
+        address receiver,
+        bytes proof,
+        bool isWrapped
+    );
+
+    /**
      * @notice the struct that represents parameters for the erc1155 deposit
      * @param token the address of deposited tokens
      * @param tokenId the id of deposited tokens

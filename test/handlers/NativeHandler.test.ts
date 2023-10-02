@@ -128,6 +128,9 @@ describe("NativeHandler", () => {
         });
 
         await expect(tx).to.changeEtherBalances([bridge, OWNER], [-wei("10"), wei("10")]);
+        await expect(tx)
+          .to.emit(bridge, "WithdrawnNative")
+          .withArgs(wei("10"), EMPTY_BUNDLE.salt, EMPTY_BUNDLE.bundle, RANDOM_ORIGIN_HASH, OWNER.address, "0x");
       });
     });
 
@@ -169,6 +172,9 @@ describe("NativeHandler", () => {
 
         await expect(tx).to.changeEtherBalances([bridge, proxyAddress, OWNER], [-wei("10"), 0, wei("5")]);
         await expect(tx).to.changeTokenBalances(weth9, [bridge, proxyAddress, OWNER], [0, wei("5"), 0]);
+        await expect(tx)
+          .to.emit(bridge, "WithdrawnNative")
+          .withArgs(wei("10"), bundleTransfer.salt, bundleTransfer.bundle, RANDOM_ORIGIN_HASH, proxyAddress, "0x");
       });
     });
   });
