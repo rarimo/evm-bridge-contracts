@@ -29,12 +29,6 @@ var (
 	_ = abi.ConvertType
 )
 
-// IBundlerBundle is an auto generated low-level Go binding around an user-defined struct.
-type IBundlerBundle struct {
-	Salt   [32]byte
-	Bundle []byte
-}
-
 // IERC1155HandlerDepositERC1155Parameters is an auto generated low-level Go binding around an user-defined struct.
 type IERC1155HandlerDepositERC1155Parameters struct {
 	Token     common.Address

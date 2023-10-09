@@ -29,11 +29,6 @@ var (
 	_ = abi.ConvertType
 )
 
-// IBundlerBundle is an auto generated low-level Go binding around an user-defined struct.
-type IBundlerBundle struct {
-	Salt   [32]byte
-	Bundle []byte
-}
 
 // IERC20HandlerDepositERC20Parameters is an auto generated low-level Go binding around an user-defined struct.
 type IERC20HandlerDepositERC20Parameters struct {
