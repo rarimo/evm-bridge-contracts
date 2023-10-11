@@ -1,0 +1,26 @@
+#
+# Builds the bindings and deploys bindings branch
+#
+# https://github.com/actions/setup-node
+# Using https://github.com/marketplace/actions/deploy-to-github-pages
+name: Deploy bindings
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy_bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Generate bindings
+        run: npm install && npm run generate-types
+
+      - name: Deploy bindings
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: bindings # The branch the action should deploy to.
+          folder: generated-types # The folder the action should deploy.
