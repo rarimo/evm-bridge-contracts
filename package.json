@@ -42,7 +42,7 @@
     "typechain": "^8.1.0"
   },
   "devDependencies": {
-    "@solarity/hardhat-gobind": "^1.0.5",
+    "@solarity/hardhat-gobind": "^1.1.0",
     "@solarity/hardhat-markup": "^1.0.2",
     "@solarity/hardhat-migrate": "^1.5.9",
     "@metamask/eth-sig-util": "^4.0.0",
