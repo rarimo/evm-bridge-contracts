@@ -43,6 +43,7 @@ contract Bridge is
     ) external initializer {
         __Signers_init(signer_, chainName_);
         __Bundler_init(bundleImplementation_, facade_);
+        __MultiOwnable_init();
     }
 
     function verifyMerkleLeaf(
