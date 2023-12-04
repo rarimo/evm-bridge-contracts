@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@dlsl/dev-modules/access-control/MultiOwnable.sol";
+import "@solarity/solidity-lib/access-control/MultiOwnable.sol";
 
 import "../interfaces/bridge/IBridge.sol";
 

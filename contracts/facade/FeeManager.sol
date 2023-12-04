@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "@dlsl/dev-modules/access-control/MultiOwnable.sol";
+import "@solarity/solidity-lib/access-control/MultiOwnable.sol";
 
 import "../interfaces/facade/IFeeManager.sol";
 import "../interfaces/utils/ISigners.sol";
