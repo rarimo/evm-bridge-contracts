@@ -1,7 +1,7 @@
 {
-  "name": "@rarimo/evm-bridge",
-  "version": "2.1.1",
-  "author": "Rarimo",
+  "name": "@rarimo/evm-bridge-contracts",
+  "version": "1.0.0",
+  "author": "Rarimo Foundation",
   "keywords": [
     "solidity",
     "ethereum",

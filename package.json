@@ -1,6 +1,6 @@
 {
-  "version": "2.1.1",
-  "author": "Rarimo",
+  "version": "1.0.0",
+  "author": "Rarimo Foundation",
   "keywords": [
     "solidity",
     "ethereum",
@@ -34,7 +34,7 @@
     "publish-to-npm": "npm run lint-fix && bash ./scripts/publish.sh"
   },
   "dependencies": {
-    "@dlsl/dev-modules": "^2.5.1",
+    "@solarity/solidity-lib": "2.5.7",
     "@openzeppelin/contracts": "4.6.0",
     "@openzeppelin/contracts-upgradeable": "4.6.0",
     "dotenv": "^10.0.0",
@@ -42,9 +42,9 @@
     "typechain": "^8.1.0"
   },
   "devDependencies": {
-    "@dlsl/hardhat-gobind": "^1.0.3",
-    "@dlsl/hardhat-markup": "^1.0.0-rc.14",
-    "@dlsl/hardhat-migrate": "^1.5.5",
+    "@solarity/hardhat-gobind": "^1.0.5",
+    "@solarity/hardhat-markup": "^1.0.2",
+    "@solarity/hardhat-migrate": "^1.5.9",
     "@metamask/eth-sig-util": "^4.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
