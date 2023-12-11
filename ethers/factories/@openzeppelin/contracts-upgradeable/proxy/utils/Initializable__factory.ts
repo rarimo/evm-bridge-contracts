@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   Initializable,
   InitializableInterface,
-} from "../../../../../@openzeppelin/contracts/proxy/utils/Initializable";
+} from "../../../../../@openzeppelin/contracts-upgradeable/proxy/utils/Initializable";
 
 const _abi = [
   {

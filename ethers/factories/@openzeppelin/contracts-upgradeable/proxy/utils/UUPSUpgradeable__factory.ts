@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   UUPSUpgradeable,
   UUPSUpgradeableInterface,
-} from "../../../../../@openzeppelin/contracts/proxy/utils/UUPSUpgradeable";
+} from "../../../../../@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable";
 
 const _abi = [
   {
@@ -40,6 +40,19 @@ const _abi = [
       },
     ],
     name: "BeaconUpgraded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "version",
+        type: "uint8",
+      },
+    ],
+    name: "Initialized",
     type: "event",
   },
   {
