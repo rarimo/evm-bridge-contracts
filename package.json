@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Rarimo Foundation",
   "keywords": [
     "solidity",
@@ -61,7 +61,7 @@
     "chai": "^4.3.4",
     "hardhat-contract-sizer": "^2.6.1",
     "hardhat-gas-reporter": "^1.0.9",
-    "husky": "^7.0.2",
+    "husky": "^8.0.0",
     "merkletreejs": "^0.2.32",
     "mocha": "^10.2.0",
     "prettier": "^2.7.1",
