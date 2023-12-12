@@ -1,22 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "../interfaces/bridge/IBridge.sol";
+import {IBridge} from "../interfaces/bridge/IBridge.sol";
+import {IBundler} from "../interfaces/bundle/IBundler.sol";
 
-import "../handlers/ERC20Handler.sol";
-import "../handlers/ERC721Handler.sol";
-import "../handlers/SBTHandler.sol";
-import "../handlers/ERC1155Handler.sol";
-import "../handlers/NativeHandler.sol";
+import {ERC20Handler} from "../handlers/ERC20Handler.sol";
+import {ERC721Handler} from "../handlers/ERC721Handler.sol";
+import {SBTHandler} from "../handlers/SBTHandler.sol";
+import {ERC1155Handler} from "../handlers/ERC1155Handler.sol";
+import {NativeHandler} from "../handlers/NativeHandler.sol";
 
-import "../bundle/Bundler.sol";
+import {Bundler} from "../bundle/Bundler.sol";
 
-import "./proxy/UUPSSignableUpgradeable.sol";
+import {UUPSSignableUpgradeable} from "./proxy/UUPSSignableUpgradeable.sol";
 
-import "../utils/Signers.sol";
-import "../utils/Hashes.sol";
+import {Signers} from "../utils/Signers.sol";
+import {Hashes} from "../utils/Hashes.sol";
 
-import "../libs/Encoder.sol";
+import {Encoder} from "../libs/Encoder.sol";
 
 contract Bridge is
     IBridge,

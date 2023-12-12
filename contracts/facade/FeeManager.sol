@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../interfaces/facade/IFeeManager.sol";
-import "../interfaces/utils/ISigners.sol";
+import {IFeeManager} from "../interfaces/facade/IFeeManager.sol";
+import {ISigners} from "../interfaces/utils/ISigners.sol";
 
-import "../bridge/proxy/UUPSSignableUpgradeable.sol";
+import {UUPSSignableUpgradeable} from "../bridge/proxy/UUPSSignableUpgradeable.sol";
 
-import "../libs/Constants.sol";
+import {Constants} from "../libs/Constants.sol";
 
 abstract contract FeeManager is IFeeManager, UUPSSignableUpgradeable {
     using SafeERC20 for IERC20;

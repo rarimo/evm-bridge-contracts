@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import {ERC721Holder} from "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import {ERC1155Holder} from "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
-import "../../interfaces/tokens/IWrappedNative.sol";
+import {IWrappedNative} from "../../interfaces/tokens/IWrappedNative.sol";
 
 contract BundleExecutorImplementation is ERC721Holder, ERC1155Holder {
     address public immutable WRAPPED_NATIVE;

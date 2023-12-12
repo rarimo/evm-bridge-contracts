@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import {ERC1155Holder} from "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
-import "../interfaces/handlers/IERC1155Handler.sol";
-import "../interfaces/tokens/IERC1155MintableBurnable.sol";
+import {IERC1155Handler} from "../interfaces/handlers/IERC1155Handler.sol";
+import {IERC1155MintableBurnable} from "../interfaces/tokens/IERC1155MintableBurnable.sol";
 
-import "../libs/Encoder.sol";
+import {Encoder} from "../libs/Encoder.sol";
 
-import "../bundle/Bundler.sol";
+import {Bundler} from "../bundle/Bundler.sol";
 
 abstract contract ERC1155Handler is IERC1155Handler, Bundler, ERC1155Holder {
     using Encoder for bytes32;
