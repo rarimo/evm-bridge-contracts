@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "../bundle/IBundler.sol";
+import {IBundler} from "../bundle/IBundler.sol";
 
 interface IERC20Handler is IBundler {
     /**

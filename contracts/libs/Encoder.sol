@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "../interfaces/bridge/IBridge.sol";
-import "../interfaces/bundle/IBundler.sol";
+import {IBridge} from "../interfaces/bridge/IBridge.sol";
+import {IBundler} from "../interfaces/bundle/IBundler.sol";
 
 library Encoder {
     function encode(bytes32 salt_) internal view returns (bytes32) {

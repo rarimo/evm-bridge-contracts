@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./IFeeManager.sol";
-import "../bridge/IBridge.sol";
+import {IFeeManager} from "./IFeeManager.sol";
+import {IBridge} from "../bridge/IBridge.sol";
 
 /**
  * @notice The Bridge Facade contract.

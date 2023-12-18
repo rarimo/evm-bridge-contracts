@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import {ERC721Holder} from "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
-import "../interfaces/handlers/ISBTHandler.sol";
-import "../interfaces/tokens/IERC721MintableBurnable.sol";
-import "../interfaces/tokens/SBT/ISBT.sol";
+import {ISBTHandler} from "../interfaces/handlers/ISBTHandler.sol";
+import {IERC721MintableBurnable} from "../interfaces/tokens/IERC721MintableBurnable.sol";
+import {ISBT} from "../interfaces/tokens/SBT/ISBT.sol";
 
-import "../libs/Encoder.sol";
+import {Encoder} from "../libs/Encoder.sol";
 
-import "../bundle/Bundler.sol";
+import {Bundler} from "../bundle/Bundler.sol";
 
 abstract contract SBTHandler is ISBTHandler, Bundler, ERC721Holder {
     using Encoder for bytes32;

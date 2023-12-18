@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "../interfaces/handlers/INativeHandler.sol";
+import {INativeHandler} from "../interfaces/handlers/INativeHandler.sol";
 
-import "../libs/Encoder.sol";
+import {Encoder} from "../libs/Encoder.sol";
 
-import "../bundle/Bundler.sol";
+import {Bundler} from "../bundle/Bundler.sol";
 
 abstract contract NativeHandler is INativeHandler, Bundler {
     using Encoder for bytes32;

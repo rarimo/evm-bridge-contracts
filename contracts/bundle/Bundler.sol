@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-import "../interfaces/bundle/IBundler.sol";
+import {IBundler} from "../interfaces/bundle/IBundler.sol";
 
-import "./proxy/BundleExecutorProxy.sol";
-import "./proxy/BundleExecutorImplementation.sol";
+import {BundleExecutorProxy} from "./proxy/BundleExecutorProxy.sol";
+import {BundleExecutorImplementation} from "./proxy/BundleExecutorImplementation.sol";
 
 abstract contract Bundler is IBundler, Initializable {
     address public bundleExecutorImplementation;

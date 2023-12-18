@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "../interfaces/facade/IBridgeFacade.sol";
-import "../interfaces/bridge/IBridge.sol";
-import "../interfaces/tokens/IERC20MintableBurnable.sol";
-import "../interfaces/tokens/IERC721MintableBurnable.sol";
-import "../interfaces/tokens/SBT/ISBT.sol";
-import "../interfaces/tokens/IERC1155MintableBurnable.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../libs/Encoder.sol";
+import {IBridgeFacade} from "../interfaces/facade/IBridgeFacade.sol";
+import {IBridge} from "../interfaces/bridge/IBridge.sol";
+import {IERC20MintableBurnable} from "../interfaces/tokens/IERC20MintableBurnable.sol";
+import {IERC721MintableBurnable} from "../interfaces/tokens/IERC721MintableBurnable.sol";
+import {ISBT} from "../interfaces/tokens/SBT/ISBT.sol";
+import {IERC1155MintableBurnable} from "../interfaces/tokens/IERC1155MintableBurnable.sol";
 
-import "./FeeManager.sol";
+import {Encoder} from "../libs/Encoder.sol";
+
+import {FeeManager} from "./FeeManager.sol";
 
 contract BridgeFacade is IBridgeFacade, FeeManager {
     using SafeERC20 for *;

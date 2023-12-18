@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-import "../interfaces/tokens/SBT/IERC5192.sol";
-import "../interfaces/tokens/SBT/ISBT.sol";
+import {IERC5192} from "../interfaces/tokens/SBT/IERC5192.sol";
+import {ISBT} from "../interfaces/tokens/SBT/ISBT.sol";
 
 contract SBTMintableBurnable is IERC5192, ISBT, Ownable, ERC721URIStorage {
     string public baseURI;

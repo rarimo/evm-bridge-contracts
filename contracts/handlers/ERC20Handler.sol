@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../interfaces/tokens/IERC20MintableBurnable.sol";
-import "../interfaces/handlers/IERC20Handler.sol";
+import {IERC20MintableBurnable} from "../interfaces/tokens/IERC20MintableBurnable.sol";
+import {IERC20Handler} from "../interfaces/handlers/IERC20Handler.sol";
 
-import "../libs/Encoder.sol";
+import {Encoder} from "../libs/Encoder.sol";
 
-import "../bundle/Bundler.sol";
+import {Bundler} from "../bundle/Bundler.sol";
 
 abstract contract ERC20Handler is IERC20Handler, Bundler {
     using SafeERC20 for IERC20MintableBurnable;
