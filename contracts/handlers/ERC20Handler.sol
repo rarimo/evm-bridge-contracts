@@ -8,9 +8,10 @@ import {IERC20Handler} from "../interfaces/handlers/IERC20Handler.sol";
 
 import {Encoder} from "../libs/Encoder.sol";
 
+import {Signers} from "../utils/Signers.sol";
 import {Bundler} from "../bundle/Bundler.sol";
 
-abstract contract ERC20Handler is IERC20Handler, Bundler {
+abstract contract ERC20Handler is IERC20Handler, Signers, Bundler {
     using SafeERC20 for IERC20MintableBurnable;
     using Encoder for bytes32;
 

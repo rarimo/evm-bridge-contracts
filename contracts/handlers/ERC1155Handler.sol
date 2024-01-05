@@ -8,9 +8,10 @@ import {IERC1155MintableBurnable} from "../interfaces/tokens/IERC1155MintableBur
 
 import {Encoder} from "../libs/Encoder.sol";
 
+import {Signers} from "../utils/Signers.sol";
 import {Bundler} from "../bundle/Bundler.sol";
 
-abstract contract ERC1155Handler is IERC1155Handler, Bundler, ERC1155Holder {
+abstract contract ERC1155Handler is IERC1155Handler, Signers, Bundler, ERC1155Holder {
     using Encoder for bytes32;
 
     function depositERC1155(

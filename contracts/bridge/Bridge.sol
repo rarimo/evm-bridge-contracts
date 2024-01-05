@@ -22,8 +22,8 @@ import {Encoder} from "../libs/Encoder.sol";
 contract Bridge is
     IBridge,
     UUPSSignableUpgradeable,
-    Bundler,
     Signers,
+    Bundler,
     Hashes,
     ERC20Handler,
     ERC721Handler,
@@ -39,8 +39,8 @@ contract Bridge is
         string calldata chainName_,
         address facade_
     ) external initializer {
-        __Signers_init(signer_, chainName_);
-        __Bundler_init(bundleImplementation_, facade_);
+        __Signers_init(signer_, facade_, chainName_);
+        __Bundler_init(bundleImplementation_);
     }
 
     function verifyMerkleLeaf(
@@ -68,7 +68,7 @@ contract Bridge is
     ) external {
         require(newImplementation_ != address(0), "Bridge: zero address");
 
-        validateChangeAddressSignature(
+        _validateChangeAddressSignature(
             uint8(MethodId.ChangeBundleExecutorImplementation),
             address(this),
             newImplementation_,
@@ -81,7 +81,7 @@ contract Bridge is
     function changeFacade(address newFacade_, bytes calldata signature_) external {
         require(newFacade_ != address(0), "Bridge: zero address");
 
-        validateChangeAddressSignature(
+        _validateChangeAddressSignature(
             uint8(MethodId.ChangeFacade),
             address(this),
             newFacade_,
@@ -101,7 +101,7 @@ contract Bridge is
     ) internal override {
         require(newImplementation_ != address(0), "Bridge: zero address");
 
-        validateChangeAddressSignature(
+        _validateChangeAddressSignature(
             uint8(MethodId.AuthorizeUpgrade),
             address(this),
             newImplementation_,

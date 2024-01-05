@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import {IBundler} from "../bundle/IBundler.sol";
 
-interface INativeHandler is IBundler {
+interface INativeHandler {
     /**
      * @notice the event emitted from the depositNative function
      */

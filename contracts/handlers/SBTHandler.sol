@@ -9,9 +9,10 @@ import {ISBT} from "../interfaces/tokens/SBT/ISBT.sol";
 
 import {Encoder} from "../libs/Encoder.sol";
 
+import {Signers} from "../utils/Signers.sol";
 import {Bundler} from "../bundle/Bundler.sol";
 
-abstract contract SBTHandler is ISBTHandler, Bundler, ERC721Holder {
+abstract contract SBTHandler is ISBTHandler, Signers, Bundler, ERC721Holder {
     using Encoder for bytes32;
 
     function depositSBT(DepositSBTParameters calldata params_) external override onlyFacade {

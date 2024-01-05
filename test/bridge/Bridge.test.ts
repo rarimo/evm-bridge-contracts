@@ -6,7 +6,7 @@ import { CHAIN_NAME, EMPTY_BUNDLE, RANDOM_ORIGIN_HASH } from "@/test/utils/const
 import { Reverter } from "@/test/helpers/reverter";
 import { SignHelper } from "@/test/utils/signature";
 import { Wallet } from "ethers";
-import { ZERO_ADDR } from "@/scripts/utils/constants";
+import { ZERO_ADDR, ZERO_BYTES32 } from "@/scripts/utils/constants";
 import { wei } from "@/scripts/utils/utils";
 import { MerkleTreeHelper } from "@/test/utils/merkletree";
 import { WithdrawERC20Parameters, WithdrawNativeParameters } from "@/test/utils/types";
@@ -44,6 +44,18 @@ describe("Bridge", () => {
   });
 
   afterEach(reverter.revert);
+
+  describe("signers", () => {
+    it("only facade should call these methods", async () => {
+      await expect(
+        bridge.connect(SECOND).checkSignatureAndIncrementNonce(0, ZERO_ADDR, ZERO_BYTES32, "0x")
+      ).to.be.revertedWith("Bundler: not a facade");
+
+      await expect(
+        bridge.connect(SECOND).validateChangeAddressSignature(0, ZERO_ADDR, ZERO_ADDR, "0x")
+      ).to.be.revertedWith("Bundler: not a facade");
+    });
+  });
 
   describe("proxy", () => {
     let bridgeV2: Bridge;
@@ -85,13 +97,13 @@ describe("Bridge", () => {
     });
 
     it("should not initialize Bundler parent contract", async () => {
-      const tx = bridge.__Bundler_init(ZERO_ADDR, ZERO_ADDR);
+      const tx = bridge.__Bundler_init(ZERO_ADDR);
 
       await expect(tx).to.be.revertedWith("Initializable: contract is not initializing");
     });
 
     it("should not initialize Signer parent contract", async () => {
-      const tx = bridge.__Signers_init(ZERO_ADDR, CHAIN_NAME);
+      const tx = bridge.__Signers_init(ZERO_ADDR, ZERO_ADDR, CHAIN_NAME);
 
       await expect(tx).to.be.revertedWith("Initializable: contract is not initializing");
     });
