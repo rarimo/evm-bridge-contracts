@@ -10,19 +10,9 @@ import {BundleExecutorImplementation} from "./proxy/BundleExecutorImplementation
 
 abstract contract Bundler is IBundler, Initializable {
     address public bundleExecutorImplementation;
-    address public facade;
 
-    modifier onlyFacade() {
-        _onlyFacade();
-        _;
-    }
-
-    function __Bundler_init(
-        address bundleExecutorImplementation_,
-        address facade_
-    ) public onlyInitializing {
+    function __Bundler_init(address bundleExecutorImplementation_) public onlyInitializing {
         bundleExecutorImplementation = bundleExecutorImplementation_;
-        facade = facade_;
     }
 
     function _bundleUp(Bundle memory bundle_) internal {
@@ -60,9 +50,5 @@ abstract contract Bundler is IBundler, Initializable {
             );
     }
 
-    function _onlyFacade() private view {
-        require(msg.sender == facade, "Bundler: not a facade");
-    }
-
-    uint256[48] private _gap;
+    uint256[49] private _gap;
 }

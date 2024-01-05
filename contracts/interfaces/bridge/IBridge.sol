@@ -24,13 +24,13 @@ import {ISigners} from "../utils/ISigners.sol";
  * The bridge enables the transaction bundling feature as well.
  */
 interface IBridge is
-    IBundler,
-    ISigners,
     IERC20Handler,
     IERC721Handler,
     ISBTHandler,
     IERC1155Handler,
-    INativeHandler
+    INativeHandler,
+    ISigners,
+    IBundler
 {
     /**
      * @notice the enum that helps distinguish functions for calling within the signature

@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import {IBundler} from "../bundle/IBundler.sol";
 
-interface IERC721Handler is IBundler {
+interface IERC721Handler {
     /**
      * @notice the event emitted from the depositERC721 function
      */

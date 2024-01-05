@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import {IBundler} from "../bundle/IBundler.sol";
 
-interface ISBTHandler is IBundler {
+interface ISBTHandler {
     /**
      * @notice the event emitted from the depositSBT function
      */

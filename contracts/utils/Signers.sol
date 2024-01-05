@@ -15,12 +15,23 @@ abstract contract Signers is ISigners, Initializable {
     uint256 public constant P = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
 
     address public signer;
+    address public facade;
     string public chainName;
 
     mapping(address => mapping(uint8 => uint256)) public nonces;
 
-    function __Signers_init(address signer_, string calldata chainName_) public onlyInitializing {
+    modifier onlyFacade() {
+        _onlyFacade();
+        _;
+    }
+
+    function __Signers_init(
+        address signer_,
+        address facade_,
+        string calldata chainName_
+    ) public onlyInitializing {
         signer = signer_;
+        facade = facade_;
         chainName = chainName_;
     }
 
@@ -29,9 +40,8 @@ abstract contract Signers is ISigners, Initializable {
         address contractAddress_,
         bytes32 signHash_,
         bytes calldata signature_
-    ) public {
-        _checkSignature(signHash_, signature_);
-        ++nonces[contractAddress_][methodId_];
+    ) external onlyFacade {
+        _checkSignatureAndIncrementNonce(methodId_, contractAddress_, signHash_, signature_);
     }
 
     function validateChangeAddressSignature(
@@ -39,14 +49,8 @@ abstract contract Signers is ISigners, Initializable {
         address contractAddress_,
         address newAddress_,
         bytes calldata signature_
-    ) public {
-        (string memory chainName_, uint256 nonce_) = getSigComponents(methodId_, contractAddress_);
-
-        bytes32 signHash_ = keccak256(
-            abi.encodePacked(methodId_, newAddress_, chainName_, nonce_, contractAddress_)
-        );
-
-        checkSignatureAndIncrementNonce(methodId_, contractAddress_, signHash_, signature_);
+    ) external onlyFacade {
+        _validateChangeAddressSignature(methodId_, contractAddress_, newAddress_, signature_);
     }
 
     function getSigComponents(
@@ -54,6 +58,31 @@ abstract contract Signers is ISigners, Initializable {
         address contractAddress_
     ) public view returns (string memory chainName_, uint256 nonce_) {
         return (chainName, nonces[contractAddress_][methodId_]);
+    }
+
+    function _checkSignatureAndIncrementNonce(
+        uint8 methodId_,
+        address contractAddress_,
+        bytes32 signHash_,
+        bytes memory signature_
+    ) internal {
+        _checkSignature(signHash_, signature_);
+        ++nonces[contractAddress_][methodId_];
+    }
+
+    function _validateChangeAddressSignature(
+        uint8 methodId_,
+        address contractAddress_,
+        address newAddress_,
+        bytes memory signature_
+    ) internal {
+        (string memory chainName_, uint256 nonce_) = getSigComponents(methodId_, contractAddress_);
+
+        bytes32 signHash_ = keccak256(
+            abi.encodePacked(methodId_, newAddress_, chainName_, nonce_, contractAddress_)
+        );
+
+        _checkSignatureAndIncrementNonce(methodId_, contractAddress_, signHash_, signature_);
     }
 
     function _checkSignature(bytes32 signHash_, bytes memory signature_) internal view {
@@ -88,5 +117,9 @@ abstract contract Signers is ISigners, Initializable {
         return address(uint160(uint256(keccak256(pubKey_))));
     }
 
-    uint256[47] private _gap;
+    function _onlyFacade() private view {
+        require(msg.sender == facade, "Bundler: not a facade");
+    }
+
+    uint256[46] private _gap;
 }

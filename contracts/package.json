@@ -1,6 +1,6 @@
 {
   "name": "@rarimo/evm-bridge-contracts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Rarimo Foundation",
   "keywords": [
     "solidity",

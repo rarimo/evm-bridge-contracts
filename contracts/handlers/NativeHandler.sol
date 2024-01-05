@@ -5,9 +5,10 @@ import {INativeHandler} from "../interfaces/handlers/INativeHandler.sol";
 
 import {Encoder} from "../libs/Encoder.sol";
 
+import {Signers} from "../utils/Signers.sol";
 import {Bundler} from "../bundle/Bundler.sol";
 
-abstract contract NativeHandler is INativeHandler, Bundler {
+abstract contract NativeHandler is INativeHandler, Signers, Bundler {
     using Encoder for bytes32;
 
     function depositNative(
