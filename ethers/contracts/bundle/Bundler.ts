@@ -28,31 +28,28 @@ import type {
 
 export interface BundlerInterface extends utils.Interface {
   functions: {
-    "__Bundler_init(address,address)": FunctionFragment;
+    "__Bundler_init(address)": FunctionFragment;
     "bundleExecutorImplementation()": FunctionFragment;
     "determineProxyAddress(bytes32)": FunctionFragment;
-    "facade()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "__Bundler_init"
-      | "__Bundler_init(address,address)"
+      | "__Bundler_init(address)"
       | "bundleExecutorImplementation"
       | "bundleExecutorImplementation()"
       | "determineProxyAddress"
       | "determineProxyAddress(bytes32)"
-      | "facade"
-      | "facade()"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "__Bundler_init",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "__Bundler_init(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "__Bundler_init(address)",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "bundleExecutorImplementation",
@@ -70,15 +67,13 @@ export interface BundlerInterface extends utils.Interface {
     functionFragment: "determineProxyAddress(bytes32)",
     values: [PromiseOrValue<BytesLike>]
   ): string;
-  encodeFunctionData(functionFragment: "facade", values?: undefined): string;
-  encodeFunctionData(functionFragment: "facade()", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "__Bundler_init",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "__Bundler_init(address,address)",
+    functionFragment: "__Bundler_init(address)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -97,8 +92,6 @@ export interface BundlerInterface extends utils.Interface {
     functionFragment: "determineProxyAddress(bytes32)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "facade", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "facade()", data: BytesLike): Result;
 
   events: {
     "Initialized(uint8)": EventFragment;
@@ -146,13 +139,11 @@ export interface Bundler extends BaseContract {
   functions: {
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -171,21 +162,15 @@ export interface Bundler extends BaseContract {
       salt_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
-
-    facade(overrides?: CallOverrides): Promise<[string]>;
-
-    "facade()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   __Bundler_init(
     bundleExecutorImplementation_: PromiseOrValue<string>,
-    facade_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "__Bundler_init(address,address)"(
+  "__Bundler_init(address)"(
     bundleExecutorImplementation_: PromiseOrValue<string>,
-    facade_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -203,20 +188,14 @@ export interface Bundler extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  facade(overrides?: CallOverrides): Promise<string>;
-
-  "facade()"(overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -235,10 +214,6 @@ export interface Bundler extends BaseContract {
       salt_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    facade(overrides?: CallOverrides): Promise<string>;
-
-    "facade()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -249,13 +224,11 @@ export interface Bundler extends BaseContract {
   estimateGas: {
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -274,22 +247,16 @@ export interface Bundler extends BaseContract {
       salt_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    facade(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "facade()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -310,9 +277,5 @@ export interface Bundler extends BaseContract {
       salt_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    facade(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "facade()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -85,40 +85,82 @@ export declare namespace INativeHandler {
 
 export interface NativeHandlerInterface extends utils.Interface {
   functions: {
-    "__Bundler_init(address,address)": FunctionFragment;
+    "P()": FunctionFragment;
+    "__Bundler_init(address)": FunctionFragment;
+    "__Signers_init(address,address,string)": FunctionFragment;
     "bundleExecutorImplementation()": FunctionFragment;
+    "chainName()": FunctionFragment;
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)": FunctionFragment;
     "depositNative((uint256,(bytes32,bytes),string,string))": FunctionFragment;
     "determineProxyAddress(bytes32)": FunctionFragment;
     "facade()": FunctionFragment;
+    "getSigComponents(uint8,address)": FunctionFragment;
+    "nonces(address,uint8)": FunctionFragment;
+    "signer()": FunctionFragment;
+    "validateChangeAddressSignature(uint8,address,address,bytes)": FunctionFragment;
     "withdrawNative((uint256,(bytes32,bytes),bytes32,address,bytes))": FunctionFragment;
     "withdrawNativeBundle((uint256,(bytes32,bytes),bytes32,address,bytes))": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "P"
+      | "P()"
       | "__Bundler_init"
-      | "__Bundler_init(address,address)"
+      | "__Bundler_init(address)"
+      | "__Signers_init"
+      | "__Signers_init(address,address,string)"
       | "bundleExecutorImplementation"
       | "bundleExecutorImplementation()"
+      | "chainName"
+      | "chainName()"
+      | "checkSignatureAndIncrementNonce"
+      | "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"
       | "depositNative"
       | "depositNative((uint256,(bytes32,bytes),string,string))"
       | "determineProxyAddress"
       | "determineProxyAddress(bytes32)"
       | "facade"
       | "facade()"
+      | "getSigComponents"
+      | "getSigComponents(uint8,address)"
+      | "nonces"
+      | "nonces(address,uint8)"
+      | "signer"
+      | "signer()"
+      | "validateChangeAddressSignature"
+      | "validateChangeAddressSignature(uint8,address,address,bytes)"
       | "withdrawNative"
       | "withdrawNative((uint256,(bytes32,bytes),bytes32,address,bytes))"
       | "withdrawNativeBundle"
       | "withdrawNativeBundle((uint256,(bytes32,bytes),bytes32,address,bytes))"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "P", values?: undefined): string;
+  encodeFunctionData(functionFragment: "P()", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "__Bundler_init",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "__Bundler_init(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "__Bundler_init(address)",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__Signers_init",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__Signers_init(address,address,string)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "bundleExecutorImplementation",
@@ -127,6 +169,29 @@ export interface NativeHandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "bundleExecutorImplementation()",
     values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "chainName", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "chainName()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkSignatureAndIncrementNonce",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "depositNative",
@@ -147,6 +212,42 @@ export interface NativeHandlerInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "facade", values?: undefined): string;
   encodeFunctionData(functionFragment: "facade()", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "getSigComponents",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSigComponents(uint8,address)",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "nonces",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "nonces(address,uint8)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(functionFragment: "signer", values?: undefined): string;
+  encodeFunctionData(functionFragment: "signer()", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "validateChangeAddressSignature",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "validateChangeAddressSignature(uint8,address,address,bytes)",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawNative",
     values: [INativeHandler.WithdrawNativeParametersStruct]
   ): string;
@@ -163,12 +264,22 @@ export interface NativeHandlerInterface extends utils.Interface {
     values: [INativeHandler.WithdrawNativeParametersStruct]
   ): string;
 
+  decodeFunctionResult(functionFragment: "P", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "P()", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "__Bundler_init",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "__Bundler_init(address,address)",
+    functionFragment: "__Bundler_init(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__Signers_init",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__Signers_init(address,address,string)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -177,6 +288,19 @@ export interface NativeHandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "bundleExecutorImplementation()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "chainName", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "chainName()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkSignatureAndIncrementNonce",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -197,6 +321,29 @@ export interface NativeHandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "facade", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "facade()", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getSigComponents",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getSigComponents(uint8,address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "nonces(address,uint8)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "signer", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "signer()", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "validateChangeAddressSignature",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "validateChangeAddressSignature(uint8,address,address,bytes)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawNative",
     data: BytesLike
@@ -297,15 +444,31 @@ export interface NativeHandler extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    P(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "P()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -314,6 +477,26 @@ export interface NativeHandler extends BaseContract {
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    chainName(overrides?: CallOverrides): Promise<[string]>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<[string]>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     depositNative(
       params_: INativeHandler.DepositNativeParametersStruct,
@@ -339,6 +522,50 @@ export interface NativeHandler extends BaseContract {
 
     "facade()"(overrides?: CallOverrides): Promise<[string]>;
 
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    signer(overrides?: CallOverrides): Promise<[string]>;
+
+    "signer()"(overrides?: CallOverrides): Promise<[string]>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -360,21 +587,57 @@ export interface NativeHandler extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  P(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "P()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   __Bundler_init(
     bundleExecutorImplementation_: PromiseOrValue<string>,
-    facade_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "__Bundler_init(address,address)"(
+  "__Bundler_init(address)"(
     bundleExecutorImplementation_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  __Signers_init(
+    signer_: PromiseOrValue<string>,
     facade_: PromiseOrValue<string>,
+    chainName_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "__Signers_init(address,address,string)"(
+    signer_: PromiseOrValue<string>,
+    facade_: PromiseOrValue<string>,
+    chainName_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   bundleExecutorImplementation(overrides?: CallOverrides): Promise<string>;
 
   "bundleExecutorImplementation()"(overrides?: CallOverrides): Promise<string>;
+
+  chainName(overrides?: CallOverrides): Promise<string>;
+
+  "chainName()"(overrides?: CallOverrides): Promise<string>;
+
+  checkSignatureAndIncrementNonce(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    signHash_: PromiseOrValue<BytesLike>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    signHash_: PromiseOrValue<BytesLike>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   depositNative(
     params_: INativeHandler.DepositNativeParametersStruct,
@@ -400,6 +663,46 @@ export interface NativeHandler extends BaseContract {
 
   "facade()"(overrides?: CallOverrides): Promise<string>;
 
+  getSigComponents(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+  "getSigComponents(uint8,address)"(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+  nonces(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "nonces(address,uint8)"(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  validateChangeAddressSignature(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    newAddress_: PromiseOrValue<string>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "validateChangeAddressSignature(uint8,address,address,bytes)"(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    newAddress_: PromiseOrValue<string>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawNative(
     params_: INativeHandler.WithdrawNativeParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -421,15 +724,31 @@ export interface NativeHandler extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    P(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "P()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -438,6 +757,26 @@ export interface NativeHandler extends BaseContract {
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
     ): Promise<string>;
+
+    chainName(overrides?: CallOverrides): Promise<string>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<string>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     depositNative(
       params_: INativeHandler.DepositNativeParametersStruct,
@@ -462,6 +801,50 @@ export interface NativeHandler extends BaseContract {
     facade(overrides?: CallOverrides): Promise<string>;
 
     "facade()"(overrides?: CallOverrides): Promise<string>;
+
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    signer(overrides?: CallOverrides): Promise<string>;
+
+    "signer()"(overrides?: CallOverrides): Promise<string>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,
@@ -522,15 +905,31 @@ export interface NativeHandler extends BaseContract {
   };
 
   estimateGas: {
+    P(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "P()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -538,6 +937,26 @@ export interface NativeHandler extends BaseContract {
 
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    chainName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     depositNative(
@@ -564,6 +983,50 @@ export interface NativeHandler extends BaseContract {
 
     "facade()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    signer(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "signer()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -586,15 +1049,31 @@ export interface NativeHandler extends BaseContract {
   };
 
   populateTransaction: {
+    P(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "P()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -604,6 +1083,26 @@ export interface NativeHandler extends BaseContract {
 
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    chainName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     depositNative(
@@ -629,6 +1128,50 @@ export interface NativeHandler extends BaseContract {
     facade(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "facade()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    signer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "signer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,

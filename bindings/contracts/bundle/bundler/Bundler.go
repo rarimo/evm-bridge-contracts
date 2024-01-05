@@ -31,7 +31,7 @@ var (
 
 // BundlerMetaData contains all meta data concerning the Bundler contract.
 var BundlerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bundleExecutorImplementation_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"facade_\",\"type\":\"address\"}],\"name\":\"__Bundler_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bundleExecutorImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt_\",\"type\":\"bytes32\"}],\"name\":\"determineProxyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facade\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bundleExecutorImplementation_\",\"type\":\"address\"}],\"name\":\"__Bundler_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bundleExecutorImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt_\",\"type\":\"bytes32\"}],\"name\":\"determineProxyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // BundlerABI is the input ABI used to generate the binding from.
@@ -242,56 +242,25 @@ func (_Bundler *BundlerCallerSession) DetermineProxyAddress(salt_ [32]byte) (com
 	return _Bundler.Contract.DetermineProxyAddress(&_Bundler.CallOpts, salt_)
 }
 
-// Facade is a free data retrieval call binding the contract method 0x5014a0fb.
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
 //
-// Solidity: function facade() view returns(address)
-func (_Bundler *BundlerCaller) Facade(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _Bundler.contract.Call(opts, &out, "facade")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_Bundler *BundlerTransactor) BundlerInit(opts *bind.TransactOpts, bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _Bundler.contract.Transact(opts, "__Bundler_init", bundleExecutorImplementation_)
 }
 
-// Facade is a free data retrieval call binding the contract method 0x5014a0fb.
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
 //
-// Solidity: function facade() view returns(address)
-func (_Bundler *BundlerSession) Facade() (common.Address, error) {
-	return _Bundler.Contract.Facade(&_Bundler.CallOpts)
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_Bundler *BundlerSession) BundlerInit(bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _Bundler.Contract.BundlerInit(&_Bundler.TransactOpts, bundleExecutorImplementation_)
 }
 
-// Facade is a free data retrieval call binding the contract method 0x5014a0fb.
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
 //
-// Solidity: function facade() view returns(address)
-func (_Bundler *BundlerCallerSession) Facade() (common.Address, error) {
-	return _Bundler.Contract.Facade(&_Bundler.CallOpts)
-}
-
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
-//
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_Bundler *BundlerTransactor) BundlerInit(opts *bind.TransactOpts, bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _Bundler.contract.Transact(opts, "__Bundler_init", bundleExecutorImplementation_, facade_)
-}
-
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
-//
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_Bundler *BundlerSession) BundlerInit(bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _Bundler.Contract.BundlerInit(&_Bundler.TransactOpts, bundleExecutorImplementation_, facade_)
-}
-
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
-//
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_Bundler *BundlerTransactorSession) BundlerInit(bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _Bundler.Contract.BundlerInit(&_Bundler.TransactOpts, bundleExecutorImplementation_, facade_)
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_Bundler *BundlerTransactorSession) BundlerInit(bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _Bundler.Contract.BundlerInit(&_Bundler.TransactOpts, bundleExecutorImplementation_)
 }
 
 // BundlerInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the Bundler contract.

@@ -94,7 +94,6 @@ export declare namespace ISBTHandler {
 export interface ISBTHandlerInterface extends utils.Interface {
   functions: {
     "depositSBT((address,uint256,(bytes32,bytes),string,string))": FunctionFragment;
-    "determineProxyAddress(bytes32)": FunctionFragment;
     "withdrawSBT((address,uint256,string,(bytes32,bytes),bytes32,address,bytes))": FunctionFragment;
     "withdrawSBTBundle((address,uint256,string,(bytes32,bytes),bytes32,address,bytes))": FunctionFragment;
   };
@@ -103,8 +102,6 @@ export interface ISBTHandlerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "depositSBT"
       | "depositSBT((address,uint256,(bytes32,bytes),string,string))"
-      | "determineProxyAddress"
-      | "determineProxyAddress(bytes32)"
       | "withdrawSBT"
       | "withdrawSBT((address,uint256,string,(bytes32,bytes),bytes32,address,bytes))"
       | "withdrawSBTBundle"
@@ -118,14 +115,6 @@ export interface ISBTHandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "depositSBT((address,uint256,(bytes32,bytes),string,string))",
     values: [ISBTHandler.DepositSBTParametersStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress(bytes32)",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawSBT",
@@ -147,14 +136,6 @@ export interface ISBTHandlerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "depositSBT", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "depositSBT((address,uint256,(bytes32,bytes),string,string))",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress(bytes32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -260,16 +241,6 @@ export interface ISBTHandler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     withdrawSBT(
       params_: ISBTHandler.WithdrawSBTParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -301,16 +272,6 @@ export interface ISBTHandler extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  determineProxyAddress(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "determineProxyAddress(bytes32)"(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   withdrawSBT(
     params_: ISBTHandler.WithdrawSBTParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -341,16 +302,6 @@ export interface ISBTHandler extends BaseContract {
       params_: ISBTHandler.DepositSBTParametersStruct,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     withdrawSBT(
       params_: ISBTHandler.WithdrawSBTParametersStruct,
@@ -424,16 +375,6 @@ export interface ISBTHandler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdrawSBT(
       params_: ISBTHandler.WithdrawSBTParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -464,16 +405,6 @@ export interface ISBTHandler extends BaseContract {
     "depositSBT((address,uint256,(bytes32,bytes),string,string))"(
       params_: ISBTHandler.DepositSBTParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawSBT(

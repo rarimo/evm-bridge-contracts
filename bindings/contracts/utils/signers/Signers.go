@@ -31,7 +31,7 @@ var (
 
 // SignersMetaData contains all meta data concerning the Signers contract.
 var SignersMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"P\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer_\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"}],\"name\":\"__Signers_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"chainName\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"signHash_\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"checkSignatureAndIncrementNonce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"}],\"name\":\"getSigComponents\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce_\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"nonces\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"newAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"validateChangeAddressSignature\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"P\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"facade_\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"}],\"name\":\"__Signers_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"chainName\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"signHash_\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"checkSignatureAndIncrementNonce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facade\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"}],\"name\":\"getSigComponents\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce_\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"nonces\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"newAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"validateChangeAddressSignature\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // SignersABI is the input ABI used to generate the binding from.
@@ -242,6 +242,37 @@ func (_Signers *SignersCallerSession) ChainName() (string, error) {
 	return _Signers.Contract.ChainName(&_Signers.CallOpts)
 }
 
+// Facade is a free data retrieval call binding the contract method 0x5014a0fb.
+//
+// Solidity: function facade() view returns(address)
+func (_Signers *SignersCaller) Facade(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _Signers.contract.Call(opts, &out, "facade")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Facade is a free data retrieval call binding the contract method 0x5014a0fb.
+//
+// Solidity: function facade() view returns(address)
+func (_Signers *SignersSession) Facade() (common.Address, error) {
+	return _Signers.Contract.Facade(&_Signers.CallOpts)
+}
+
+// Facade is a free data retrieval call binding the contract method 0x5014a0fb.
+//
+// Solidity: function facade() view returns(address)
+func (_Signers *SignersCallerSession) Facade() (common.Address, error) {
+	return _Signers.Contract.Facade(&_Signers.CallOpts)
+}
+
 // GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
 //
 // Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
@@ -349,25 +380,25 @@ func (_Signers *SignersCallerSession) Signer() (common.Address, error) {
 	return _Signers.Contract.Signer(&_Signers.CallOpts)
 }
 
-// SignersInit is a paid mutator transaction binding the contract method 0x509ace95.
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
 //
-// Solidity: function __Signers_init(address signer_, string chainName_) returns()
-func (_Signers *SignersTransactor) SignersInit(opts *bind.TransactOpts, signer_ common.Address, chainName_ string) (*types.Transaction, error) {
-	return _Signers.contract.Transact(opts, "__Signers_init", signer_, chainName_)
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_Signers *SignersTransactor) SignersInit(opts *bind.TransactOpts, signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _Signers.contract.Transact(opts, "__Signers_init", signer_, facade_, chainName_)
 }
 
-// SignersInit is a paid mutator transaction binding the contract method 0x509ace95.
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
 //
-// Solidity: function __Signers_init(address signer_, string chainName_) returns()
-func (_Signers *SignersSession) SignersInit(signer_ common.Address, chainName_ string) (*types.Transaction, error) {
-	return _Signers.Contract.SignersInit(&_Signers.TransactOpts, signer_, chainName_)
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_Signers *SignersSession) SignersInit(signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _Signers.Contract.SignersInit(&_Signers.TransactOpts, signer_, facade_, chainName_)
 }
 
-// SignersInit is a paid mutator transaction binding the contract method 0x509ace95.
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
 //
-// Solidity: function __Signers_init(address signer_, string chainName_) returns()
-func (_Signers *SignersTransactorSession) SignersInit(signer_ common.Address, chainName_ string) (*types.Transaction, error) {
-	return _Signers.Contract.SignersInit(&_Signers.TransactOpts, signer_, chainName_)
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_Signers *SignersTransactorSession) SignersInit(signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _Signers.Contract.SignersInit(&_Signers.TransactOpts, signer_, facade_, chainName_)
 }
 
 // CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.

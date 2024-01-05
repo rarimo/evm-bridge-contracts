@@ -316,8 +316,8 @@ export interface BridgeInterface extends utils.Interface {
   functions: {
     "P()": FunctionFragment;
     "__Bridge_init(address,address,string,address)": FunctionFragment;
-    "__Bundler_init(address,address)": FunctionFragment;
-    "__Signers_init(address,string)": FunctionFragment;
+    "__Bundler_init(address)": FunctionFragment;
+    "__Signers_init(address,address,string)": FunctionFragment;
     "bundleExecutorImplementation()": FunctionFragment;
     "chainName()": FunctionFragment;
     "changeBundleExecutorImplementation(address,bytes)": FunctionFragment;
@@ -364,9 +364,9 @@ export interface BridgeInterface extends utils.Interface {
       | "__Bridge_init"
       | "__Bridge_init(address,address,string,address)"
       | "__Bundler_init"
-      | "__Bundler_init(address,address)"
+      | "__Bundler_init(address)"
       | "__Signers_init"
-      | "__Signers_init(address,string)"
+      | "__Signers_init(address,address,string)"
       | "bundleExecutorImplementation"
       | "bundleExecutorImplementation()"
       | "chainName"
@@ -465,19 +465,27 @@ export interface BridgeInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "__Bundler_init",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "__Bundler_init(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "__Bundler_init(address)",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "__Signers_init",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
-    functionFragment: "__Signers_init(address,string)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "__Signers_init(address,address,string)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "bundleExecutorImplementation",
@@ -842,7 +850,7 @@ export interface BridgeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "__Bundler_init(address,address)",
+    functionFragment: "__Bundler_init(address)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -850,7 +858,7 @@ export interface BridgeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "__Signers_init(address,string)",
+    functionFragment: "__Signers_init(address,address,string)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -1455,24 +1463,24 @@ export interface Bridge extends BaseContract {
 
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -1898,24 +1906,24 @@ export interface Bridge extends BaseContract {
 
   __Bundler_init(
     bundleExecutorImplementation_: PromiseOrValue<string>,
-    facade_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "__Bundler_init(address,address)"(
+  "__Bundler_init(address)"(
     bundleExecutorImplementation_: PromiseOrValue<string>,
-    facade_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   __Signers_init(
     signer_: PromiseOrValue<string>,
+    facade_: PromiseOrValue<string>,
     chainName_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "__Signers_init(address,string)"(
+  "__Signers_init(address,address,string)"(
     signer_: PromiseOrValue<string>,
+    facade_: PromiseOrValue<string>,
     chainName_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -2335,24 +2343,24 @@ export interface Bridge extends BaseContract {
 
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -3005,24 +3013,24 @@ export interface Bridge extends BaseContract {
 
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -3449,24 +3457,24 @@ export interface Bridge extends BaseContract {
 
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

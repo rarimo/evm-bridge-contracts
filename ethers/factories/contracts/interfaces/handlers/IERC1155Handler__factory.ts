@@ -197,25 +197,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "salt_",
-        type: "bytes32",
-      },
-    ],
-    name: "determineProxyAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         components: [
           {
             internalType: "address",

@@ -30,11 +30,6 @@ const _abi = [
         name: "bundleExecutorImplementation_",
         type: "address",
       },
-      {
-        internalType: "address",
-        name: "facade_",
-        type: "address",
-      },
     ],
     name: "__Bundler_init",
     outputs: [],
@@ -63,19 +58,6 @@ const _abi = [
       },
     ],
     name: "determineProxyAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "facade",
     outputs: [
       {
         internalType: "address",

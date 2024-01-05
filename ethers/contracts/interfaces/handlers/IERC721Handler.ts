@@ -100,7 +100,6 @@ export declare namespace IERC721Handler {
 export interface IERC721HandlerInterface extends utils.Interface {
   functions: {
     "depositERC721((address,uint256,(bytes32,bytes),string,string,bool))": FunctionFragment;
-    "determineProxyAddress(bytes32)": FunctionFragment;
     "withdrawERC721((address,uint256,string,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
     "withdrawERC721Bundle((address,uint256,string,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
   };
@@ -109,8 +108,6 @@ export interface IERC721HandlerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "depositERC721"
       | "depositERC721((address,uint256,(bytes32,bytes),string,string,bool))"
-      | "determineProxyAddress"
-      | "determineProxyAddress(bytes32)"
       | "withdrawERC721"
       | "withdrawERC721((address,uint256,string,(bytes32,bytes),bytes32,address,bytes,bool))"
       | "withdrawERC721Bundle"
@@ -124,14 +121,6 @@ export interface IERC721HandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "depositERC721((address,uint256,(bytes32,bytes),string,string,bool))",
     values: [IERC721Handler.DepositERC721ParametersStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress(bytes32)",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawERC721",
@@ -156,14 +145,6 @@ export interface IERC721HandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "depositERC721((address,uint256,(bytes32,bytes),string,string,bool))",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress(bytes32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -271,16 +252,6 @@ export interface IERC721Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     withdrawERC721(
       params_: IERC721Handler.WithdrawERC721ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -312,16 +283,6 @@ export interface IERC721Handler extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  determineProxyAddress(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "determineProxyAddress(bytes32)"(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   withdrawERC721(
     params_: IERC721Handler.WithdrawERC721ParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -352,16 +313,6 @@ export interface IERC721Handler extends BaseContract {
       params_: IERC721Handler.DepositERC721ParametersStruct,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     withdrawERC721(
       params_: IERC721Handler.WithdrawERC721ParametersStruct,
@@ -439,16 +390,6 @@ export interface IERC721Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdrawERC721(
       params_: IERC721Handler.WithdrawERC721ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -479,16 +420,6 @@ export interface IERC721Handler extends BaseContract {
     "depositERC721((address,uint256,(bytes32,bytes),string,string,bool))"(
       params_: IERC721Handler.DepositERC721ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawERC721(

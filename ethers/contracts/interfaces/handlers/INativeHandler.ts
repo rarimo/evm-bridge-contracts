@@ -86,7 +86,6 @@ export declare namespace INativeHandler {
 export interface INativeHandlerInterface extends utils.Interface {
   functions: {
     "depositNative((uint256,(bytes32,bytes),string,string))": FunctionFragment;
-    "determineProxyAddress(bytes32)": FunctionFragment;
     "withdrawNative((uint256,(bytes32,bytes),bytes32,address,bytes))": FunctionFragment;
     "withdrawNativeBundle((uint256,(bytes32,bytes),bytes32,address,bytes))": FunctionFragment;
   };
@@ -95,8 +94,6 @@ export interface INativeHandlerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "depositNative"
       | "depositNative((uint256,(bytes32,bytes),string,string))"
-      | "determineProxyAddress"
-      | "determineProxyAddress(bytes32)"
       | "withdrawNative"
       | "withdrawNative((uint256,(bytes32,bytes),bytes32,address,bytes))"
       | "withdrawNativeBundle"
@@ -110,14 +107,6 @@ export interface INativeHandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "depositNative((uint256,(bytes32,bytes),string,string))",
     values: [INativeHandler.DepositNativeParametersStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress(bytes32)",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawNative",
@@ -142,14 +131,6 @@ export interface INativeHandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "depositNative((uint256,(bytes32,bytes),string,string))",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress(bytes32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -252,16 +233,6 @@ export interface INativeHandler extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -293,16 +264,6 @@ export interface INativeHandler extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  determineProxyAddress(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "determineProxyAddress(bytes32)"(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   withdrawNative(
     params_: INativeHandler.WithdrawNativeParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -333,16 +294,6 @@ export interface INativeHandler extends BaseContract {
       params_: INativeHandler.DepositNativeParametersStruct,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,
@@ -410,16 +361,6 @@ export interface INativeHandler extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdrawNative(
       params_: INativeHandler.WithdrawNativeParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -450,16 +391,6 @@ export interface INativeHandler extends BaseContract {
     "depositNative((uint256,(bytes32,bytes),string,string))"(
       params_: INativeHandler.DepositNativeParametersStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawNative(

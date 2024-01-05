@@ -30,9 +30,10 @@ import type {
 export interface SignersInterface extends utils.Interface {
   functions: {
     "P()": FunctionFragment;
-    "__Signers_init(address,string)": FunctionFragment;
+    "__Signers_init(address,address,string)": FunctionFragment;
     "chainName()": FunctionFragment;
     "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)": FunctionFragment;
+    "facade()": FunctionFragment;
     "getSigComponents(uint8,address)": FunctionFragment;
     "nonces(address,uint8)": FunctionFragment;
     "signer()": FunctionFragment;
@@ -44,11 +45,13 @@ export interface SignersInterface extends utils.Interface {
       | "P"
       | "P()"
       | "__Signers_init"
-      | "__Signers_init(address,string)"
+      | "__Signers_init(address,address,string)"
       | "chainName"
       | "chainName()"
       | "checkSignatureAndIncrementNonce"
       | "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"
+      | "facade"
+      | "facade()"
       | "getSigComponents"
       | "getSigComponents(uint8,address)"
       | "nonces"
@@ -63,11 +66,19 @@ export interface SignersInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "P()", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "__Signers_init",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
-    functionFragment: "__Signers_init(address,string)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "__Signers_init(address,address,string)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "chainName", values?: undefined): string;
   encodeFunctionData(
@@ -92,6 +103,8 @@ export interface SignersInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
+  encodeFunctionData(functionFragment: "facade", values?: undefined): string;
+  encodeFunctionData(functionFragment: "facade()", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getSigComponents",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
@@ -136,7 +149,7 @@ export interface SignersInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "__Signers_init(address,string)",
+    functionFragment: "__Signers_init(address,address,string)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "chainName", data: BytesLike): Result;
@@ -152,6 +165,8 @@ export interface SignersInterface extends utils.Interface {
     functionFragment: "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "facade", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "facade()", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getSigComponents",
     data: BytesLike
@@ -226,12 +241,14 @@ export interface Signers extends BaseContract {
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -255,6 +272,10 @@ export interface Signers extends BaseContract {
       signature_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    facade(overrides?: CallOverrides): Promise<[string]>;
+
+    "facade()"(overrides?: CallOverrides): Promise<[string]>;
 
     getSigComponents(
       methodId_: PromiseOrValue<BigNumberish>,
@@ -307,12 +328,14 @@ export interface Signers extends BaseContract {
 
   __Signers_init(
     signer_: PromiseOrValue<string>,
+    facade_: PromiseOrValue<string>,
     chainName_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "__Signers_init(address,string)"(
+  "__Signers_init(address,address,string)"(
     signer_: PromiseOrValue<string>,
+    facade_: PromiseOrValue<string>,
     chainName_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -336,6 +359,10 @@ export interface Signers extends BaseContract {
     signature_: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  facade(overrides?: CallOverrides): Promise<string>;
+
+  "facade()"(overrides?: CallOverrides): Promise<string>;
 
   getSigComponents(
     methodId_: PromiseOrValue<BigNumberish>,
@@ -384,12 +411,14 @@ export interface Signers extends BaseContract {
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -413,6 +442,10 @@ export interface Signers extends BaseContract {
       signature_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    facade(overrides?: CallOverrides): Promise<string>;
+
+    "facade()"(overrides?: CallOverrides): Promise<string>;
 
     getSigComponents(
       methodId_: PromiseOrValue<BigNumberish>,
@@ -471,12 +504,14 @@ export interface Signers extends BaseContract {
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -500,6 +535,10 @@ export interface Signers extends BaseContract {
       signature_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    facade(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "facade()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getSigComponents(
       methodId_: PromiseOrValue<BigNumberish>,
@@ -553,12 +592,14 @@ export interface Signers extends BaseContract {
 
     __Signers_init(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "__Signers_init(address,string)"(
+    "__Signers_init(address,address,string)"(
       signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
       chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -582,6 +623,10 @@ export interface Signers extends BaseContract {
       signature_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    facade(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "facade()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSigComponents(
       methodId_: PromiseOrValue<BigNumberish>,

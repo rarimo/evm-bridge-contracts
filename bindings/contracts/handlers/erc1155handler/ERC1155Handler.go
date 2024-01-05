@@ -61,7 +61,7 @@ type IERC1155HandlerWithdrawERC1155Parameters struct {
 
 // ERC1155HandlerMetaData contains all meta data concerning the ERC1155Handler contract.
 var ERC1155HandlerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"name\":\"DepositedERC1155\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"name\":\"WithdrawnERC1155\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bundleExecutorImplementation_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"facade_\",\"type\":\"address\"}],\"name\":\"__Bundler_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bundleExecutorImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"internalType\":\"structIERC1155Handler.DepositERC1155Parameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"depositERC1155\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt_\",\"type\":\"bytes32\"}],\"name\":\"determineProxyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facade\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"internalType\":\"structIERC1155Handler.WithdrawERC1155Parameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawERC1155\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"internalType\":\"structIERC1155Handler.WithdrawERC1155Parameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawERC1155Bundle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"name\":\"DepositedERC1155\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"name\":\"WithdrawnERC1155\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"P\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bundleExecutorImplementation_\",\"type\":\"address\"}],\"name\":\"__Bundler_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"facade_\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"}],\"name\":\"__Signers_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bundleExecutorImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"chainName\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"signHash_\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"checkSignatureAndIncrementNonce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"internalType\":\"structIERC1155Handler.DepositERC1155Parameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"depositERC1155\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt_\",\"type\":\"bytes32\"}],\"name\":\"determineProxyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facade\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"}],\"name\":\"getSigComponents\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce_\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"nonces\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"newAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"validateChangeAddressSignature\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"internalType\":\"structIERC1155Handler.WithdrawERC1155Parameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawERC1155\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"isWrapped\",\"type\":\"bool\"}],\"internalType\":\"structIERC1155Handler.WithdrawERC1155Parameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawERC1155Bundle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ERC1155HandlerABI is the input ABI used to generate the binding from.
@@ -210,6 +210,37 @@ func (_ERC1155Handler *ERC1155HandlerTransactorRaw) Transact(opts *bind.Transact
 	return _ERC1155Handler.Contract.contract.Transact(opts, method, params...)
 }
 
+// P is a free data retrieval call binding the contract method 0x8b8fbd92.
+//
+// Solidity: function P() view returns(uint256)
+func (_ERC1155Handler *ERC1155HandlerCaller) P(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _ERC1155Handler.contract.Call(opts, &out, "P")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// P is a free data retrieval call binding the contract method 0x8b8fbd92.
+//
+// Solidity: function P() view returns(uint256)
+func (_ERC1155Handler *ERC1155HandlerSession) P() (*big.Int, error) {
+	return _ERC1155Handler.Contract.P(&_ERC1155Handler.CallOpts)
+}
+
+// P is a free data retrieval call binding the contract method 0x8b8fbd92.
+//
+// Solidity: function P() view returns(uint256)
+func (_ERC1155Handler *ERC1155HandlerCallerSession) P() (*big.Int, error) {
+	return _ERC1155Handler.Contract.P(&_ERC1155Handler.CallOpts)
+}
+
 // BundleExecutorImplementation is a free data retrieval call binding the contract method 0x59e46336.
 //
 // Solidity: function bundleExecutorImplementation() view returns(address)
@@ -239,6 +270,37 @@ func (_ERC1155Handler *ERC1155HandlerSession) BundleExecutorImplementation() (co
 // Solidity: function bundleExecutorImplementation() view returns(address)
 func (_ERC1155Handler *ERC1155HandlerCallerSession) BundleExecutorImplementation() (common.Address, error) {
 	return _ERC1155Handler.Contract.BundleExecutorImplementation(&_ERC1155Handler.CallOpts)
+}
+
+// ChainName is a free data retrieval call binding the contract method 0x1c93b03a.
+//
+// Solidity: function chainName() view returns(string)
+func (_ERC1155Handler *ERC1155HandlerCaller) ChainName(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _ERC1155Handler.contract.Call(opts, &out, "chainName")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// ChainName is a free data retrieval call binding the contract method 0x1c93b03a.
+//
+// Solidity: function chainName() view returns(string)
+func (_ERC1155Handler *ERC1155HandlerSession) ChainName() (string, error) {
+	return _ERC1155Handler.Contract.ChainName(&_ERC1155Handler.CallOpts)
+}
+
+// ChainName is a free data retrieval call binding the contract method 0x1c93b03a.
+//
+// Solidity: function chainName() view returns(string)
+func (_ERC1155Handler *ERC1155HandlerCallerSession) ChainName() (string, error) {
+	return _ERC1155Handler.Contract.ChainName(&_ERC1155Handler.CallOpts)
 }
 
 // DetermineProxyAddress is a free data retrieval call binding the contract method 0x0492e493.
@@ -303,6 +365,113 @@ func (_ERC1155Handler *ERC1155HandlerCallerSession) Facade() (common.Address, er
 	return _ERC1155Handler.Contract.Facade(&_ERC1155Handler.CallOpts)
 }
 
+// GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
+//
+// Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
+func (_ERC1155Handler *ERC1155HandlerCaller) GetSigComponents(opts *bind.CallOpts, methodId_ uint8, contractAddress_ common.Address) (struct {
+	ChainName string
+	Nonce     *big.Int
+}, error) {
+	var out []interface{}
+	err := _ERC1155Handler.contract.Call(opts, &out, "getSigComponents", methodId_, contractAddress_)
+
+	outstruct := new(struct {
+		ChainName string
+		Nonce     *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.ChainName = *abi.ConvertType(out[0], new(string)).(*string)
+	outstruct.Nonce = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
+//
+// Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
+func (_ERC1155Handler *ERC1155HandlerSession) GetSigComponents(methodId_ uint8, contractAddress_ common.Address) (struct {
+	ChainName string
+	Nonce     *big.Int
+}, error) {
+	return _ERC1155Handler.Contract.GetSigComponents(&_ERC1155Handler.CallOpts, methodId_, contractAddress_)
+}
+
+// GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
+//
+// Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
+func (_ERC1155Handler *ERC1155HandlerCallerSession) GetSigComponents(methodId_ uint8, contractAddress_ common.Address) (struct {
+	ChainName string
+	Nonce     *big.Int
+}, error) {
+	return _ERC1155Handler.Contract.GetSigComponents(&_ERC1155Handler.CallOpts, methodId_, contractAddress_)
+}
+
+// Nonces is a free data retrieval call binding the contract method 0xed3218a2.
+//
+// Solidity: function nonces(address , uint8 ) view returns(uint256)
+func (_ERC1155Handler *ERC1155HandlerCaller) Nonces(opts *bind.CallOpts, arg0 common.Address, arg1 uint8) (*big.Int, error) {
+	var out []interface{}
+	err := _ERC1155Handler.contract.Call(opts, &out, "nonces", arg0, arg1)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// Nonces is a free data retrieval call binding the contract method 0xed3218a2.
+//
+// Solidity: function nonces(address , uint8 ) view returns(uint256)
+func (_ERC1155Handler *ERC1155HandlerSession) Nonces(arg0 common.Address, arg1 uint8) (*big.Int, error) {
+	return _ERC1155Handler.Contract.Nonces(&_ERC1155Handler.CallOpts, arg0, arg1)
+}
+
+// Nonces is a free data retrieval call binding the contract method 0xed3218a2.
+//
+// Solidity: function nonces(address , uint8 ) view returns(uint256)
+func (_ERC1155Handler *ERC1155HandlerCallerSession) Nonces(arg0 common.Address, arg1 uint8) (*big.Int, error) {
+	return _ERC1155Handler.Contract.Nonces(&_ERC1155Handler.CallOpts, arg0, arg1)
+}
+
+// Signer is a free data retrieval call binding the contract method 0x238ac933.
+//
+// Solidity: function signer() view returns(address)
+func (_ERC1155Handler *ERC1155HandlerCaller) Signer(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _ERC1155Handler.contract.Call(opts, &out, "signer")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Signer is a free data retrieval call binding the contract method 0x238ac933.
+//
+// Solidity: function signer() view returns(address)
+func (_ERC1155Handler *ERC1155HandlerSession) Signer() (common.Address, error) {
+	return _ERC1155Handler.Contract.Signer(&_ERC1155Handler.CallOpts)
+}
+
+// Signer is a free data retrieval call binding the contract method 0x238ac933.
+//
+// Solidity: function signer() view returns(address)
+func (_ERC1155Handler *ERC1155HandlerCallerSession) Signer() (common.Address, error) {
+	return _ERC1155Handler.Contract.Signer(&_ERC1155Handler.CallOpts)
+}
+
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
@@ -334,25 +503,67 @@ func (_ERC1155Handler *ERC1155HandlerCallerSession) SupportsInterface(interfaceI
 	return _ERC1155Handler.Contract.SupportsInterface(&_ERC1155Handler.CallOpts, interfaceId)
 }
 
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
 //
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_ERC1155Handler *ERC1155HandlerTransactor) BundlerInit(opts *bind.TransactOpts, bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _ERC1155Handler.contract.Transact(opts, "__Bundler_init", bundleExecutorImplementation_, facade_)
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactor) BundlerInit(opts *bind.TransactOpts, bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _ERC1155Handler.contract.Transact(opts, "__Bundler_init", bundleExecutorImplementation_)
 }
 
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
 //
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_ERC1155Handler *ERC1155HandlerSession) BundlerInit(bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _ERC1155Handler.Contract.BundlerInit(&_ERC1155Handler.TransactOpts, bundleExecutorImplementation_, facade_)
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_ERC1155Handler *ERC1155HandlerSession) BundlerInit(bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.BundlerInit(&_ERC1155Handler.TransactOpts, bundleExecutorImplementation_)
 }
 
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
 //
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_ERC1155Handler *ERC1155HandlerTransactorSession) BundlerInit(bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _ERC1155Handler.Contract.BundlerInit(&_ERC1155Handler.TransactOpts, bundleExecutorImplementation_, facade_)
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactorSession) BundlerInit(bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.BundlerInit(&_ERC1155Handler.TransactOpts, bundleExecutorImplementation_)
+}
+
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
+//
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactor) SignersInit(opts *bind.TransactOpts, signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _ERC1155Handler.contract.Transact(opts, "__Signers_init", signer_, facade_, chainName_)
+}
+
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
+//
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_ERC1155Handler *ERC1155HandlerSession) SignersInit(signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.SignersInit(&_ERC1155Handler.TransactOpts, signer_, facade_, chainName_)
+}
+
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
+//
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactorSession) SignersInit(signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.SignersInit(&_ERC1155Handler.TransactOpts, signer_, facade_, chainName_)
+}
+
+// CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.
+//
+// Solidity: function checkSignatureAndIncrementNonce(uint8 methodId_, address contractAddress_, bytes32 signHash_, bytes signature_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactor) CheckSignatureAndIncrementNonce(opts *bind.TransactOpts, methodId_ uint8, contractAddress_ common.Address, signHash_ [32]byte, signature_ []byte) (*types.Transaction, error) {
+	return _ERC1155Handler.contract.Transact(opts, "checkSignatureAndIncrementNonce", methodId_, contractAddress_, signHash_, signature_)
+}
+
+// CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.
+//
+// Solidity: function checkSignatureAndIncrementNonce(uint8 methodId_, address contractAddress_, bytes32 signHash_, bytes signature_) returns()
+func (_ERC1155Handler *ERC1155HandlerSession) CheckSignatureAndIncrementNonce(methodId_ uint8, contractAddress_ common.Address, signHash_ [32]byte, signature_ []byte) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.CheckSignatureAndIncrementNonce(&_ERC1155Handler.TransactOpts, methodId_, contractAddress_, signHash_, signature_)
+}
+
+// CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.
+//
+// Solidity: function checkSignatureAndIncrementNonce(uint8 methodId_, address contractAddress_, bytes32 signHash_, bytes signature_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactorSession) CheckSignatureAndIncrementNonce(methodId_ uint8, contractAddress_ common.Address, signHash_ [32]byte, signature_ []byte) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.CheckSignatureAndIncrementNonce(&_ERC1155Handler.TransactOpts, methodId_, contractAddress_, signHash_, signature_)
 }
 
 // DepositERC1155 is a paid mutator transaction binding the contract method 0x969aef06.
@@ -416,6 +627,27 @@ func (_ERC1155Handler *ERC1155HandlerSession) OnERC1155Received(arg0 common.Addr
 // Solidity: function onERC1155Received(address , address , uint256 , uint256 , bytes ) returns(bytes4)
 func (_ERC1155Handler *ERC1155HandlerTransactorSession) OnERC1155Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 *big.Int, arg4 []byte) (*types.Transaction, error) {
 	return _ERC1155Handler.Contract.OnERC1155Received(&_ERC1155Handler.TransactOpts, arg0, arg1, arg2, arg3, arg4)
+}
+
+// ValidateChangeAddressSignature is a paid mutator transaction binding the contract method 0x7d1e764b.
+//
+// Solidity: function validateChangeAddressSignature(uint8 methodId_, address contractAddress_, address newAddress_, bytes signature_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactor) ValidateChangeAddressSignature(opts *bind.TransactOpts, methodId_ uint8, contractAddress_ common.Address, newAddress_ common.Address, signature_ []byte) (*types.Transaction, error) {
+	return _ERC1155Handler.contract.Transact(opts, "validateChangeAddressSignature", methodId_, contractAddress_, newAddress_, signature_)
+}
+
+// ValidateChangeAddressSignature is a paid mutator transaction binding the contract method 0x7d1e764b.
+//
+// Solidity: function validateChangeAddressSignature(uint8 methodId_, address contractAddress_, address newAddress_, bytes signature_) returns()
+func (_ERC1155Handler *ERC1155HandlerSession) ValidateChangeAddressSignature(methodId_ uint8, contractAddress_ common.Address, newAddress_ common.Address, signature_ []byte) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.ValidateChangeAddressSignature(&_ERC1155Handler.TransactOpts, methodId_, contractAddress_, newAddress_, signature_)
+}
+
+// ValidateChangeAddressSignature is a paid mutator transaction binding the contract method 0x7d1e764b.
+//
+// Solidity: function validateChangeAddressSignature(uint8 methodId_, address contractAddress_, address newAddress_, bytes signature_) returns()
+func (_ERC1155Handler *ERC1155HandlerTransactorSession) ValidateChangeAddressSignature(methodId_ uint8, contractAddress_ common.Address, newAddress_ common.Address, signature_ []byte) (*types.Transaction, error) {
+	return _ERC1155Handler.Contract.ValidateChangeAddressSignature(&_ERC1155Handler.TransactOpts, methodId_, contractAddress_, newAddress_, signature_)
 }
 
 // WithdrawERC1155 is a paid mutator transaction binding the contract method 0x00903e5d.

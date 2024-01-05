@@ -97,7 +97,6 @@ export declare namespace IERC20Handler {
 export interface IERC20HandlerInterface extends utils.Interface {
   functions: {
     "depositERC20((address,uint256,(bytes32,bytes),string,string,bool))": FunctionFragment;
-    "determineProxyAddress(bytes32)": FunctionFragment;
     "withdrawERC20((address,uint256,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
     "withdrawERC20Bundle((address,uint256,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
   };
@@ -106,8 +105,6 @@ export interface IERC20HandlerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "depositERC20"
       | "depositERC20((address,uint256,(bytes32,bytes),string,string,bool))"
-      | "determineProxyAddress"
-      | "determineProxyAddress(bytes32)"
       | "withdrawERC20"
       | "withdrawERC20((address,uint256,(bytes32,bytes),bytes32,address,bytes,bool))"
       | "withdrawERC20Bundle"
@@ -121,14 +118,6 @@ export interface IERC20HandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "depositERC20((address,uint256,(bytes32,bytes),string,string,bool))",
     values: [IERC20Handler.DepositERC20ParametersStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress(bytes32)",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawERC20",
@@ -153,14 +142,6 @@ export interface IERC20HandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "depositERC20((address,uint256,(bytes32,bytes),string,string,bool))",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress(bytes32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -267,16 +248,6 @@ export interface IERC20Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     withdrawERC20(
       params_: IERC20Handler.WithdrawERC20ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -308,16 +279,6 @@ export interface IERC20Handler extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  determineProxyAddress(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "determineProxyAddress(bytes32)"(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   withdrawERC20(
     params_: IERC20Handler.WithdrawERC20ParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -348,16 +309,6 @@ export interface IERC20Handler extends BaseContract {
       params_: IERC20Handler.DepositERC20ParametersStruct,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     withdrawERC20(
       params_: IERC20Handler.WithdrawERC20ParametersStruct,
@@ -433,16 +384,6 @@ export interface IERC20Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdrawERC20(
       params_: IERC20Handler.WithdrawERC20ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -473,16 +414,6 @@ export interface IERC20Handler extends BaseContract {
     "depositERC20((address,uint256,(bytes32,bytes),string,string,bool))"(
       params_: IERC20Handler.DepositERC20ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawERC20(

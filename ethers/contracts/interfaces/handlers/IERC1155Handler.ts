@@ -106,7 +106,6 @@ export declare namespace IERC1155Handler {
 export interface IERC1155HandlerInterface extends utils.Interface {
   functions: {
     "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))": FunctionFragment;
-    "determineProxyAddress(bytes32)": FunctionFragment;
     "withdrawERC1155((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
     "withdrawERC1155Bundle((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
   };
@@ -115,8 +114,6 @@ export interface IERC1155HandlerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "depositERC1155"
       | "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))"
-      | "determineProxyAddress"
-      | "determineProxyAddress(bytes32)"
       | "withdrawERC1155"
       | "withdrawERC1155((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))"
       | "withdrawERC1155Bundle"
@@ -130,14 +127,6 @@ export interface IERC1155HandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))",
     values: [IERC1155Handler.DepositERC1155ParametersStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineProxyAddress(bytes32)",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawERC1155",
@@ -162,14 +151,6 @@ export interface IERC1155HandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineProxyAddress(bytes32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -292,16 +273,6 @@ export interface IERC1155Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     withdrawERC1155(
       params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -333,16 +304,6 @@ export interface IERC1155Handler extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  determineProxyAddress(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "determineProxyAddress(bytes32)"(
-    salt_: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   withdrawERC1155(
     params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -373,16 +334,6 @@ export interface IERC1155Handler extends BaseContract {
       params_: IERC1155Handler.DepositERC1155ParametersStruct,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     withdrawERC1155(
       params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
@@ -464,16 +415,6 @@ export interface IERC1155Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdrawERC1155(
       params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -504,16 +445,6 @@ export interface IERC1155Handler extends BaseContract {
     "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))"(
       params_: IERC1155Handler.DepositERC1155ParametersStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    determineProxyAddress(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "determineProxyAddress(bytes32)"(
-      salt_: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawERC1155(

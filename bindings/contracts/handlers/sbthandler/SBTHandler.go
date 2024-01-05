@@ -57,7 +57,7 @@ type ISBTHandlerWithdrawSBTParameters struct {
 
 // SBTHandlerMetaData contains all meta data concerning the SBTHandler contract.
 var SBTHandlerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"}],\"name\":\"DepositedSBT\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"}],\"name\":\"WithdrawnSBT\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bundleExecutorImplementation_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"facade_\",\"type\":\"address\"}],\"name\":\"__Bundler_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bundleExecutorImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"}],\"internalType\":\"structISBTHandler.DepositSBTParameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"depositSBT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt_\",\"type\":\"bytes32\"}],\"name\":\"determineProxyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facade\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"}],\"internalType\":\"structISBTHandler.WithdrawSBTParameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawSBT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"}],\"internalType\":\"structISBTHandler.WithdrawSBTParameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawSBTBundle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"}],\"name\":\"DepositedSBT\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"}],\"name\":\"WithdrawnSBT\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"P\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bundleExecutorImplementation_\",\"type\":\"address\"}],\"name\":\"__Bundler_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"facade_\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"}],\"name\":\"__Signers_init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bundleExecutorImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"chainName\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"signHash_\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"checkSignatureAndIncrementNonce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"network\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"receiver\",\"type\":\"string\"}],\"internalType\":\"structISBTHandler.DepositSBTParameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"depositSBT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt_\",\"type\":\"bytes32\"}],\"name\":\"determineProxyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facade\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"}],\"name\":\"getSigComponents\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"chainName_\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce_\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"nonces\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"methodId_\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"contractAddress_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"newAddress_\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"signature_\",\"type\":\"bytes\"}],\"name\":\"validateChangeAddressSignature\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"}],\"internalType\":\"structISBTHandler.WithdrawSBTParameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawSBT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"bundle\",\"type\":\"bytes\"}],\"internalType\":\"structIBundler.Bundle\",\"name\":\"bundle\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"originHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"}],\"internalType\":\"structISBTHandler.WithdrawSBTParameters\",\"name\":\"params_\",\"type\":\"tuple\"}],\"name\":\"withdrawSBTBundle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // SBTHandlerABI is the input ABI used to generate the binding from.
@@ -206,6 +206,37 @@ func (_SBTHandler *SBTHandlerTransactorRaw) Transact(opts *bind.TransactOpts, me
 	return _SBTHandler.Contract.contract.Transact(opts, method, params...)
 }
 
+// P is a free data retrieval call binding the contract method 0x8b8fbd92.
+//
+// Solidity: function P() view returns(uint256)
+func (_SBTHandler *SBTHandlerCaller) P(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SBTHandler.contract.Call(opts, &out, "P")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// P is a free data retrieval call binding the contract method 0x8b8fbd92.
+//
+// Solidity: function P() view returns(uint256)
+func (_SBTHandler *SBTHandlerSession) P() (*big.Int, error) {
+	return _SBTHandler.Contract.P(&_SBTHandler.CallOpts)
+}
+
+// P is a free data retrieval call binding the contract method 0x8b8fbd92.
+//
+// Solidity: function P() view returns(uint256)
+func (_SBTHandler *SBTHandlerCallerSession) P() (*big.Int, error) {
+	return _SBTHandler.Contract.P(&_SBTHandler.CallOpts)
+}
+
 // BundleExecutorImplementation is a free data retrieval call binding the contract method 0x59e46336.
 //
 // Solidity: function bundleExecutorImplementation() view returns(address)
@@ -235,6 +266,37 @@ func (_SBTHandler *SBTHandlerSession) BundleExecutorImplementation() (common.Add
 // Solidity: function bundleExecutorImplementation() view returns(address)
 func (_SBTHandler *SBTHandlerCallerSession) BundleExecutorImplementation() (common.Address, error) {
 	return _SBTHandler.Contract.BundleExecutorImplementation(&_SBTHandler.CallOpts)
+}
+
+// ChainName is a free data retrieval call binding the contract method 0x1c93b03a.
+//
+// Solidity: function chainName() view returns(string)
+func (_SBTHandler *SBTHandlerCaller) ChainName(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _SBTHandler.contract.Call(opts, &out, "chainName")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// ChainName is a free data retrieval call binding the contract method 0x1c93b03a.
+//
+// Solidity: function chainName() view returns(string)
+func (_SBTHandler *SBTHandlerSession) ChainName() (string, error) {
+	return _SBTHandler.Contract.ChainName(&_SBTHandler.CallOpts)
+}
+
+// ChainName is a free data retrieval call binding the contract method 0x1c93b03a.
+//
+// Solidity: function chainName() view returns(string)
+func (_SBTHandler *SBTHandlerCallerSession) ChainName() (string, error) {
+	return _SBTHandler.Contract.ChainName(&_SBTHandler.CallOpts)
 }
 
 // DetermineProxyAddress is a free data retrieval call binding the contract method 0x0492e493.
@@ -299,25 +361,174 @@ func (_SBTHandler *SBTHandlerCallerSession) Facade() (common.Address, error) {
 	return _SBTHandler.Contract.Facade(&_SBTHandler.CallOpts)
 }
 
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
+// GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
 //
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_SBTHandler *SBTHandlerTransactor) BundlerInit(opts *bind.TransactOpts, bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _SBTHandler.contract.Transact(opts, "__Bundler_init", bundleExecutorImplementation_, facade_)
+// Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
+func (_SBTHandler *SBTHandlerCaller) GetSigComponents(opts *bind.CallOpts, methodId_ uint8, contractAddress_ common.Address) (struct {
+	ChainName string
+	Nonce     *big.Int
+}, error) {
+	var out []interface{}
+	err := _SBTHandler.contract.Call(opts, &out, "getSigComponents", methodId_, contractAddress_)
+
+	outstruct := new(struct {
+		ChainName string
+		Nonce     *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.ChainName = *abi.ConvertType(out[0], new(string)).(*string)
+	outstruct.Nonce = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
 }
 
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
+// GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
 //
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_SBTHandler *SBTHandlerSession) BundlerInit(bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _SBTHandler.Contract.BundlerInit(&_SBTHandler.TransactOpts, bundleExecutorImplementation_, facade_)
+// Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
+func (_SBTHandler *SBTHandlerSession) GetSigComponents(methodId_ uint8, contractAddress_ common.Address) (struct {
+	ChainName string
+	Nonce     *big.Int
+}, error) {
+	return _SBTHandler.Contract.GetSigComponents(&_SBTHandler.CallOpts, methodId_, contractAddress_)
 }
 
-// BundlerInit is a paid mutator transaction binding the contract method 0x96de44c2.
+// GetSigComponents is a free data retrieval call binding the contract method 0x827e099e.
 //
-// Solidity: function __Bundler_init(address bundleExecutorImplementation_, address facade_) returns()
-func (_SBTHandler *SBTHandlerTransactorSession) BundlerInit(bundleExecutorImplementation_ common.Address, facade_ common.Address) (*types.Transaction, error) {
-	return _SBTHandler.Contract.BundlerInit(&_SBTHandler.TransactOpts, bundleExecutorImplementation_, facade_)
+// Solidity: function getSigComponents(uint8 methodId_, address contractAddress_) view returns(string chainName_, uint256 nonce_)
+func (_SBTHandler *SBTHandlerCallerSession) GetSigComponents(methodId_ uint8, contractAddress_ common.Address) (struct {
+	ChainName string
+	Nonce     *big.Int
+}, error) {
+	return _SBTHandler.Contract.GetSigComponents(&_SBTHandler.CallOpts, methodId_, contractAddress_)
+}
+
+// Nonces is a free data retrieval call binding the contract method 0xed3218a2.
+//
+// Solidity: function nonces(address , uint8 ) view returns(uint256)
+func (_SBTHandler *SBTHandlerCaller) Nonces(opts *bind.CallOpts, arg0 common.Address, arg1 uint8) (*big.Int, error) {
+	var out []interface{}
+	err := _SBTHandler.contract.Call(opts, &out, "nonces", arg0, arg1)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// Nonces is a free data retrieval call binding the contract method 0xed3218a2.
+//
+// Solidity: function nonces(address , uint8 ) view returns(uint256)
+func (_SBTHandler *SBTHandlerSession) Nonces(arg0 common.Address, arg1 uint8) (*big.Int, error) {
+	return _SBTHandler.Contract.Nonces(&_SBTHandler.CallOpts, arg0, arg1)
+}
+
+// Nonces is a free data retrieval call binding the contract method 0xed3218a2.
+//
+// Solidity: function nonces(address , uint8 ) view returns(uint256)
+func (_SBTHandler *SBTHandlerCallerSession) Nonces(arg0 common.Address, arg1 uint8) (*big.Int, error) {
+	return _SBTHandler.Contract.Nonces(&_SBTHandler.CallOpts, arg0, arg1)
+}
+
+// Signer is a free data retrieval call binding the contract method 0x238ac933.
+//
+// Solidity: function signer() view returns(address)
+func (_SBTHandler *SBTHandlerCaller) Signer(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _SBTHandler.contract.Call(opts, &out, "signer")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Signer is a free data retrieval call binding the contract method 0x238ac933.
+//
+// Solidity: function signer() view returns(address)
+func (_SBTHandler *SBTHandlerSession) Signer() (common.Address, error) {
+	return _SBTHandler.Contract.Signer(&_SBTHandler.CallOpts)
+}
+
+// Signer is a free data retrieval call binding the contract method 0x238ac933.
+//
+// Solidity: function signer() view returns(address)
+func (_SBTHandler *SBTHandlerCallerSession) Signer() (common.Address, error) {
+	return _SBTHandler.Contract.Signer(&_SBTHandler.CallOpts)
+}
+
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
+//
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_SBTHandler *SBTHandlerTransactor) BundlerInit(opts *bind.TransactOpts, bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _SBTHandler.contract.Transact(opts, "__Bundler_init", bundleExecutorImplementation_)
+}
+
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
+//
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_SBTHandler *SBTHandlerSession) BundlerInit(bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _SBTHandler.Contract.BundlerInit(&_SBTHandler.TransactOpts, bundleExecutorImplementation_)
+}
+
+// BundlerInit is a paid mutator transaction binding the contract method 0x654d62aa.
+//
+// Solidity: function __Bundler_init(address bundleExecutorImplementation_) returns()
+func (_SBTHandler *SBTHandlerTransactorSession) BundlerInit(bundleExecutorImplementation_ common.Address) (*types.Transaction, error) {
+	return _SBTHandler.Contract.BundlerInit(&_SBTHandler.TransactOpts, bundleExecutorImplementation_)
+}
+
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
+//
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_SBTHandler *SBTHandlerTransactor) SignersInit(opts *bind.TransactOpts, signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _SBTHandler.contract.Transact(opts, "__Signers_init", signer_, facade_, chainName_)
+}
+
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
+//
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_SBTHandler *SBTHandlerSession) SignersInit(signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _SBTHandler.Contract.SignersInit(&_SBTHandler.TransactOpts, signer_, facade_, chainName_)
+}
+
+// SignersInit is a paid mutator transaction binding the contract method 0x3baa7892.
+//
+// Solidity: function __Signers_init(address signer_, address facade_, string chainName_) returns()
+func (_SBTHandler *SBTHandlerTransactorSession) SignersInit(signer_ common.Address, facade_ common.Address, chainName_ string) (*types.Transaction, error) {
+	return _SBTHandler.Contract.SignersInit(&_SBTHandler.TransactOpts, signer_, facade_, chainName_)
+}
+
+// CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.
+//
+// Solidity: function checkSignatureAndIncrementNonce(uint8 methodId_, address contractAddress_, bytes32 signHash_, bytes signature_) returns()
+func (_SBTHandler *SBTHandlerTransactor) CheckSignatureAndIncrementNonce(opts *bind.TransactOpts, methodId_ uint8, contractAddress_ common.Address, signHash_ [32]byte, signature_ []byte) (*types.Transaction, error) {
+	return _SBTHandler.contract.Transact(opts, "checkSignatureAndIncrementNonce", methodId_, contractAddress_, signHash_, signature_)
+}
+
+// CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.
+//
+// Solidity: function checkSignatureAndIncrementNonce(uint8 methodId_, address contractAddress_, bytes32 signHash_, bytes signature_) returns()
+func (_SBTHandler *SBTHandlerSession) CheckSignatureAndIncrementNonce(methodId_ uint8, contractAddress_ common.Address, signHash_ [32]byte, signature_ []byte) (*types.Transaction, error) {
+	return _SBTHandler.Contract.CheckSignatureAndIncrementNonce(&_SBTHandler.TransactOpts, methodId_, contractAddress_, signHash_, signature_)
+}
+
+// CheckSignatureAndIncrementNonce is a paid mutator transaction binding the contract method 0xe3754f90.
+//
+// Solidity: function checkSignatureAndIncrementNonce(uint8 methodId_, address contractAddress_, bytes32 signHash_, bytes signature_) returns()
+func (_SBTHandler *SBTHandlerTransactorSession) CheckSignatureAndIncrementNonce(methodId_ uint8, contractAddress_ common.Address, signHash_ [32]byte, signature_ []byte) (*types.Transaction, error) {
+	return _SBTHandler.Contract.CheckSignatureAndIncrementNonce(&_SBTHandler.TransactOpts, methodId_, contractAddress_, signHash_, signature_)
 }
 
 // DepositSBT is a paid mutator transaction binding the contract method 0x755f3823.
@@ -360,6 +571,27 @@ func (_SBTHandler *SBTHandlerSession) OnERC721Received(arg0 common.Address, arg1
 // Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
 func (_SBTHandler *SBTHandlerTransactorSession) OnERC721Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
 	return _SBTHandler.Contract.OnERC721Received(&_SBTHandler.TransactOpts, arg0, arg1, arg2, arg3)
+}
+
+// ValidateChangeAddressSignature is a paid mutator transaction binding the contract method 0x7d1e764b.
+//
+// Solidity: function validateChangeAddressSignature(uint8 methodId_, address contractAddress_, address newAddress_, bytes signature_) returns()
+func (_SBTHandler *SBTHandlerTransactor) ValidateChangeAddressSignature(opts *bind.TransactOpts, methodId_ uint8, contractAddress_ common.Address, newAddress_ common.Address, signature_ []byte) (*types.Transaction, error) {
+	return _SBTHandler.contract.Transact(opts, "validateChangeAddressSignature", methodId_, contractAddress_, newAddress_, signature_)
+}
+
+// ValidateChangeAddressSignature is a paid mutator transaction binding the contract method 0x7d1e764b.
+//
+// Solidity: function validateChangeAddressSignature(uint8 methodId_, address contractAddress_, address newAddress_, bytes signature_) returns()
+func (_SBTHandler *SBTHandlerSession) ValidateChangeAddressSignature(methodId_ uint8, contractAddress_ common.Address, newAddress_ common.Address, signature_ []byte) (*types.Transaction, error) {
+	return _SBTHandler.Contract.ValidateChangeAddressSignature(&_SBTHandler.TransactOpts, methodId_, contractAddress_, newAddress_, signature_)
+}
+
+// ValidateChangeAddressSignature is a paid mutator transaction binding the contract method 0x7d1e764b.
+//
+// Solidity: function validateChangeAddressSignature(uint8 methodId_, address contractAddress_, address newAddress_, bytes signature_) returns()
+func (_SBTHandler *SBTHandlerTransactorSession) ValidateChangeAddressSignature(methodId_ uint8, contractAddress_ common.Address, newAddress_ common.Address, signature_ []byte) (*types.Transaction, error) {
+	return _SBTHandler.Contract.ValidateChangeAddressSignature(&_SBTHandler.TransactOpts, methodId_, contractAddress_, newAddress_, signature_)
 }
 
 // WithdrawSBT is a paid mutator transaction binding the contract method 0x73710258.

@@ -105,49 +105,91 @@ export declare namespace IERC1155Handler {
 
 export interface ERC1155HandlerInterface extends utils.Interface {
   functions: {
-    "__Bundler_init(address,address)": FunctionFragment;
+    "P()": FunctionFragment;
+    "__Bundler_init(address)": FunctionFragment;
+    "__Signers_init(address,address,string)": FunctionFragment;
     "bundleExecutorImplementation()": FunctionFragment;
+    "chainName()": FunctionFragment;
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)": FunctionFragment;
     "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))": FunctionFragment;
     "determineProxyAddress(bytes32)": FunctionFragment;
     "facade()": FunctionFragment;
+    "getSigComponents(uint8,address)": FunctionFragment;
+    "nonces(address,uint8)": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "signer()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "validateChangeAddressSignature(uint8,address,address,bytes)": FunctionFragment;
     "withdrawERC1155((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
     "withdrawERC1155Bundle((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "P"
+      | "P()"
       | "__Bundler_init"
-      | "__Bundler_init(address,address)"
+      | "__Bundler_init(address)"
+      | "__Signers_init"
+      | "__Signers_init(address,address,string)"
       | "bundleExecutorImplementation"
       | "bundleExecutorImplementation()"
+      | "chainName"
+      | "chainName()"
+      | "checkSignatureAndIncrementNonce"
+      | "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"
       | "depositERC1155"
       | "depositERC1155((address,uint256,uint256,(bytes32,bytes),string,string,bool))"
       | "determineProxyAddress"
       | "determineProxyAddress(bytes32)"
       | "facade"
       | "facade()"
+      | "getSigComponents"
+      | "getSigComponents(uint8,address)"
+      | "nonces"
+      | "nonces(address,uint8)"
       | "onERC1155BatchReceived"
       | "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"
       | "onERC1155Received"
       | "onERC1155Received(address,address,uint256,uint256,bytes)"
+      | "signer"
+      | "signer()"
       | "supportsInterface"
       | "supportsInterface(bytes4)"
+      | "validateChangeAddressSignature"
+      | "validateChangeAddressSignature(uint8,address,address,bytes)"
       | "withdrawERC1155"
       | "withdrawERC1155((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))"
       | "withdrawERC1155Bundle"
       | "withdrawERC1155Bundle((address,uint256,string,uint256,(bytes32,bytes),bytes32,address,bytes,bool))"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "P", values?: undefined): string;
+  encodeFunctionData(functionFragment: "P()", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "__Bundler_init",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "__Bundler_init(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "__Bundler_init(address)",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__Signers_init",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__Signers_init(address,address,string)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "bundleExecutorImplementation",
@@ -156,6 +198,29 @@ export interface ERC1155HandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "bundleExecutorImplementation()",
     values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "chainName", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "chainName()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkSignatureAndIncrementNonce",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "depositERC1155",
@@ -175,6 +240,22 @@ export interface ERC1155HandlerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "facade", values?: undefined): string;
   encodeFunctionData(functionFragment: "facade()", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getSigComponents",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSigComponents(uint8,address)",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "nonces",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "nonces(address,uint8)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
     values: [
@@ -215,6 +296,8 @@ export interface ERC1155HandlerInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
+  encodeFunctionData(functionFragment: "signer", values?: undefined): string;
+  encodeFunctionData(functionFragment: "signer()", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
@@ -222,6 +305,24 @@ export interface ERC1155HandlerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "supportsInterface(bytes4)",
     values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "validateChangeAddressSignature",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "validateChangeAddressSignature(uint8,address,address,bytes)",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawERC1155",
@@ -240,12 +341,22 @@ export interface ERC1155HandlerInterface extends utils.Interface {
     values: [IERC1155Handler.WithdrawERC1155ParametersStruct]
   ): string;
 
+  decodeFunctionResult(functionFragment: "P", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "P()", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "__Bundler_init",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "__Bundler_init(address,address)",
+    functionFragment: "__Bundler_init(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__Signers_init",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__Signers_init(address,address,string)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -254,6 +365,19 @@ export interface ERC1155HandlerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "bundleExecutorImplementation()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "chainName", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "chainName()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkSignatureAndIncrementNonce",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -275,6 +399,19 @@ export interface ERC1155HandlerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "facade", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "facade()", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "getSigComponents",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getSigComponents(uint8,address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "nonces(address,uint8)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
   ): Result;
@@ -290,12 +427,22 @@ export interface ERC1155HandlerInterface extends utils.Interface {
     functionFragment: "onERC1155Received(address,address,uint256,uint256,bytes)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "signer", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "signer()", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface(bytes4)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "validateChangeAddressSignature",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "validateChangeAddressSignature(uint8,address,address,bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -418,15 +565,31 @@ export interface ERC1155Handler extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    P(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "P()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -435,6 +598,26 @@ export interface ERC1155Handler extends BaseContract {
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    chainName(overrides?: CallOverrides): Promise<[string]>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<[string]>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     depositERC1155(
       params_: IERC1155Handler.DepositERC1155ParametersStruct,
@@ -459,6 +642,30 @@ export interface ERC1155Handler extends BaseContract {
     facade(overrides?: CallOverrides): Promise<[string]>;
 
     "facade()"(overrides?: CallOverrides): Promise<[string]>;
+
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     onERC1155BatchReceived(
       arg0: PromiseOrValue<string>,
@@ -496,6 +703,10 @@ export interface ERC1155Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    signer(overrides?: CallOverrides): Promise<[string]>;
+
+    "signer()"(overrides?: CallOverrides): Promise<[string]>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -505,6 +716,22 @@ export interface ERC1155Handler extends BaseContract {
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     withdrawERC1155(
       params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
@@ -527,21 +754,57 @@ export interface ERC1155Handler extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  P(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "P()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   __Bundler_init(
     bundleExecutorImplementation_: PromiseOrValue<string>,
-    facade_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "__Bundler_init(address,address)"(
+  "__Bundler_init(address)"(
     bundleExecutorImplementation_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  __Signers_init(
+    signer_: PromiseOrValue<string>,
     facade_: PromiseOrValue<string>,
+    chainName_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "__Signers_init(address,address,string)"(
+    signer_: PromiseOrValue<string>,
+    facade_: PromiseOrValue<string>,
+    chainName_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   bundleExecutorImplementation(overrides?: CallOverrides): Promise<string>;
 
   "bundleExecutorImplementation()"(overrides?: CallOverrides): Promise<string>;
+
+  chainName(overrides?: CallOverrides): Promise<string>;
+
+  "chainName()"(overrides?: CallOverrides): Promise<string>;
+
+  checkSignatureAndIncrementNonce(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    signHash_: PromiseOrValue<BytesLike>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    signHash_: PromiseOrValue<BytesLike>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   depositERC1155(
     params_: IERC1155Handler.DepositERC1155ParametersStruct,
@@ -566,6 +829,30 @@ export interface ERC1155Handler extends BaseContract {
   facade(overrides?: CallOverrides): Promise<string>;
 
   "facade()"(overrides?: CallOverrides): Promise<string>;
+
+  getSigComponents(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+  "getSigComponents(uint8,address)"(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+  nonces(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "nonces(address,uint8)"(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   onERC1155BatchReceived(
     arg0: PromiseOrValue<string>,
@@ -613,6 +900,22 @@ export interface ERC1155Handler extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  validateChangeAddressSignature(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    newAddress_: PromiseOrValue<string>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "validateChangeAddressSignature(uint8,address,address,bytes)"(
+    methodId_: PromiseOrValue<BigNumberish>,
+    contractAddress_: PromiseOrValue<string>,
+    newAddress_: PromiseOrValue<string>,
+    signature_: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawERC1155(
     params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -634,15 +937,31 @@ export interface ERC1155Handler extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    P(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "P()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -651,6 +970,26 @@ export interface ERC1155Handler extends BaseContract {
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
     ): Promise<string>;
+
+    chainName(overrides?: CallOverrides): Promise<string>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<string>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     depositERC1155(
       params_: IERC1155Handler.DepositERC1155ParametersStruct,
@@ -675,6 +1014,30 @@ export interface ERC1155Handler extends BaseContract {
     facade(overrides?: CallOverrides): Promise<string>;
 
     "facade()"(overrides?: CallOverrides): Promise<string>;
+
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { chainName_: string; nonce_: BigNumber }>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     onERC1155BatchReceived(
       arg0: PromiseOrValue<string>,
@@ -712,6 +1075,10 @@ export interface ERC1155Handler extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    signer(overrides?: CallOverrides): Promise<string>;
+
+    "signer()"(overrides?: CallOverrides): Promise<string>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -721,6 +1088,22 @@ export interface ERC1155Handler extends BaseContract {
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     withdrawERC1155(
       params_: IERC1155Handler.WithdrawERC1155ParametersStruct,
@@ -795,15 +1178,31 @@ export interface ERC1155Handler extends BaseContract {
   };
 
   estimateGas: {
+    P(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "P()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -811,6 +1210,26 @@ export interface ERC1155Handler extends BaseContract {
 
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    chainName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     depositERC1155(
@@ -837,6 +1256,30 @@ export interface ERC1155Handler extends BaseContract {
 
     "facade()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
@@ -873,6 +1316,10 @@ export interface ERC1155Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    signer(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "signer()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -881,6 +1328,22 @@ export interface ERC1155Handler extends BaseContract {
     "supportsInterface(bytes4)"(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     withdrawERC1155(
@@ -905,15 +1368,31 @@ export interface ERC1155Handler extends BaseContract {
   };
 
   populateTransaction: {
+    P(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "P()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     __Bundler_init(
       bundleExecutorImplementation_: PromiseOrValue<string>,
-      facade_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "__Bundler_init(address,address)"(
+    "__Bundler_init(address)"(
       bundleExecutorImplementation_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __Signers_init(
+      signer_: PromiseOrValue<string>,
       facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "__Signers_init(address,address,string)"(
+      signer_: PromiseOrValue<string>,
+      facade_: PromiseOrValue<string>,
+      chainName_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -923,6 +1402,26 @@ export interface ERC1155Handler extends BaseContract {
 
     "bundleExecutorImplementation()"(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    chainName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "chainName()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    checkSignatureAndIncrementNonce(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "checkSignatureAndIncrementNonce(uint8,address,bytes32,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      signHash_: PromiseOrValue<BytesLike>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     depositERC1155(
@@ -949,6 +1448,30 @@ export interface ERC1155Handler extends BaseContract {
 
     "facade()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getSigComponents(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getSigComponents(uint8,address)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    nonces(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address,uint8)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     onERC1155BatchReceived(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
@@ -985,6 +1508,10 @@ export interface ERC1155Handler extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    signer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "signer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -993,6 +1520,22 @@ export interface ERC1155Handler extends BaseContract {
     "supportsInterface(bytes4)"(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    validateChangeAddressSignature(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "validateChangeAddressSignature(uint8,address,address,bytes)"(
+      methodId_: PromiseOrValue<BigNumberish>,
+      contractAddress_: PromiseOrValue<string>,
+      newAddress_: PromiseOrValue<string>,
+      signature_: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     withdrawERC1155(

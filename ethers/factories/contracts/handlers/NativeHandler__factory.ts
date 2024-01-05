@@ -104,10 +104,36 @@ const _abi = [
     type: "event",
   },
   {
+    inputs: [],
+    name: "P",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
         name: "bundleExecutorImplementation_",
+        type: "address",
+      },
+    ],
+    name: "__Bundler_init",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "signer_",
         type: "address",
       },
       {
@@ -115,8 +141,13 @@ const _abi = [
         name: "facade_",
         type: "address",
       },
+      {
+        internalType: "string",
+        name: "chainName_",
+        type: "string",
+      },
     ],
-    name: "__Bundler_init",
+    name: "__Signers_init",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -132,6 +163,47 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "chainName",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "methodId_",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "contractAddress_",
+        type: "address",
+      },
+      {
+        internalType: "bytes32",
+        name: "signHash_",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "signature_",
+        type: "bytes",
+      },
+    ],
+    name: "checkSignatureAndIncrementNonce",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -211,6 +283,100 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "methodId_",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "contractAddress_",
+        type: "address",
+      },
+    ],
+    name: "getSigComponents",
+    outputs: [
+      {
+        internalType: "string",
+        name: "chainName_",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "nonce_",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    name: "nonces",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "signer",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "methodId_",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "contractAddress_",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "newAddress_",
+        type: "address",
+      },
+      {
+        internalType: "bytes",
+        name: "signature_",
+        type: "bytes",
+      },
+    ],
+    name: "validateChangeAddressSignature",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

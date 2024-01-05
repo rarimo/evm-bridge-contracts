@@ -44,6 +44,11 @@ const _abi = [
         type: "address",
       },
       {
+        internalType: "address",
+        name: "facade_",
+        type: "address",
+      },
+      {
         internalType: "string",
         name: "chainName_",
         type: "string",
@@ -93,6 +98,19 @@ const _abi = [
     name: "checkSignatureAndIncrementNonce",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "facade",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
